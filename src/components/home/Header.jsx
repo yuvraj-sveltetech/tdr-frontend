@@ -1,7 +1,11 @@
 import React from "react";
 import { FaUser } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Header = () => {
+  const logout = () => {
+    localStorage.setItem("auth_token", "");
+  };
   return (
     <div className="header">
       <div className="profile row m-0">
@@ -18,9 +22,9 @@ const Header = () => {
             </button>
             <ul className="dropdown-menu">
               <li>
-                <a className="dropdown-item" href="!#">
+                <Link className="dropdown-item" to="/" onClick={logout}>
                   Logout
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

@@ -13,7 +13,6 @@ const Dashboard = () => {
           <div className="main">
             <div className="choose">
               <button className="btn btn-light">I.P.D.R</button>
-              {/* <span>|</span> */}
               <img src={tower} alt="tower_icon" width="30" height="30" />
               <button className="btn btn-dark">C.D.R</button>
             </div>

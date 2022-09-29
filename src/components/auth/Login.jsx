@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import background_img from "../../assets/images/background_img.jpg";
 import logo from "../../assets/images/logo.png";
 import useApiHandle from "../utils/useApiHandle";
 import * as URL from "../utils/ConstantUrl";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { data, loading, apiCall } = useApiHandle();
@@ -10,6 +11,21 @@ const Login = () => {
     email: "",
     password: "",
   });
+  let navigate = useNavigate();
+  let auth = localStorage.getItem("auth_token");
+
+  useEffect(() => {
+    if (auth) navigate("/dashboard");
+  }, [auth, navigate]);
+
+  useEffect(() => {
+    if (data?.data) {
+      localStorage.setItem("auth_token", data?.data?.access_token);
+      localStorage.setItem("refresh_token", data?.data?.refresh_token);
+      localStorage.setItem("user_email", data?.data?.email);
+      navigate("/dashboard");
+    }
+  }, [data, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,12 +35,6 @@ const Login = () => {
   const login = () => {
     apiCall("post", URL.LOGIN, credential);
   };
-
-  if (data?.data) {
-    localStorage.setItem("auth_token", data?.data?.access_token);
-    localStorage.setItem("refresh_token", data?.data?.refresh_token);
-    localStorage.setItem("user_email", data?.data?.email);
-  }
 
   return (
     <div
