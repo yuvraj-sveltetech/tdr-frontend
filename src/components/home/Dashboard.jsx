@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import tower from "../../assets/images/tower-icon.png";
+import CreateFolder from "./CreateFolder";
 
 const Dashboard = () => {
+  const [category, setCategory] = useState("IPDR");
+
+  const changeCategory = (item) => {
+    setCategory(item);
+  };
+
   return (
     <div className="dashboard container-fluid">
       <div className="row ">
@@ -12,10 +19,21 @@ const Dashboard = () => {
           <Header />
           <div className="main">
             <div className="choose">
-              <button className="btn btn-light">I.P.D.R</button>
+              <button
+                className="btn btn-light"
+                onClick={() => changeCategory("IPDR")}
+              >
+                I.P.D.R
+              </button>
               <img src={tower} alt="tower_icon" width="30" height="30" />
-              <button className="btn btn-dark">C.D.R</button>
+              <button
+                className="btn btn-dark"
+                onClick={() => changeCategory("CDR")}
+              >
+                C.D.R
+              </button>
             </div>
+            <CreateFolder category={category} />
           </div>
         </div>
       </div>

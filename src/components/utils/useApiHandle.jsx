@@ -16,6 +16,7 @@ const useApiHandle = () => {
         data: payload,
       });
       setData(res);
+      toast.success(res?.data?.Message);
     } catch (err) {
       toast.error(err?.response?.data?.Error);
     } finally {

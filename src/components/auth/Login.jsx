@@ -54,7 +54,7 @@ const Login = () => {
         </div>
 
         <div className="col-md-6 h-100 m-auto d-flex ">
-          <div className="login-panel">
+          <form className="login-panel" onSubmit={login}>
             <h2 className="fs-1 text-white">LOG IN</h2>
             <div className="l d-flex flex-column justify-content-evenly">
               <div className="email d-flex flex-column">
@@ -99,7 +99,7 @@ const Login = () => {
                 )}
               </button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
