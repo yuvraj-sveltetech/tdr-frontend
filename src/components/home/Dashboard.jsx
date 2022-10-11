@@ -3,12 +3,17 @@ import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import tower from "../../assets/images/tower-icon.png";
 import CreateFolder from "./CreateFolder";
+const ipcRenderer = window.require("electron").ipcRenderer;
 
 const Dashboard = () => {
   const [category, setCategory] = useState("IPDR");
 
   const changeCategory = (item) => {
     setCategory(item);
+  };
+
+  const pp = () => {
+    ipcRenderer.send("request-mainprocess-action", "LLLLKKKLLL");
   };
 
   return (
@@ -31,6 +36,9 @@ const Dashboard = () => {
                 onClick={() => changeCategory("CDR")}
               >
                 C.D.R
+              </button>
+              <button id="folder" onClick={pp}>
+                Folder
               </button>
             </div>
             <CreateFolder category={category} />
