@@ -3,11 +3,10 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 
-ipcMain.on("request-mainprocess-action", (a, b) => {
+ipcMain.on("request-mainprocess-action", (event, arg) => {
   let destPath, dirpath;
-
-  console.log("Organized and organized folder created", os.homedir(), "ooo");
-
+  console.log(arg);
+  event.returnValue = "pong";
   //   const isMac = os.platform() === "darwin";
   //   const isWindows = os.platform() === "win32";
   //   const isLinux = os.platform() === "linux";
@@ -22,9 +21,14 @@ ipcMain.on("request-mainprocess-action", (a, b) => {
 
     if (doesExist === true) {
       destPath = path.join(dirpath, "organized_files");
-
       if (fs.existsSync(destPath) === false) {
-        fs.mkdirSync(destPath);
+        (async () => {
+          await fs.mkdirSync(destPath);
+          await fs.mkdirSync(path.join(destPath, "airtel"));
+          await fs.mkdirSync(path.join(destPath, "jio"));
+          await fs.mkdirSync(path.join(destPath, "bsnl"));
+          await fs.mkdirSync(path.join(destPath, "voda"));
+        })().catch(console.error);
       } else {
         console.log("This folder already exists");
       }

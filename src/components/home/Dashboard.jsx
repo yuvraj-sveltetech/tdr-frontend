@@ -13,7 +13,11 @@ const Dashboard = () => {
   };
 
   const pp = () => {
-    ipcRenderer.send("request-mainprocess-action", "LLLLKKKLLL");
+    let request = ipcRenderer.sendSync(
+      "request-mainprocess-action",
+      "LLLLKKKLLL"
+    );
+    console.log(request, "-----");
   };
 
   return (
