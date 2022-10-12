@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import useApiHandle from "./useApiHandle";
 import * as URL from "./ConstantUrl";
+const ipcRenderer = window.require("electron").ipcRenderer;
+
 
 const Modal = ({ modalType, category }) => {
   const { data, loading, apiCall } = useApiHandle();
@@ -22,6 +24,12 @@ const Modal = ({ modalType, category }) => {
     setFolderName(e.target.value);
   };
 
+  const create_folder = () => {
+    ipcRenderer.send("request-mainprocess-action", folderName+"_"+category);
+    setFolderName("")
+  };
+ 
+
   const conditionalModalContent = () => {
     if (modalType === "Create Folder") {
       return (
@@ -36,13 +44,7 @@ const Modal = ({ modalType, category }) => {
     }
   };
 
-  const createFolder = () => {
-    apiCall(
-      "post",
-      URL.CREATE_FOLDER + `?folder_name=${folderName}&category=${category}`,
-      ""
-    );
-  };
+
 
   return (
     <div
@@ -76,8 +78,8 @@ const Modal = ({ modalType, category }) => {
             </button>
             <button
               type="button"
-              className="btn btn-primary"
-              onClick={createFolder}
+              className="btn btn-primary" data-bs-dismiss="modal"
+              onClick={create_folder}
             >
               {buttonName}
             </button>

@@ -20,7 +20,8 @@ ipcMain.on("request-mainprocess-action", (event, arg) => {
     let doesExist = fs.existsSync(dirpath);
 
     if (doesExist === true) {
-      destPath = path.join(dirpath, "organized_files");
+      destPath = path.join(dirpath, arg);
+
       if (fs.existsSync(destPath) === false) {
         (async () => {
           await fs.mkdirSync(destPath);
