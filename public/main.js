@@ -1,7 +1,11 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, ipcRenderer } = require("electron");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
+
+let desktop_path = path.join(os.homedir(), "Desktop");
+let all_folders = [];
+let get_specific_folders = [];
 
 ipcMain.on("request-mainprocess-action", (event, arg) => {
   let destPath, dirpath;
@@ -37,6 +41,23 @@ ipcMain.on("request-mainprocess-action", (event, arg) => {
       console.log("Please enter a valid path");
     }
   }
+});
+
+ipcMain.once("get_folders", (e, arg) => {
+  fs.readdir(desktop_path, (err, files) => {
+    all_folders = [...files];
+    let isFolder;
+    all_folders.forEach((folder) => {
+      isFolder = folder.split("_");
+
+      if (isFolder[isFolder.length - 1] === "IPDR") {
+        get_specific_folders.push(folder);
+      }
+    });
+
+    console.log(get_specific_folders.length);
+    e.returnValue = get_specific_folders;
+  });
 });
 
 function createWindow() {
