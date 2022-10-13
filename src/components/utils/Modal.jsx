@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from "react";
-import useApiHandle from "./useApiHandle";
-import * as URL from "./ConstantUrl";
 import { toast } from "react-toastify";
 const ipcRenderer = window.require("electron").ipcRenderer;
 
-
-
 const Modal = ({ modalType, category }) => {
-  const { data, loading, apiCall } = useApiHandle();
   const [buttonName, setButtonName] = useState("");
   const [folderName, setFolderName] = useState("");
 
@@ -17,10 +12,6 @@ const Modal = ({ modalType, category }) => {
     }
     conditionalModalContent();
   }, [modalType]);
-
-  useEffect(() => {
-    console.log(data, "ll");
-  }, [data]);
 
   const handleChange = (e) => {
     setFolderName(e.target.value);
@@ -35,7 +26,6 @@ const Modal = ({ modalType, category }) => {
     else if(message_recived===false)toast.error("This folder already exists")
     else toast.notify("Please enter a valid path")
   };
- 
 
   const conditionalModalContent = () => {
     if (modalType === "Create Folder") {
@@ -50,8 +40,6 @@ const Modal = ({ modalType, category }) => {
       );
     }
   };
-
-
 
   return (
     <div
@@ -85,7 +73,8 @@ const Modal = ({ modalType, category }) => {
             </button>
             <button
               type="button"
-              className="btn btn-primary" data-bs-dismiss="modal"
+              className="btn btn-primary"
+              data-bs-dismiss="modal"
               onClick={create_folder}
             >
               {buttonName}
