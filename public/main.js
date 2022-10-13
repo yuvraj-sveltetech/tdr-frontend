@@ -3,13 +3,11 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 
-ipcMain.on("request-mainprocess-action", (event, arg) => {
+ipcMain.on("request-mainprocess-action", (event, arg) => {  
   let destPath, dirpath;
-  console.log(arg);
-  event.returnValue = "pong";
   //   const isMac = os.platform() === "darwin";
   //   const isWindows = os.platform() === "win32";
-  //   const isLinux = os.platform() === "linux";
+  //   const isLinux = os.platform() === "linux";  
 
   dirpath = path.join(os.homedir(), "Desktop");
 
@@ -29,10 +27,12 @@ ipcMain.on("request-mainprocess-action", (event, arg) => {
           await fs.mkdirSync(path.join(destPath, "jio"));
           await fs.mkdirSync(path.join(destPath, "bsnl"));
           await fs.mkdirSync(path.join(destPath, "voda"));
+          event.returnValue=true;
         })().catch(console.error);
       } else {
+        event.returnValue = false;
         console.log("This folder already exists");
-      }
+      } 
     } else {
       console.log("Please enter a valid path");
     }

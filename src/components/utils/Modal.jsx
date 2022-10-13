@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import useApiHandle from "./useApiHandle";
 import * as URL from "./ConstantUrl";
+import { toast } from "react-toastify";
 const ipcRenderer = window.require("electron").ipcRenderer;
+
 
 
 const Modal = ({ modalType, category }) => {
@@ -24,9 +26,14 @@ const Modal = ({ modalType, category }) => {
     setFolderName(e.target.value);
   };
 
+  
+
   const create_folder = () => {
-    ipcRenderer.send("request-mainprocess-action", folderName+"_"+category);
-    setFolderName("")
+    let message_recived = ipcRenderer.sendSync("request-mainprocess-action", folderName+"_"+category);
+    setFolderName("");
+    if(message_recived)toast.success("Folder Created")
+    else if(message_recived===false)toast.error("This folder already exists")
+    else toast.notify("Please enter a valid path")
   };
  
 
