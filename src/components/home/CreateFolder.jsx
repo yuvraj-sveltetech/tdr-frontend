@@ -21,6 +21,7 @@ const CreateFolder = ({ category }) => {
 
     console.log(ipcRenderer.sendSync("get_folders"));
     console.log("iiioioi");
+    // ipcRenderer.removeListener("get_folders");
   }, []);
 
   const setModal = () => {

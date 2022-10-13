@@ -43,7 +43,7 @@ ipcMain.on("request-mainprocess-action", (event, arg) => {
   }
 });
 
-ipcMain.once("get_folders", (e, arg) => {
+ipcMain.on("get_folders", (e, arg) => {
   fs.readdir(desktop_path, (err, files) => {
     all_folders = [...files];
     let isFolder;
@@ -51,12 +51,13 @@ ipcMain.once("get_folders", (e, arg) => {
       isFolder = folder.split("_");
 
       if (isFolder[isFolder.length - 1] === "IPDR") {
-        get_specific_folders.push(folder);
+        let response =get_specific_folders.includes(folder);
+        if(!response)get_specific_folders.push(folder);
       }
     });
 
     console.log(get_specific_folders.length);
-    e.returnValue = get_specific_folders;
+    e.returnValue =get_specific_folders ;
   });
 });
 
