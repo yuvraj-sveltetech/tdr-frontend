@@ -3,7 +3,6 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 
-
 let desktop_path = path.join(os.homedir(), "Desktop");
 let all_folders = [];
 let get_specific_folders = [];
@@ -51,13 +50,17 @@ module.exports = {
       let isFolder;
       all_folders.forEach((folder) => {
         isFolder = folder.split("_");
-  
-        if (isFolder[isFolder.length - 1] === "IPDR") {
-          get_specific_folders.push(folder);
+        console.log(isFolder[isFolder.length - 1]);
+        if (
+          isFolder[isFolder.length - 1] === "IPDR" ||
+          isFolder[isFolder.length - 1] === "CDR"
+        ) {
+          let response = get_specific_folders.includes(folder);
+          if (!response) get_specific_folders.push(folder);
         }
       });
-  
+
       e.returnValue = get_specific_folders;
     });
-  });
+  }),
 };
