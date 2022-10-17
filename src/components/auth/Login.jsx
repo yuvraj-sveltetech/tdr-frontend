@@ -4,15 +4,20 @@ import logo from "../../assets/images/logo.png";
 import useApiHandle from "../utils/useApiHandle";
 import * as URL from "../utils/ConstantUrl";
 import { useNavigate } from "react-router-dom";
+import {useDispatch,useSelector } from "react-redux";
+import AddSlice from "../../redux/slice/CreateSlice";
 
 const Login = () => {
   const { data, loading, apiCall } = useApiHandle();
+  const staticData =useSelector((state)=>state.showFile);
+  const {addfile} =AddSlice.actions
   const [credential, setCredential] = useState({
     email: "",
     password: "",
   });
   let navigate = useNavigate();
   let auth = localStorage.getItem("auth_token");
+  const dispatch=useDispatch();
 
   useEffect(() => {
     if (auth) navigate("/dashboard");
@@ -27,6 +32,10 @@ const Login = () => {
     }
   }, [data, navigate]);
 
+
+
+
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredential((prev) => ({ ...prev, [name]: value }));

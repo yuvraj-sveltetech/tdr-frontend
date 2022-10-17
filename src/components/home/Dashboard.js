@@ -9,10 +9,11 @@ import CreateFolder from "./CreateFolder";
 // const ipcRenderer = window.ipcRenderer;
 const Dashboard = () => {
   const [category, setCategory] = useState("IPDR");
+  // const data = useSelector((state) => state);
 
-  useEffect(() => {
-    console.log(ipcRenderer.sendSync("chokidar"));
-  }, []);
+  // useEffect(() => {
+  //   console.log(ipcRenderer.sendSync("chokidar"));
+  // }, []);
 
   const changeCategory = (item) => {
     setCategory(item);
@@ -32,6 +33,7 @@ const Dashboard = () => {
               >
                 I.P.D.R
               </button>
+
               <img src={tower} alt="tower_icon" width="30" height="30" />
               <button
                 className="btn btn-dark"
