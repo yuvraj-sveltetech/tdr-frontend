@@ -3,9 +3,11 @@ import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import tower from "../../assets/images/tower-icon.png";
 import CreateFolder from "./CreateFolder";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const [category, setCategory] = useState("IPDR");
+  const data = useSelector((state) => state);
 
   const changeCategory = (item) => {
     setCategory(item);
@@ -25,6 +27,7 @@ const Dashboard = () => {
               >
                 I.P.D.R
               </button>
+
               <img src={tower} alt="tower_icon" width="30" height="30" />
               <button
                 className="btn btn-dark"

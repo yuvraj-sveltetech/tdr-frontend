@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-const ipcRenderer = window.require("electron").ipcRenderer;
+// const ipcRenderer = window.require("electron").ipcRenderer;
 
 const Modal = ({ modalType, category }) => {
   const [buttonName, setButtonName] = useState("");
@@ -20,11 +20,11 @@ const Modal = ({ modalType, category }) => {
   
 
   const create_folder = () => {
-    let message_recived = ipcRenderer.sendSync("request-mainprocess-action", folderName+"_"+category);
-    setFolderName("");
-    if(message_recived)toast.success("Folder Created")
-    else if(message_recived===false)toast.error("This folder already exists")
-    else toast.notify("Please enter a valid path")
+    // let message_recived = ipcRenderer.sendSync("request-mainprocess-action", folderName+"_"+category);
+    // setFolderName("");
+    // if(message_recived)toast.success("Folder Created")
+    // else if(message_recived===false)toast.error("This folder already exists")
+    // else toast.notify("Please enter a valid path")
   };
 
   const conditionalModalContent = () => {

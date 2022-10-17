@@ -11,7 +11,7 @@ ipcMain.on("request-mainprocess-action", (event, arg) => {
   let destPath, dirpath;
   //   const isMac = os.platform() === "darwin";
   //   const isWindows = os.platform() === "win32";
-  //   const isLinux = os.platform() === "linux";  
+  //   const isLinux = os.platform() === "linux";
 
   dirpath = path.join(os.homedir(), "Desktop");
 
@@ -31,12 +31,12 @@ ipcMain.on("request-mainprocess-action", (event, arg) => {
           await fs.mkdirSync(path.join(destPath, "jio"));
           await fs.mkdirSync(path.join(destPath, "bsnl"));
           await fs.mkdirSync(path.join(destPath, "voda"));
-          event.returnValue=true;
+          event.returnValue = true;
         })().catch(console.error);
       } else {
         event.returnValue = false;
         console.log("This folder already exists");
-      } 
+      }
     } else {
       console.log("Please enter a valid path");
     }
@@ -51,13 +51,16 @@ ipcMain.on("get_folders", (e, arg) => {
       isFolder = folder.split("_");
 
       if (isFolder[isFolder.length - 1] === "IPDR") {
-        let response =get_specific_folders.includes(folder);
-        if(!response)get_specific_folders.push(folder);
+        let response = get_specific_folders.includes(folder);
+        if (!response) get_specific_folders.push(folder);
+      } else if (isFolder[isFolder.length - 1] === "CDR") {
+        let response = get_specific_folders.includes(folder);
+        if (!response) get_specific_folders.push(folder);
       }
     });
 
     console.log(get_specific_folders.length);
-    e.returnValue =get_specific_folders ;
+    e.returnValue = get_specific_folders;
   });
 });
 
