@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import tower from "../../assets/images/tower-icon.png";
 import CreateFolder from "./CreateFolder";
-
+// const ipcRenderer = window.require("electron").ipcRenderer;
+// const ipcRenderer =
+//   (window.require && window.require("electron").ipcRenderer) || null;
+// const ipcRenderer = window.ipcRenderer;
 const Dashboard = () => {
   const [category, setCategory] = useState("IPDR");
+
+  useEffect(() => {
+    console.log(ipcRenderer.sendSync("chokidar"));
+  }, []);
 
   const changeCategory = (item) => {
     setCategory(item);

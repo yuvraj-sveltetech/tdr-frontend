@@ -1,64 +1,13 @@
-const { app, BrowserWindow, ipcMain, ipcRenderer } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
+const chokidar = require("chokidar");
+require("../src/electron/index");
 
 let desktop_path = path.join(os.homedir(), "Desktop");
 let all_folders = [];
 let get_specific_folders = [];
-
-ipcMain.on("request-mainprocess-action", (event, arg) => {
-  let destPath, dirpath;
-  //   const isMac = os.platform() === "darwin";
-  //   const isWindows = os.platform() === "win32";
-  //   const isLinux = os.platform() === "linux";  
-
-  dirpath = path.join(os.homedir(), "Desktop");
-
-  if (dirpath === undefined) {
-    console.log("Please enter a valid directory path with quotes");
-    return;
-  } else {
-    let doesExist = fs.existsSync(dirpath);
-
-    if (doesExist === true) {
-      destPath = path.join(dirpath, arg);
-
-      if (fs.existsSync(destPath) === false) {
-        (async () => {
-          await fs.mkdirSync(destPath);
-          await fs.mkdirSync(path.join(destPath, "airtel"));
-          await fs.mkdirSync(path.join(destPath, "jio"));
-          await fs.mkdirSync(path.join(destPath, "bsnl"));
-          await fs.mkdirSync(path.join(destPath, "voda"));
-          event.returnValue=true;
-        })().catch(console.error);
-      } else {
-        event.returnValue = false;
-        console.log("This folder already exists");
-      } 
-    } else {
-      console.log("Please enter a valid path");
-    }
-  }
-});
-
-ipcMain.once("get_folders", (e, arg) => {
-  fs.readdir(desktop_path, (err, files) => {
-    all_folders = [...files];
-    let isFolder;
-    all_folders.forEach((folder) => {
-      isFolder = folder.split("_");
-
-      if (isFolder[isFolder.length - 1] === "IPDR") {
-        get_specific_folders.push(folder);
-      }
-    });
-
-    console.log(get_specific_folders.length);
-    e.returnValue = get_specific_folders;
-  });
-});
 
 function createWindow() {
   // Create the browser window.
@@ -67,7 +16,8 @@ function createWindow() {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false,
+      // contextIsolation: false,
+      preload: path.join(app.getAppPath(), "preload.js"),
     },
   });
 
@@ -103,3 +53,51 @@ app.on("activate", () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+ipcMain.on("get_folders", (e, arg) => {
+  fs.readdir(desktop_path, (err, files) => {
+    all_folders = [...files];
+    let isFolder;
+    all_folders.forEach((folder) => {
+      isFolder = folder.split("_");
+
+      if (isFolder[isFolder.length - 1] === "IPDR") {
+        get_specific_folders.push(folder);
+      }
+    });
+
+    e.returnValue = get_specific_folders;
+  });
+});
+
+ipcMain.on("chokidar", (event, arg) => {
+  const watcher = chokidar.watch(
+    ["C:\\Users\\Yuvi\\Desktop\\ddd_IPDR\\airtel\\"],
+    {
+      // ignored: /(^|[\/\\])\../, // ignore dotfiles
+      persistent: true,
+    }
+  );
+  watcher.on("ready", (path) => {
+    console.log(path, "Ready to watch");
+  });
+
+  watcher.on("add", (path) => {
+    console.log(path, "path............");
+  });
+});
+
+ipcMain.on("open_dialog_box", (e, arg) => {
+  dialog
+    .showOpenDialog({
+      title: "Select Files",
+      buttonLabel: "Select",
+      properties: ["openFile", "multiSelections"],
+    })
+    .then((files) => {
+      if (files?.filePaths) e.returnValue = files;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
