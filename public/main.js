@@ -5,10 +5,6 @@ const os = require("os");
 const chokidar = require("chokidar");
 require("../src/electron/index");
 
-let desktop_path = path.join(os.homedir(), "Desktop");
-let all_folders = [];
-let get_specific_folders = [];
-
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
@@ -52,22 +48,6 @@ app.on("activate", () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-
-ipcMain.on("get_folders", (e, arg) => {
-  fs.readdir(desktop_path, (err, files) => {
-    all_folders = [...files];
-    let isFolder;
-    all_folders.forEach((folder) => {
-      isFolder = folder.split("_");
-
-      if (isFolder[isFolder.length - 1] === "IPDR") {
-        get_specific_folders.push(folder);
-      }
-    });
-
-    e.returnValue = get_specific_folders;
-  });
-});
 
 ipcMain.on("chokidar", (event, arg) => {
   const watcher = chokidar.watch(

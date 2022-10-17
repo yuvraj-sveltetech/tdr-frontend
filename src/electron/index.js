@@ -1,4 +1,4 @@
-const { create_folder } = require("./create_folder");
+const { create_folder } = require("./folder");
 
 module.exports = {
   create_folder,

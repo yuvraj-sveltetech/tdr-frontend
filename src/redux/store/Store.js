@@ -1,10 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import AddSliceReducer from "../slice/CreateSlice"
-import { composeWithDevTools } from 'redux-devtools-extension';
+import folder_slice from "../slices/FolderSlice";
 
 export const store = configureStore({
- reducer:{
-  showFile:AddSliceReducer.reducer
- }
-},composeWithDevTools()
-)
+  reducer: {
+    addFolder: folder_slice.reducer,
+  },
+});

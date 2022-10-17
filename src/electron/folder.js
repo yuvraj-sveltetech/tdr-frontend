@@ -3,6 +3,11 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 
+
+let desktop_path = path.join(os.homedir(), "Desktop");
+let all_folders = [];
+let get_specific_folders = [];
+
 module.exports = {
   create_folder: ipcMain.on("create-folder", (event, arg) => {
     let destPath, dirpath;
@@ -39,4 +44,20 @@ module.exports = {
       }
     }
   }),
+
+  get_folders: ipcMain.on("get_folders", (e, arg) => {
+    fs.readdir(desktop_path, (err, files) => {
+      all_folders = [...files];
+      let isFolder;
+      all_folders.forEach((folder) => {
+        isFolder = folder.split("_");
+  
+        if (isFolder[isFolder.length - 1] === "IPDR") {
+          get_specific_folders.push(folder);
+        }
+      });
+  
+      e.returnValue = get_specific_folders;
+    });
+  });
 };
