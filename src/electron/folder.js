@@ -52,7 +52,7 @@ module.exports = {
         isFolder = folder.split("_");
         console.log(isFolder[isFolder.length - 1]);
         if (
-          isFolder[isFolder.length - 1] === "IPDR" ||
+          (isFolder[isFolder.length - 1]) === "IPDR" ||
           isFolder[isFolder.length - 1] === "CDR"
         ) {
           let response = get_specific_folders.includes(folder);
