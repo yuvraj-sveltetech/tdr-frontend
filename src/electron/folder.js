@@ -52,7 +52,7 @@ module.exports = {
       all_folders.forEach((folder) => {
         isFolder = folder.split("_");
         if (
-          isFolder[isFolder.length - 1] === "IPDR" ||
+          (isFolder[isFolder.length - 1]) === "IPDR" ||
           isFolder[isFolder.length - 1] === "CDR"
         ) {
           let response = get_specific_folders.includes(folder);
