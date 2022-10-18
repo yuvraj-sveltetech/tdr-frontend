@@ -46,12 +46,12 @@ const CreateFolder = ({ category }) => {
             return (
               <div
                 className="folder d-flex flex-column"
-                key={`CreatedFolder${folder}`}
+                key={`CreatedFolder${folder?.folder_name}`}
               >
                 <li>
                   <FcFolder size="70" />
                 </li>
-                <strong>{folder}</strong>
+                <strong>{folder?.folder_name}</strong>
               </div>
             );
           })}

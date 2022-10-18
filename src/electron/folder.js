@@ -3,10 +3,6 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 
-let desktop_path = path.join(os.homedir(), "Desktop");
-let all_folders = [];
-let get_specific_folders = [];
-
 module.exports = {
   create_folder: ipcMain.on("create-folder", (event, arg) => {
     let destPath, dirpath;
@@ -45,22 +41,26 @@ module.exports = {
   }),
 
   get_folders: ipcMain.on("get-folders", (e, arg) => {
-    fs.readdir(desktop_path, (err, files) => {
-      all_folders = [...files];
-      let isFolder;
+    fs.readdir(path.join(os.homedir(), "Desktop"), (err, folders) => {
+      let created_folder = [];
+      const map = new Map();
+      for (const folderName of folders) {
+        if (!map.has(folderName)) {
+          map.set(folderName, true); // set any value to Map
+          let isFolder = folderName.split("_");
 
-      all_folders.forEach((folder) => {
-        isFolder = folder.split("_");
-        if (
-          (isFolder[isFolder.length - 1]) === "IPDR" ||
-          isFolder[isFolder.length - 1] === "CDR"
-        ) {
-          let response = get_specific_folders.includes(folder);
-          if (!response) get_specific_folders.push(folder);
+          if (
+            isFolder[isFolder.length - 1] === "IPDR" ||
+            isFolder[isFolder.length - 1] === "CDR"
+          )
+            created_folder.push({
+              folder_name: folderName,
+              folder_path: path.join(os.homedir(), folderName),
+            });
         }
-      });
+      }
 
-      e.returnValue = get_specific_folders;
+      e.returnValue = created_folder;
     });
   }),
 };
