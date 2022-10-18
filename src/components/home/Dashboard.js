@@ -4,12 +4,9 @@ import { Header } from "./Header";
 import tower from "../../assets/images/tower-icon.png";
 import CreateFolder from "./CreateFolder";
 // const ipcRenderer = window.require("electron").ipcRenderer;
-// const ipcRenderer =
-//   (window.require && window.require("electron").ipcRenderer) || null;
-// const ipcRenderer = window.ipcRenderer;
+
 const Dashboard = () => {
   const [category, setCategory] = useState("IPDR");
-  // const data = useSelector((state) => state);
 
   // useEffect(() => {
   //   console.log(ipcRenderer.sendSync("chokidar"));

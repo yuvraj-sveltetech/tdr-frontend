@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import folder_slice from "../slices/FolderSlice";
+import thunk from "redux-thunk";
+import folderReducer from "../slices/FolderSlice";
 
 export const store = configureStore({
   reducer: {
-    addFolder: folder_slice.reducer,
+    folder: folderReducer,
   },
+  middleware: [thunk],
 });

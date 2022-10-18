@@ -44,13 +44,13 @@ module.exports = {
     }
   }),
 
-  get_folders: ipcMain.on("get_folders", (e, arg) => {
+  get_folders: ipcMain.on("get-folders", (e, arg) => {
     fs.readdir(desktop_path, (err, files) => {
       all_folders = [...files];
       let isFolder;
+
       all_folders.forEach((folder) => {
         isFolder = folder.split("_");
-        console.log(isFolder[isFolder.length - 1]);
         if (
           isFolder[isFolder.length - 1] === "IPDR" ||
           isFolder[isFolder.length - 1] === "CDR"

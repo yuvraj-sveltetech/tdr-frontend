@@ -1,22 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdCreateNewFolder } from "react-icons/md";
 import { FcFolder } from "react-icons/fc";
 import Modal from "../utils/Modal";
-// const ipcRenderer = window.require("electron").ipcRenderer;
+import { useSelector, useDispatch } from "react-redux";
+import { folder } from "../../redux/slices/FolderSlice";
+const ipcRenderer = window.require("electron").ipcRenderer;
 
 const CreateFolder = ({ category }) => {
   const [modalType, setModalType] = useState("");
+  const dispatch = useDispatch();
+  const folders = useSelector((state) => state.folder.created_folders);
+
+  useEffect(() => {
+    dispatch(folder(ipcRenderer?.sendSync("get-folders")));
+  }, []);
 
   const setModal = () => {
     setModalType("Create Folder");
   };
 
-  const openDialogBox = () => {
-    // let file = ipcRenderer.sendSync("open_dialog_box");
-    // if (file) {
-    //   console.log(file);
-    // }
-  };
+  // const openDialogBox = () => {
+  //   let file = ipcRenderer.sendSync("open_dialog_box");
+  //   if (file) {
+  //     console.log(file);
+  //   }x
+  // };
 
   return (
     <div className="create-folder">
@@ -33,18 +41,23 @@ const CreateFolder = ({ category }) => {
         </button>
       </div>
       <div className="all-folders">
-        <FcFolder size="70" onClick={openDialogBox} />
-        <FcFolder size="70" />
-        <FcFolder size="70" />
-        <FcFolder size="70" />
-        <FcFolder size="70" />
-        <FcFolder size="70" />
-        <FcFolder size="70" />
-        <FcFolder size="70" />
-        <FcFolder size="70" />
-        <FcFolder size="70" />
-        <FcFolder size="70" />
-        <FcFolder size="70" />
+        <ul className="d-flex">
+          {folders?.map((folder) => {
+            return (
+              <div
+                className="folder d-flex flex-column"
+                key={`CreatedFolder${folder}`}
+              >
+                <li>
+                  <FcFolder size="70" />
+                </li>
+                <strong>{folder}</strong>
+              </div>
+            );
+          })}
+        </ul>
+
+        {/* <FcFolder size="70" onClick={openDialogBox} /> */}
       </div>
       <Modal modalType={modalType} category={category} />
     </div>
