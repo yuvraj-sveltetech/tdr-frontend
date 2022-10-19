@@ -45,13 +45,13 @@ const CreateFolder = ({ category }) => {
           {folders?.map((folder) => {
             return (
               <div
-                className="folder d-flex flex-column"
+                className="folder d-flex flex-column justify-content-start me-4"
                 key={`CreatedFolder${folder?.folder_name}`}
               >
                 <li>
                   <FcFolder size="70" />
                 </li>
-                <strong>{folder?.folder_name}</strong>
+                <p>{folder?.folder_name}</p>
               </div>
             );
           })}

@@ -210,3 +210,14 @@ nav ul li a {
 .all-folders {
   height: 90%;
 }
+.all-folders .folder {
+  width: 6rem;
+}
+.all-folders ul li {
+  list-style: none;
+  cursor: pointer;
+}
+.all-folders p {
+  word-break: break-all;
+  cursor: pointer;
+}
