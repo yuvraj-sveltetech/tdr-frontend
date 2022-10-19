@@ -4,7 +4,6 @@ import { FcFolder } from "react-icons/fc";
 import Modal from "../utils/Modal";
 import { useSelector, useDispatch } from "react-redux";
 import { folder } from "../../redux/slices/FolderSlice";
-const ipcRenderer = window.require("electron").ipcRenderer;
 
 const CreateFolder = ({ category }) => {
   const [modalType, setModalType] = useState("");
@@ -12,19 +11,17 @@ const CreateFolder = ({ category }) => {
   const folders = useSelector((state) => state.folder.created_folders);
 
   useEffect(() => {
-    dispatch(folder(ipcRenderer?.sendSync("get-folders")));
+    getFolders();
   }, []);
+
+  const getFolders = async () => {
+    let res = await window.to_electron.get_folders("get_folders");
+    if (res) dispatch(folder(res));
+  };
 
   const setModal = () => {
     setModalType("Create Folder");
   };
-
-  // const openDialogBox = () => {
-  //   let file = ipcRenderer.sendSync("open_dialog_box");
-  //   if (file) {
-  //     console.log(file);
-  //   }x
-  // };
 
   return (
     <div className="create-folder">
@@ -56,8 +53,6 @@ const CreateFolder = ({ category }) => {
             );
           })}
         </ul>
-
-        {/* <FcFolder size="70" onClick={openDialogBox} /> */}
       </div>
       <Modal modalType={modalType} category={category} />
     </div>

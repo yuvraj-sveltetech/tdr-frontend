@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { folder } from "../../redux/slices/FolderSlice";
-const ipcRenderer = window.require("electron").ipcRenderer;
 
 const Modal = ({ modalType, category }) => {
   const [buttonName, setButtonName] = useState("");
@@ -20,18 +19,25 @@ const Modal = ({ modalType, category }) => {
     setFolderName(e.target.value);
   };
 
-  const create_folder = () => {
-    let message_recived = ipcRenderer?.sendSync(
-      "create-folder",
+  const create_folder = async () => {
+    let res = await window.to_electron.create_folder(
+      "create_folder",
       folderName + "_" + category
     );
-    setFolderName("");
-    if (message_recived) {
+
+    if (res) {
       toast.success("Folder Created");
-      dispatch(folder(ipcRenderer?.sendSync("get-folders")));
-    } else if (message_recived === false)
+      getFolders();
+    } else if (!res) {
       toast.error("This folder already exists");
-    else toast.notify("Please enter a valid path");
+    } else toast.notify("Please enter a valid path");
+
+    setFolderName("");
+  };
+
+  const getFolders = async () => {
+    let res = await window.to_electron.get_folders("get_folders");
+    if (res) dispatch(folder(res));
   };
 
   const conditionalModalContent = () => {

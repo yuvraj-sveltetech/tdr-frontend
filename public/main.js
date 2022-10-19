@@ -1,7 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
-const fs = require("fs");
 const path = require("path");
-const os = require("os");
 const chokidar = require("chokidar");
 require("../src/electron/index");
 
@@ -11,11 +9,12 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: true,
     },
   });
-
+  // ipcMain.handle("ping", () => "pong");
   //load the index.html from a url
   win.loadURL("http://localhost:3000");
 
