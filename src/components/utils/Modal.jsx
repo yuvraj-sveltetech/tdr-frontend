@@ -88,6 +88,7 @@ const Modal = ({ modalType, category }) => {
               type="button"
               className="btn btn-primary"
               data-bs-dismiss="modal"
+              disabled={folderName ? false : true}
               onClick={create_folder}
             >
               {buttonName}
