@@ -3,7 +3,7 @@ import { MdCreateNewFolder } from "react-icons/md";
 import { FcFolder } from "react-icons/fc";
 import Modal from "../utils/Modal";
 import { useSelector, useDispatch } from "react-redux";
-import { folder } from "../../redux/slices/FolderSlice";
+import { folder, sub_folder } from "../../redux/slices/FolderSlice";
 
 const CreateFolder = ({ category }) => {
   const [modalType, setModalType] = useState("");
@@ -23,10 +23,25 @@ const CreateFolder = ({ category }) => {
     setModalType("Create Folder");
   };
 
+  const getSubfolder = async (folder) => {
+    let res = await window.to_electron.get_subfolders(
+      "get_subfolders",
+      folder.folder_path
+    );
+
+    if (res) {
+      let data = {
+        subfolders: res,
+        parent_path: folder.folder_name,
+      };
+      dispatch(sub_folder(data));
+    }
+  };
+
   return (
     <div className="create-folder">
       <div className="folder">
-        <strong>{category === "IPDR" ? "I.P.D.R" : "C.D.R"}</strong>
+        <h5>{category === "IPDR" ? "I.P.D.R" : "C.D.R"}</h5>
         <button
           className="add-folder d-flex align-items-center"
           data-bs-toggle="modal"
@@ -45,7 +60,7 @@ const CreateFolder = ({ category }) => {
                 className="folder d-flex flex-column justify-content-start me-4"
                 key={`CreatedFolder${folder?.folder_name}`}
               >
-                <li>
+                <li onClick={(e) => getSubfolder(folder)}>
                   <FcFolder size="70" />
                 </li>
                 <p>{folder?.folder_name}</p>
@@ -59,4 +74,4 @@ const CreateFolder = ({ category }) => {
   );
 };
 
-export default CreateFolder;
+export { CreateFolder };

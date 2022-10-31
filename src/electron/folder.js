@@ -3,11 +3,11 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 
+let dirpath = path.join(os.homedir(), "Desktop");
+
 module.exports = {
   create_folder: ipcMain.handle("create_folder", async (e, arg1, arg2) => {
-    let destPath, dirpath;
-
-    dirpath = path.join(os.homedir(), "Desktop");
+    let destPath;
 
     if (dirpath === undefined) {
       console.log("Please enter a valid directory path with quotes");
@@ -34,7 +34,7 @@ module.exports = {
   }),
 
   get_folders: ipcMain.on("get_folders", (e, arg) => {
-    fs.readdir(path.join(os.homedir(), "Desktop"), (err, folders) => {
+    fs.readdir(path.join(dirpath), (err, folders) => {
       let created_folder = [];
       const map = new Map();
 
@@ -49,12 +49,27 @@ module.exports = {
           )
             created_folder.push({
               folder_name: folderName,
-              folder_path: path.join(os.homedir(), folderName),
+              folder_path: path.join(dirpath, folderName),
             });
         }
       }
-
       e.returnValue = created_folder;
     });
+  }),
+
+  get_subfolders: ipcMain.on("get_subfolders", (e, arg1, folder_path) => {
+    fs.readdir(folder_path, (err, folders) => {
+      e.returnValue = folders;
+    });
+  }),
+
+  get_files: ipcMain.on("get_files", (e, arg1, arg2) => {
+    fs.readdir(
+      path.join(dirpath, arg2?.parent_folder_name, arg2?.subfolder_name),
+      (err, files) => {
+        console.log(files);
+        e.returnValue = files;
+      }
+    );
   }),
 };
