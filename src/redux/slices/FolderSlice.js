@@ -12,6 +12,7 @@ export const folderSlice = createSlice({
       },
     },
     all_files: [],
+    getPath:[]
   },
   reducers: {
     folder: (state, action) => {
@@ -33,8 +34,11 @@ export const folderSlice = createSlice({
     all_files: (state, action) => {
       return { ...state, all_files: action.payload };
     },
+    getPath: (state, action) => {
+      return { ...state, getPath: action.payload };
+    },
   },
 });
 
-export const { folder, sub_folder, all_files } = folderSlice.actions;
+export const { folder, sub_folder, all_files, getPath } = folderSlice.actions;
 export default folderSlice.reducer;
