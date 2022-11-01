@@ -36,7 +36,11 @@ const DirFiles = () => {
   // };
 
   const selectFile = (e) => {
-    dispatch(selected_files(e.target.files));
+    console.log(e.target.files);
+    let data = Object.values(e.target.files).map((file) => {
+      return Object.assign({}, [file.name, file.path, file]);
+    });
+    dispatch(selected_files(data));
   };
 
   return (
