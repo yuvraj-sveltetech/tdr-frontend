@@ -8,6 +8,11 @@ const SubFolder = () => {
   const sub_folders = useSelector((state) => state.folder.sub_folders);
 
   const getFiles = async (subfolder_name) => {
+    // let res = await window.to_electron.open_dialog_box("open_dialog_box");
+    // if (res) {
+    //   console.log(res);
+    // }
+
     let data = {
       parent_folder_name: sub_folders?.parent_folder,
       subfolder_name: subfolder_name,

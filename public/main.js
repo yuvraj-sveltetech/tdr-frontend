@@ -64,18 +64,3 @@ ipcMain.on("chokidar", (event, arg) => {
     console.log(path, "path............");
   });
 });
-
-ipcMain.on("open_dialog_box", (e, arg) => {
-  dialog
-    .showOpenDialog({
-      title: "Select Files",
-      buttonLabel: "Select",
-      properties: ["openFile", "multiSelections"],
-    })
-    .then((files) => {
-      if (files?.filePaths) e.returnValue = files;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
