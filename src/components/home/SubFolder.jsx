@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { FcFolder } from "react-icons/fc";
+import { MdCreateNewFolder, MdFolder } from "react-icons/md";
 import { all_files } from "../../redux/slices/FolderSlice";
 
 const SubFolder = () => {
@@ -22,17 +22,17 @@ const SubFolder = () => {
     <div className="sub_folder d-flex flex-column align-items-start">
       <h5>{sub_folders?.parent_folder}</h5>
       <div className="all-folders">
-        <ul className="d-flex">
+        <ul className="d-flex flex-wrap justify-content-between ">
           {sub_folders?.folders?.name?.map((folder) => {
             return (
               <div
-                className="folder d-flex flex-column justify-content-start me-4"
+                className="folder d-flex justify-content-start align-items-center mb-3 subfolder-box"
                 key={`SubFolder${folder}`}
               >
                 <li onClick={(e) => getFiles(folder)}>
-                  <FcFolder size="70" />
+                  <MdFolder size="32" className="folderIcon" />
                 </li>
-                <p>{folder}</p>
+                <p style={{margin:"auto 0", padding: "0 0.4rem"}}>{folder}</p>
               </div>
             );
           })}

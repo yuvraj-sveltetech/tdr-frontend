@@ -33,6 +33,7 @@ const Dashboard = () => {
               <button
                 className="btn btn-light"
                 onClick={() => changeCategory("IPDR")}
+                style={{backgroundColor:"#e5e9f2"}}
               >
                 I.P.D.R
               </button>

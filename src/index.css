@@ -156,7 +156,7 @@ nav ul li a {
 .create-folder,
 .sub_folder,
 .all_files {
-  background: darkturquoise;
+  background: rgb(245, 246, 250);
   padding: 1.3rem;
   margin: 0.5rem;
   text-align: center;
@@ -193,10 +193,10 @@ nav ul li a {
 }
 
 .create-folder {
-  height: 42vh;
+  height: 50%;
 }
 .sub_folder {
-  height: 23vh;
+  height: 50%;
 }
 
 .folder {
@@ -213,10 +213,13 @@ nav ul li a {
   padding: 0.4rem;
 }
 .all-folders {
+  width: 100%;
   height: 90%;
 }
 .all-folders .folder {
-  width: 6rem;
+  width: 13rem;
+  background: white;
+  border: 1px solid #dbdfea;
 }
 .all-folders ul li {
   list-style: none;
@@ -230,6 +233,6 @@ nav ul li a {
 }
 
 .all_files {
-  height: 50vh;
-  background-color: lightcyan;
+  height: 50%;
+  background-color: rgb(245, 246, 250);
 }

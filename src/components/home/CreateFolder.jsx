@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { MdCreateNewFolder } from "react-icons/md";
-import { FcFolder } from "react-icons/fc";
+import { MdCreateNewFolder,MdFolder } from "react-icons/md";
+import "./CreateFolder.css";
+// import { MdFolder } from "react-icons/md";
 import Modal from "../utils/Modal";
 import { useSelector, useDispatch } from "react-redux";
 import { folder, sub_folder } from "../../redux/slices/FolderSlice";
@@ -40,10 +41,10 @@ const CreateFolder = ({ category }) => {
 
   return (
     <div className="create-folder">
-      <div className="folder">
+      <div className="folder bb">
         <h5>{category === "IPDR" ? "I.P.D.R" : "C.D.R"}</h5>
         <button
-          className="add-folder d-flex align-items-center"
+          className="add-folder d-flex align-items-center btn-color"
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
           onClick={setModal}
@@ -53,15 +54,15 @@ const CreateFolder = ({ category }) => {
         </button>
       </div>
       <div className="all-folders">
-        <ul className="d-flex">
+        <ul className="d-flex flex-wrap mt-3">
           {folders?.map((folder) => {
             return (
               <div
-                className="folder d-flex flex-column justify-content-start me-4"
+                className="folder rr d-flex flex-column justify-content-center m-3"
                 key={`CreatedFolder${folder?.folder_name}`}
               >
                 <li onClick={(e) => getSubfolder(folder)}>
-                  <FcFolder size="70" />
+                  <MdFolder size="70" className="folderIcon" />
                 </li>
                 <p>{folder?.folder_name}</p>
               </div>
