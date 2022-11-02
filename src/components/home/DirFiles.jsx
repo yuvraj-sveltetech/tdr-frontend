@@ -43,7 +43,15 @@ const DirFiles = () => {
   const sendFileToBackend = async () => {
     let res = await window.to_electron.send_files("send_files", selectedFiles);
     console.log(res, "file_Response");
-  };
+
+
+  // const selectFile = (e) => {
+  //   console.log(e.target.files);
+  //   let data = Object.values(e.target.files).map((file) => {
+  //     return Object.assign({}, [file.name, file.path, file]);
+  //   });
+  //   dispatch(selected_files(data));
+  // };
 
   return (
     <div className="all_files">
