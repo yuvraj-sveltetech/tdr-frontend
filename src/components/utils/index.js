@@ -6,3 +6,4 @@ export { CreateFolder } from "../home/CreateFolder";
 export { PageNotFound } from "../home/PageNotFound";
 export { SubFolder } from "../home/SubFolder";
 export { DirFiles } from "../home/DirFiles";
+export { AddFolder } from "../home/AddFolder";

@@ -21,25 +21,24 @@ const DirFiles = () => {
   };
 
   return (
-    <div className="all_files">
-      <ul className="d-flex list-style justify-content-between flex-wrap">
+    <div className="all_files container">
+      <div className="row">
         {files?.all_files?.map((file) => {
           return (
-            <div
-              key={`all_files${file.file_name}asa`}
-              className="subfolder-box box d-flex justify-content-between align-items-center mb-3"
-            >
-              <BsFillFileEarmarkTextFill />
-              <li className="ellipsis">{file.file_name}</li>
-              <input
-                type="checkbox"
-                value={file}
-                onChange={(e) => selectFile(file)}
-              />
+            <div className="col-md-3" key={`all_files${file.file_name}`}>
+              <div className="subfolder-box box d-flex justify-content-between align-items-center mb-3">
+                <BsFillFileEarmarkTextFill />
+                <p className="ellipsis">{file.file_name}</p>
+                <input
+                  type="checkbox"
+                  value={file}
+                  onChange={(e) => selectFile(file)}
+                />
+              </div>
             </div>
           );
         })}
-      </ul>
+      </div>
       <button onClick={sendFileToBackend}>Send</button>
     </div>
   );

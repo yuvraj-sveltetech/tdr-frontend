@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { MdCreateNewFolder,MdFolder } from "react-icons/md";
 import "./CreateFolder.css";
-// import { MdFolder } from "react-icons/md";
+import { MdFolder } from "react-icons/md";
 import Modal from "../utils/Modal";
 import { useSelector, useDispatch } from "react-redux";
 import { folder, sub_folder } from "../../redux/slices/FolderSlice";
+import { AddFolder } from "../utils/index";
 
 const CreateFolder = ({ category }) => {
   const [modalType, setModalType] = useState("");
@@ -41,18 +41,7 @@ const CreateFolder = ({ category }) => {
 
   return (
     <div className="create-folder">
-      <div className="folder bb">
-        <h5>{category === "IPDR" ? "I.P.D.R" : "C.D.R"}</h5>
-        <button
-          className="add-folder d-flex align-items-center btn-color"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-          onClick={setModal}
-        >
-          <MdCreateNewFolder className="me-1" size="23" />
-          <h6 className="m-0">Create Folder</h6>
-        </button>
-      </div>
+      <AddFolder setModal={setModal} />
       <div className="all-folders">
         <ul className="d-flex flex-wrap mt-3">
           {folders?.map((folder) => {
