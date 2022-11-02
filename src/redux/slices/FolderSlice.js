@@ -37,7 +37,13 @@ export const folderSlice = createSlice({
     selected_files: (state, action) => {
       return {
         ...state,
-        selected_files: [...state.selected_files, ...action.payload],
+        selected_files: [
+          ...state.selected_files,
+          {
+            file_name: action.payload.file_name,
+            file_path: action.payload.file_path,
+          },
+        ],
       };
     },
   },

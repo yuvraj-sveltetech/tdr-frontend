@@ -18,33 +18,43 @@ const DirFiles = () => {
     // navigate("/dashboard");
     // }
     console.log(selectedFiles);
-    if (selectedFiles.length > 0) {
-      let formData = new FormData();
-      selectedFiles.forEach((file) => formData.append("file", file));
-      // selectedFiles.forEach((file) => {
-      //   console.log(file);
-      // });
+    // if (selectedFiles.length > 0) {
+    //   let formData = new FormData();
+    //   selectedFiles.forEach((file) => formData.append("file", file));
+    //   // selectedFiles.forEach((file) => {
+    //   //   console.log(file);
+    //   // });
 
-      apiCall("post", "tdr/getSubFolder/", formData);
-    }
+    //   apiCall("post", "tdr/getSubFolder/", formData);
+    // }
   }, [selectedFiles]);
 
-  // const send = (path) => {
-  //   // let formData = new FormData();
-  //   // // formData.append("file", fs.createReadStream(path));
-  //   // apiCall("post", URL.LOGIN, formData);
+  const send = async (file) => {
+    // let formData = new FormData();
+    // formData.append("file", fs.createReadStream(path));
+    // apiCall("post", URL.LOGIN, formData);
+    dispatch(selected_files(file));
+  };
+
+  // const selectFile = (e) => {
+  //   dispatch(selected_files(e.target.files));
   // };
 
-  const selectFile = (e) => {
-    dispatch(selected_files(e.target.files));
+  const sendFileToBackend = async () => {
+    let res = await window.to_electron.send_files("send_files", selectedFiles);
+    console.log(res, "file_Response");
   };
 
   return (
     <div className="all_files">
       {all_files?.map((file) => {
-        return <li>{file.file_name}</li>;
+        return (
+          <>
+            <li onClick={(e) => send(file)}>{file.file_name}</li>
+            <button onClick={sendFileToBackend}>Send</button>
+          </>
+        );
       })}
-      <input type="file" multiple onChange={(e) => selectFile(e)} />
     </div>
   );
 };

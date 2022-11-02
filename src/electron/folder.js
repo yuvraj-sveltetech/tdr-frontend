@@ -1,13 +1,11 @@
 const { ipcMain } = require("electron");
 const path = require("path");
-const fs = require("fs");
 const os = require("os");
-const axios = require("axios");
-const FormData = require("form-data");
+const request = require("request");
+var fs = require("fs");
 const { json } = require("react-router-dom");
 
 let dirpath = path.join(os.homedir(), "Desktop");
-
 
 module.exports = {
   create_folder: ipcMain.handle("create_folder", async (e, arg1, arg2) => {
@@ -96,58 +94,31 @@ module.exports = {
 
   send_files: ipcMain.on("send_files", async (e, arg1, arg2) => {
     console.log(arg2, "ll");
+    var options = {
+      method: "POST",
+      url: "http://10.5.49.205:8000/tdr/getSubFolder/",
+      headers: {},
+      formData: {
+        file: arg2.map((file) => {
+          return {
+            value: fs.createReadStream(file.file_path),
+            options: {
+              filename: file.file_name,
+              contentType: null,
+            },
+          };
+        }),
 
-
-
-
-    
-    // try {
-    //   const file = {
-    //     // lastModifiedDate: "",
-    //     // lastModified: "",
-    //     name: JSON.stringify("Postpaid_Base_1June2022_Lot1"),
-    //     // size: "",
-    //     type: JSON.stringify("accdb"),
-    //     url: JSON.stringify(arg2.file_path), // required value
-    //   };
-    //   console.log(file, "ll");
-
-    //   const formData = new FormData();
-    //   formData.append("field_name", file);
-    //   axios.post("http://10.5.49.205:8000/tdr/getSubFolder/", formData);
-    //   // const res = await axios({
-    //   //   method: "POST",
-    //   //   url: "http://10.5.49.205:8000/tdr/getSubFolder/",
-    //   //   data: formData,
-    //   //   headers: {
-    //   //     "Content-Type": "multipart/form-data",
-    //   //   },
-    //   //   // maxContentLength: Infinity,
-    //   //   // maxBodyLength: Infinity,
-    //   //   JSON: true,
-    //   // });
-    //   // console.log(res);
-    // } catch (err) {
-    //   console.log(err);
-    // }
-
-    //   let formData = new FormData();
-    //   formData.append("file", fs.createReadStream(arg2));
-
-    //   try {
-    //     const res = await axios({
-    //       method: "post",
-    //       url: "http://10.5.49.205:8000/tdr/getSubFolder/",
-    //       data: formData,
-    //       headers: {
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //       maxContentLength: Infinity,
-    //       maxBodyLength: Infinity,
-    //     });
-    //     console.log(res);
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
+        // value: fs.createReadStream(arg2),
+        // options: {
+        //   filename: "cellid_404-02-2213-16722_14.csv",
+        //   contentType: null,
+        // },
+      },
+    };
+    request(options, function (error, response) {
+      if (error) throw new Error(error);
+      console.log(response.body);
+    });
   }),
 };
