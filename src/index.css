@@ -217,7 +217,7 @@ nav ul li a {
   height: 90%;
 }
 .all-folders .folder {
-  width: 13rem;
+  /* width: 13rem; */
   background: white;
   border: 1px solid #dbdfea;
 }

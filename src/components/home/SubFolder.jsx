@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MdCreateNewFolder, MdFolder } from "react-icons/md";
+import { MdFolder } from "react-icons/md";
 import { all_files } from "../../redux/slices/FolderSlice";
 
 const SubFolder = () => {
@@ -21,22 +21,26 @@ const SubFolder = () => {
   return (
     <div className="sub_folder d-flex flex-column align-items-start">
       <h5>{sub_folders?.parent_folder}</h5>
-      <div className="all-folders">
-        <ul className="d-flex flex-wrap justify-content-between ">
+      <div className="all-folders container">
+        <div className="row list-unstyled">
           {sub_folders?.folders?.name?.map((folder) => {
             return (
-              <div
-                className="folder d-flex justify-content-start align-items-center mb-3 subfolder-box"
-                key={`SubFolder${folder}`}
-              >
-                <li onClick={(e) => getFiles(folder)}>
-                  <MdFolder size="32" className="folderIcon" />
-                </li>
-                <p style={{margin:"auto 0", padding: "0 0.4rem"}}>{folder}</p>
+              <div className="col-md-3">
+                <div
+                  className="folder d-flex justify-content-start align-items-center subfolder-box"
+                  key={`SubFolder${folder}`}
+                >
+                  <li onClick={(e) => getFiles(folder)}>
+                    <MdFolder size="32" className="folderIcon" />
+                  </li>
+                  <p style={{ margin: "auto 0", padding: "0 0.4rem" }}>
+                    {folder}
+                  </p>
+                </div>
               </div>
             );
           })}
-        </ul>
+        </div>
       </div>
     </div>
   );

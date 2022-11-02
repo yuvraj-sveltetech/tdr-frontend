@@ -40,12 +40,13 @@ const CreateFolder = ({ category }) => {
   };
 
   return (
-    <div className="create-folder">
+    <div className="create-folder container">
       <AddFolder setModal={setModal} />
-      <div className="all-folders">
-        <ul className="d-flex flex-wrap mt-3">
-          {folders?.map((folder) => {
-            return (
+      <div className="container">
+      <div className=" row list-unstyled">
+        {folders?.map((folder) => {
+          return (
+            <div className="col-md-3">
               <div
                 className="folder rr d-flex flex-column justify-content-center m-3"
                 key={`CreatedFolder${folder?.folder_name}`}
@@ -55,9 +56,10 @@ const CreateFolder = ({ category }) => {
                 </li>
                 <p>{folder?.folder_name}</p>
               </div>
-            );
-          })}
-        </ul>
+            </div>
+          );
+        })}
+      </div>
       </div>
       <Modal modalType={modalType} category={category} />
     </div>
