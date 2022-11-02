@@ -31,19 +31,28 @@ export const folderSlice = createSlice({
         },
       };
     },
+
     all_files: (state, action) => {
       return { ...state, all_files: action.payload };
     },
+
     selected_files: (state, action) => {
+      let file_name = "";
+
+      state.selected_files.forEach((file) => {
+        if (action.payload.file_name === file.file_name) {
+          file_name = action.payload.file_name;
+        }
+      });
+
       return {
         ...state,
-        selected_files: [
-          ...state.selected_files,
-          {
-            file_name: action.payload.file_name,
-            file_path: action.payload.file_path,
-          },
-        ],
+        selected_files:
+          state.selected_files.length !== 0 && file_name !== ""
+            ? state.selected_files.filter(
+                (file) => file.file_name !== action.payload.file_name
+              )
+            : [...state.selected_files, action.payload],
       };
     },
   },

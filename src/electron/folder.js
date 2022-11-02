@@ -93,7 +93,6 @@ module.exports = {
   }),
 
   send_files: ipcMain.on("send_files", async (e, arg1, arg2) => {
-    console.log(arg2, "ll");
     var options = {
       method: "POST",
       url: "http://10.5.49.205:8000/tdr/getSubFolder/",
@@ -108,17 +107,12 @@ module.exports = {
             },
           };
         }),
-
-        // value: fs.createReadStream(arg2),
-        // options: {
-        //   filename: "cellid_404-02-2213-16722_14.csv",
-        //   contentType: null,
-        // },
       },
     };
     request(options, function (error, response) {
       if (error) throw new Error(error);
       console.log(response.body);
+      e.returnValue = JSON.parse(response.body);
     });
   }),
 };
