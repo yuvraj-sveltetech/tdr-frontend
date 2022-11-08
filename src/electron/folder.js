@@ -3,9 +3,9 @@ const path = require("path");
 const os = require("os");
 const request = require("request");
 var fs = require("fs");
-const { json } = require("react-router-dom");
 
 let dirpath = path.join(os.homedir(), "Desktop");
+const baseUrl = process.env.REACT_APP_API_KEY;
 
 module.exports = {
   create_folder: ipcMain.handle("create_folder", async (e, arg1, arg2) => {
@@ -87,32 +87,44 @@ module.exports = {
           }
         });
         e.returnValue = all_files;
-        console.log(all_files);
+        // console.log(all_files);
       }
     );
   }),
 
-  send_files: ipcMain.on("send_files", async (e, arg1, arg2) => {
+  get_headers: ipcMain.on("get_headers", async (e, arg1, arg2) => {
     var options = {
       method: "POST",
-      url: "http://10.5.49.205:8000/tdr/getSubFolder/",
+      url: `http://10.5.50.37:8000/tdr/getSubFolder/`,
       headers: {},
       formData: {
-        file: arg2.map((file) => {
-          return {
-            value: fs.createReadStream(file.file_path),
-            options: {
-              filename: file.file_name,
-              contentType: null,
-            },
-          };
-        }),
+        file: {
+          value: fs.createReadStream(arg2[0].file_path),
+          options: {
+            filename: arg2[0].file_name,
+            contentType: null,
+          },
+          // file: arg2.map((file) => {
+          //   return {
+          //     value: fs.createReadStream(file.file_path),
+          //     options: {
+          //       filename: file.file_name,
+          //       contentType: null,
+          //     },
+          //   };
+          // }),
+        },
       },
     };
     request(options, function (error, response) {
-      if (error) throw new Error(error);
-      console.log(response.body);
-      e.returnValue = JSON.parse(response.body);
+      if (error) console.log(error);
+      //  /  throw new Error(error);
+
+      if (response?.statusCode === 200) {
+        // console.log(response.statusCode);
+        // console.log(typeof response?.body, "pp", response?.body.json());
+        // e.returnValue = JSON.parse(response?.body);
+      }
     });
   }),
 };

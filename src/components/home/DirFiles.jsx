@@ -2,7 +2,9 @@ import React from "react";
 import "./CreateFolder.css";
 import { useSelector, useDispatch } from "react-redux";
 import { selected_files } from "../../redux/slices/FolderSlice";
+import { all_headers } from "../../redux/slices/HeaderSlice";
 import { BsFillFileEarmarkTextFill } from "react-icons/bs";
+import { LargeModal } from "../utils/index";
 
 const DirFiles = () => {
   const files = useSelector((state) => state.folder);
@@ -11,12 +13,13 @@ const DirFiles = () => {
   const selectFile = async (file) => {
     dispatch(selected_files(file));
   };
-  console.log(files);
-  const sendFileToBackend = async () => {
-    let res = await window.to_electron.send_files(
-      "send_files",
+
+  const getHeaders = async () => {
+    let res = await window.to_electron.get_headers(
+      "get_headers",
       files.selected_files
     );
+    dispatch(all_headers(res?.data));
     console.log(res.data, "file_Response");
   };
 
@@ -39,7 +42,17 @@ const DirFiles = () => {
           );
         })}
       </div>
-      <button onClick={sendFileToBackend}>Send</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#large_modal"
+        onClick={getHeaders}
+      >
+        Select Headers
+      </button>
+
+      <LargeModal />
     </div>
   );
 };
