@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 export const folderSlice = createSlice({
   name: "Folder",
@@ -38,7 +38,6 @@ export const folderSlice = createSlice({
 
     selected_files: (state, action) => {
       let file_name = "";
-
       state.selected_files.forEach((file) => {
         if (action.payload.file_name === file.file_name) {
           file_name = action.payload.file_name;
@@ -55,9 +54,23 @@ export const folderSlice = createSlice({
             : [...state.selected_files, action.payload],
       };
     },
+
+    selected_all_files: (state, action) => {
+      return {
+        ...state,
+        selected_files: action?.payload?.isChecked
+          ? [...state.selected_files, ...action.payload?.arr]
+          : action.payload?.arr,
+      };
+    },
   },
 });
 
-export const { folder, sub_folder, all_files, selected_files } =
-  folderSlice.actions;
+export const {
+  folder,
+  sub_folder,
+  all_files,
+  selected_files,
+  selected_all_files,
+} = folderSlice.actions;
 export default folderSlice.reducer;

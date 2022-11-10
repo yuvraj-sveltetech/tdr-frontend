@@ -40,7 +40,7 @@ const CreateFolder = ({ category }) => {
   };
 
   return (
-    <div className="create-folder container">
+    <div className="create-folder">
       <AddFolder setModal={setModal} />
       <div className="container">
         <div className=" row list-unstyled">
