@@ -5,7 +5,6 @@ const request = require("request");
 var fs = require("fs");
 
 let dirpath = path.join(os.homedir(), "Desktop");
-const baseUrl = process.env.REACT_APP_API_KEY;
 
 module.exports = {
   create_folder: ipcMain.handle("create_folder", async (e, arg1, arg2) => {
@@ -87,7 +86,6 @@ module.exports = {
           }
         });
         e.returnValue = all_files;
-        // console.log(all_files);
       }
     );
   }),
@@ -95,7 +93,7 @@ module.exports = {
   get_headers: ipcMain.on("get_headers", async (e, arg1, arg2) => {
     var options = {
       method: "POST",
-      url: `http://10.5.50.37:8000/tdr/getSubFolder/`,
+      url: `http://10.5.51.99:8000/tdr/getSubFolder/`,
       headers: {},
       formData: {
         file: {
@@ -118,12 +116,9 @@ module.exports = {
     };
     request(options, function (error, response) {
       if (error) console.log(error);
-      //  /  throw new Error(error);
 
       if (response?.statusCode === 200) {
-        // console.log(response.statusCode);
-        // console.log(typeof response?.body, "pp", response?.body.json());
-        // e.returnValue = JSON.parse(response?.body);
+        e.returnValue = JSON.parse(response?.body);
       }
     });
   }),

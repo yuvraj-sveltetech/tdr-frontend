@@ -198,7 +198,9 @@ nav ul li a {
 .sub_folder {
   height: 50%;
 }
-
+.subfolder-box {
+  cursor: pointer;
+}
 .folder {
   display: flex;
   align-items: center;

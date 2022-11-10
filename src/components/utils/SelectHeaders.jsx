@@ -1,69 +1,49 @@
 import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { selected_headers } from "../../redux/slices/HeaderSlice";
 
 const SelectHeaders = () => {
   const headers = useSelector((state) => state.headers);
-  const [headersKey, setHedersKey] = useState([]);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (headers?.all_headers?.length > 0) {
-      setHedersKey(Object.keys(headers.all_headers[0]));
-      // setHedersValue(Object.values(headers.all_headers));
-      // setHead([headers.all_headers]);
-    }
-  }, [headers.all_headers]);
-
-  console.log(headers, "oo");
+  const headerSelected = (headerKey) => {
+    dispatch(selected_headers(headerKey));
+  };
 
   return (
     <div>
-      <table class="table">
+      <table className="table">
         <thead>
           <tr>
-            {/* <th scope="col">#</th> */}
-            {headersKey.map((head) => (
-              <th scope="col">{head}</th>
-            ))}
+            {headers?.all_headers.length > 0 &&
+              Object.keys(headers?.all_headers[0]).map((keys, i) => (
+                <th scope="col" key={`tableHead${i}`}>
+                  <label htmlFor={keys}>{keys}</label>
+                  <input
+                    type="checkbox"
+                    value={keys}
+                    id={keys}
+                    className="ms-1"
+                    onChange={(e) => headerSelected(keys)}
+                  />
+                </th>
+              ))}
           </tr>
         </thead>
         <tbody>
-          {/* {headers?.all_headers[0]?.map((dt, i) => {
-            return (
-              <tr key={`searchedData${i}`}>
-                {headersKey?.map((header, i) => (
-                  <td
-                    style={{
-                      backgroundColor: "lightgray",
-                      textAlign: "center",
-                    }}
-                    key={`searchedDataHeaders${i}`}
-                  >
-                    {dt[header]}
-                  </td>
-                ))}
-              </tr>
-            );
-          })} */}
-
-          {/* <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr> */}
+          {headers?.all_headers.length > 0 &&
+            Object.entries(headers?.all_headers[0]).map(
+              (header, i) =>
+                i < header[1]?.length && (
+                  <tr key={`tableRow${i}`}>
+                    {Object.values(headers?.all_headers[0]).map(
+                      (value, innerIndex) => (
+                        <td key={`tableData${innerIndex}`}>{value[i]}</td>
+                      )
+                    )}
+                  </tr>
+                )
+            )}
         </tbody>
       </table>
     </div>

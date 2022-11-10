@@ -20,7 +20,6 @@ const DirFiles = () => {
       files.selected_files
     );
     dispatch(all_headers(res?.data));
-    console.log(res.data, "file_Response");
   };
 
   return (
@@ -29,22 +28,26 @@ const DirFiles = () => {
         {files?.all_files?.map((file) => {
           return (
             <div className="col-md-3" key={`all_files${file.file_name}`}>
-              <div className="subfolder-box box d-flex justify-content-between align-items-center mb-3">
+              <label
+                className="subfolder-box box d-flex justify-content-between align-items-center mb-3"
+                htmlFor={file.file_name}
+              >
                 <BsFillFileEarmarkTextFill />
                 <p className="ellipsis">{file.file_name}</p>
                 <input
                   type="checkbox"
-                  value={file}
+                  id={file.file_name}
+                  value={file.file_name}
                   onChange={(e) => selectFile(file)}
                 />
-              </div>
+              </label>
             </div>
           );
         })}
       </div>
       <button
         type="button"
-        class="btn btn-primary"
+        className="btn btn-primary"
         data-bs-toggle="modal"
         data-bs-target="#large_modal"
         onClick={getHeaders}
