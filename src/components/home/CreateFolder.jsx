@@ -40,26 +40,26 @@ const CreateFolder = ({ category }) => {
   };
 
   return (
-    <div className="create-folder container">
+    <div className="create-folder">
       <AddFolder setModal={setModal} />
       <div className="container">
-      <div className=" row list-unstyled">
-        {folders?.map((folder) => {
-          return (
-            <div className="col-md-3">
-              <div
-                className="folder rr d-flex flex-column justify-content-center m-3"
-                key={`CreatedFolder${folder?.folder_name}`}
-              >
-                <li onClick={(e) => getSubfolder(folder)}>
-                  <MdFolder size="70" className="folderIcon" />
-                </li>
-                <p>{folder?.folder_name}</p>
+        <div className=" row list-unstyled">
+          {folders?.map((folder) => {
+            return (
+              <div className="col-md-3">
+                <div
+                  className="folder rr d-flex flex-column justify-content-center m-3"
+                  key={`CreatedFolder${folder?.folder_name}`}
+                >
+                  <li onClick={(e) => getSubfolder(folder)}>
+                    <MdFolder size="70" className="folderIcon" />
+                  </li>
+                  <p>{folder?.folder_name}</p>
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
       </div>
       <Modal modalType={modalType} category={category} />
     </div>

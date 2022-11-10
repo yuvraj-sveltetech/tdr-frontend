@@ -44,3 +44,10 @@
   text-overflow: ellipsis;
   margin: auto;
 }
+
+/* select all button css */
+.select-all {
+  border-radius: 5px;
+  border: 2px solid black;
+  justify-content: center;
+}

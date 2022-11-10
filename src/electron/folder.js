@@ -87,7 +87,6 @@ module.exports = {
           }
         });
         e.returnValue = all_files;
-        console.log(all_files);
       }
     );
   }),
@@ -111,7 +110,6 @@ module.exports = {
     };
     request(options, function (error, response) {
       if (error) throw new Error(error);
-      console.log(response.body);
       e.returnValue = JSON.parse(response.body);
     });
   }),
