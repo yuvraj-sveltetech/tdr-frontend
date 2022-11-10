@@ -1,0 +1,46 @@
+.rr {
+  height: 157.97px;
+  background: white;
+  border: 1px solid #dbdfea;
+}
+.folderIcon {
+  fill: rgb(108, 135, 254);
+  /* fill: rgb(70 177 167); */
+}
+
+.bb {
+  background-color: white;
+  padding: 5px 8px;
+}
+.bb h5 {
+  margin: auto 0.5rem !important;
+}
+.btn-color {
+  background-color: #e5e9f2;
+  border-color: #e5e9f2;
+}
+.btn-color:hover {
+  color: #fff;
+  background: #c3c6ce;
+  box-shadow: 195, 198, 206;
+}
+.subfolder-box {
+  height: 5rem !important;
+  padding: 23px;
+  justify-content: space-between;
+}
+.box {
+  background-color: #fff;
+}
+.list-style {
+  padding-left: none !important;
+  list-style: none;
+}
+.ellipsis {
+  text-align: center;
+  white-space: nowrap;
+  width: 155px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: auto;
+}

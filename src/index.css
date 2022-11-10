@@ -153,9 +153,11 @@ nav ul li a {
 }
 
 .main .choose,
-.create-folder {
-  background: darkturquoise;
-  padding: 0.8rem 0.5rem;
+.create-folder,
+.sub_folder,
+.all_files {
+  background: rgb(245, 246, 250);
+  padding: 1.3rem;
   margin: 0.5rem;
   text-align: center;
   border-radius: 0.3rem;
@@ -191,9 +193,14 @@ nav ul li a {
 }
 
 .create-folder {
-  height: 42vh;
+  height: 50%;
 }
-
+.sub_folder {
+  height: 50%;
+}
+.subfolder-box {
+  cursor: pointer;
+}
 .folder {
   display: flex;
   align-items: center;
@@ -208,5 +215,26 @@ nav ul li a {
   padding: 0.4rem;
 }
 .all-folders {
+  width: 100%;
   height: 90%;
+}
+.all-folders .folder {
+  /* width: 13rem; */
+  background: white;
+  border: 1px solid #dbdfea;
+}
+.all-folders ul li {
+  list-style: none;
+  cursor: pointer;
+}
+.all-folders p {
+  word-break: break-all;
+  cursor: pointer;
+  font-size: 1rem !important;
+  font-weight: 500;
+}
+
+.all_files {
+  height: 50%;
+  background-color: rgb(245, 246, 250);
 }

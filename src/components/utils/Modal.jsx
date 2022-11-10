@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import useApiHandle from "./useApiHandle";
-import * as URL from "./ConstantUrl";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { folder } from "../../redux/slices/FolderSlice";
 
 const Modal = ({ modalType, category }) => {
-  const { data, loading, apiCall } = useApiHandle();
   const [buttonName, setButtonName] = useState("");
   const [folderName, setFolderName] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (modalType === "Create Folder") {
@@ -14,12 +15,29 @@ const Modal = ({ modalType, category }) => {
     conditionalModalContent();
   }, [modalType]);
 
-  useEffect(() => {
-    console.log(data, "ll");
-  }, [data]);
-
   const handleChange = (e) => {
     setFolderName(e.target.value);
+  };
+
+  const create_folder = async () => {
+    let res = await window.to_electron.create_folder(
+      "create_folder",
+      folderName + "_" + category
+    );
+
+    if (res) {
+      toast.success("Folder Created");
+      getFolders();
+    } else if (!res) {
+      toast.error("This folder already exists");
+    } else toast.notify("Please enter a valid path");
+
+    setFolderName("");
+  };
+
+  const getFolders = async () => {
+    let res = await window.to_electron.get_folders("get_folders");
+    if (res) dispatch(folder(res));
   };
 
   const conditionalModalContent = () => {
@@ -34,14 +52,6 @@ const Modal = ({ modalType, category }) => {
         />
       );
     }
-  };
-
-  const createFolder = () => {
-    apiCall(
-      "post",
-      URL.CREATE_FOLDER + `?folder_name=${folderName}&category=${category}`,
-      ""
-    );
   };
 
   return (
@@ -77,7 +87,9 @@ const Modal = ({ modalType, category }) => {
             <button
               type="button"
               className="btn btn-primary"
-              onClick={createFolder}
+              data-bs-dismiss="modal"
+              disabled={folderName ? false : true}
+              onClick={create_folder}
             >
               {buttonName}
             </button>
