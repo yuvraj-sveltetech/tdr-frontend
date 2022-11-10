@@ -14,10 +14,6 @@ const DirFiles = () => {
   const files = useSelector((state) => state.folder);
   const dispatch = useDispatch();
 
-  const sendFileToBackend = async () => {
-    await window.to_electron.send_files("send_files", files.selected_files);
-  };
-
   const selectedFileHandle = (e, file) => {
     dispatch(selected_files(file));
   };
@@ -28,6 +24,7 @@ const DirFiles = () => {
       files.selected_files
     );
     dispatch(all_headers(res?.data));
+  };
 
   const all_file_name = files?.all_files.map((file) => {
     return file.file_name;
