@@ -62,7 +62,7 @@ const DirFiles = () => {
   };
 
   return (
-    <div className="all_files container">
+    <div className="all_files ">
       <div className="d-flex justify-content-end">
         <div className="select-all d-flex">
           <input
