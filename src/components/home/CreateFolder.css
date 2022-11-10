@@ -1,11 +1,11 @@
 .rr {
-  height: 157.97px;
+  height: 152px;
   background: white;
   border: 1px solid #dbdfea;
+  cursor: pointer;
 }
 .folderIcon {
   fill: rgb(108, 135, 254);
-  /* fill: rgb(70 177 167); */
 }
 
 .bb {

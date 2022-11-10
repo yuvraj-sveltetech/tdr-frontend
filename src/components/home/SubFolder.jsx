@@ -26,7 +26,10 @@ const SubFolder = () => {
           {sub_folders?.folders?.name?.map((folder) => {
             return (
               <div className="col-md-3" key={`SubFolder${folder}`}>
-                <div className="folder d-flex justify-content-start align-items-center subfolder-box">
+                <div
+                  className="folder d-flex justify-content-start align-items-center subfolder-box"
+                  onClick={(e) => getFiles(folder)}
+                >
                   <li onClick={(e) => getFiles(folder)}>
                     <MdFolder size="32" className="folderIcon" />
                   </li>
