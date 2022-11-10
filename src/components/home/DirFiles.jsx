@@ -1,11 +1,14 @@
 import React from "react";
 import "./CreateFolder.css";
 import { useSelector, useDispatch } from "react-redux";
+import { all_headers } from "../../redux/slices/HeaderSlice";
 import {
   selected_files,
   selected_all_files,
 } from "../../redux/slices/FolderSlice";
+
 import { BsFillFileEarmarkTextFill } from "react-icons/bs";
+import { LargeModal } from "../utils/index";
 
 const DirFiles = () => {
   const files = useSelector((state) => state.folder);
@@ -18,6 +21,13 @@ const DirFiles = () => {
   const selectedFileHandle = (e, file) => {
     dispatch(selected_files(file));
   };
+
+  const getHeaders = async () => {
+    let res = await window.to_electron.get_headers(
+      "get_headers",
+      files.selected_files
+    );
+    dispatch(all_headers(res?.data));
 
   const all_file_name = files?.all_files.map((file) => {
     return file.file_name;
@@ -73,21 +83,35 @@ const DirFiles = () => {
         {files?.all_files?.map((file) => {
           return (
             <div className="col-md-3" key={`all_files${file.file_name}`}>
-              <div className="subfolder-box box d-flex justify-content-between align-items-center mb-3">
+              <label
+                className="subfolder-box box d-flex justify-content-between align-items-center mb-3"
+                htmlFor={file.file_name}
+              >
                 <BsFillFileEarmarkTextFill />
                 <p className="ellipsis">{file.file_name}</p>
                 <input
                   type="checkbox"
-                  value={file}
+                  id={file.file_name}
+                  value={file.file_name}
                   onChange={(e) => selectedFileHandle(e, file, file.file_name)}
                   checked={selected_file_name.includes(file.file_name)}
                 />
-              </div>
+              </label>
             </div>
           );
         })}
       </div>
-      <button onClick={sendFileToBackend}>Send</button>
+      <button
+        type="button"
+        className="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#large_modal"
+        onClick={getHeaders}
+      >
+        Select Headers
+      </button>
+
+      <LargeModal />
     </div>
   );
 };

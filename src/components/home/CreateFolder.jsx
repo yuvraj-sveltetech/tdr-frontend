@@ -46,11 +46,11 @@ const CreateFolder = ({ category }) => {
         <div className=" row list-unstyled">
           {folders?.map((folder) => {
             return (
-              <div className="col-md-3">
-                <div
-                  className="folder rr d-flex flex-column justify-content-center m-3"
-                  key={`CreatedFolder${folder?.folder_name}`}
-                >
+              <div
+                className="col-md-3"
+                key={`CreatedFolder${folder?.folder_name}`}
+              >
+                <div className="folder rr d-flex flex-column justify-content-center m-3">
                   <li onClick={(e) => getSubfolder(folder)}>
                     <MdFolder size="70" className="folderIcon" />
                   </li>

@@ -3,7 +3,6 @@ const path = require("path");
 const os = require("os");
 const request = require("request");
 var fs = require("fs");
-const { json } = require("react-router-dom");
 
 let dirpath = path.join(os.homedir(), "Desktop");
 
@@ -91,26 +90,36 @@ module.exports = {
     );
   }),
 
-  send_files: ipcMain.on("send_files", async (e, arg1, arg2) => {
+  get_headers: ipcMain.on("get_headers", async (e, arg1, arg2) => {
     var options = {
       method: "POST",
-      url: "http://10.5.49.205:8000/tdr/getSubFolder/",
+      url: `http://10.5.51.99:8000/tdr/getSubFolder/`,
       headers: {},
       formData: {
-        file: arg2.map((file) => {
-          return {
-            value: fs.createReadStream(file.file_path),
-            options: {
-              filename: file.file_name,
-              contentType: null,
-            },
-          };
-        }),
+        file: {
+          value: fs.createReadStream(arg2[0].file_path),
+          options: {
+            filename: arg2[0].file_name,
+            contentType: null,
+          },
+          // file: arg2.map((file) => {
+          //   return {
+          //     value: fs.createReadStream(file.file_path),
+          //     options: {
+          //       filename: file.file_name,
+          //       contentType: null,
+          //     },
+          //   };
+          // }),
+        },
       },
     };
     request(options, function (error, response) {
-      if (error) throw new Error(error);
-      e.returnValue = JSON.parse(response.body);
+      if (error) console.log(error);
+
+      if (response?.statusCode === 200) {
+        e.returnValue = JSON.parse(response?.body);
+      }
     });
   }),
 };
