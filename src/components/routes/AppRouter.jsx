@@ -11,7 +11,7 @@ const AppRouter = () => {
       <ToastContainer />
       <Routes>
         <Route element={<PrivateRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route exact path="/dashboard" element={<Dashboard />} />
         </Route>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />

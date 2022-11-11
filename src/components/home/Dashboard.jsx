@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Header,
   SubFolder,
@@ -8,11 +8,13 @@ import {
 } from "../utils/index";
 import tower from "../../assets/images/tower-icon.png";
 import { useSelector } from "react-redux";
+import Breadcrumb from "../breadcrumb/Breadcrumb";
 // const ipcRenderer = window.require("electron").ipcRenderer;
 
 const Dashboard = () => {
   const [category, setCategory] = useState("IPDR");
   const sub_folders = useSelector((state) => state.folder.sub_folders);
+  const folder_name = sub_folders.parent_folder;
 
   // useEffect(() => {
   //   console.log(ipcRenderer.sendSync("chokidar"));
@@ -28,6 +30,7 @@ const Dashboard = () => {
         <Sidebar />
         <div className="dashpage col-md-10">
           <Header />
+          <Breadcrumb folder_name={folder_name} />
           <div className="main">
             <div className="choose">
               <button
