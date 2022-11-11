@@ -68,7 +68,10 @@ const DirFiles = () => {
           <input
             type="checkbox"
             value="selectAll"
-            checked={isChecked(selected_file_name, all_file_name)}
+            checked={
+              files.selected_files.length > 0 &&
+              isChecked(selected_file_name, all_file_name)
+            }
             onChange={(e) => {
               selectAllFilesHandle(e);
             }}
