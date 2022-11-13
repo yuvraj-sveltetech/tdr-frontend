@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const headerSlice = createSlice({
-  name: "headers_from_api",
+  name: "Headers",
   initialState: {
     all_headers: [],
     selected_headers: [],

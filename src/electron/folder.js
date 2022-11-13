@@ -81,6 +81,8 @@ module.exports = {
                   arg2?.subfolder_name,
                   file
                 ),
+                parent_folder_name: arg2?.parent_folder_name,
+                subfolder_name: arg2?.subfolder_name,
               },
             ];
           }
@@ -96,22 +98,52 @@ module.exports = {
       url: `http://10.5.51.99:8000/tdr/getSubFolder/`,
       headers: {},
       formData: {
-        file: {
-          value: fs.createReadStream(arg2[0].file_path),
-          options: {
-            filename: arg2[0].file_name,
-            contentType: null,
-          },
-          // file: arg2.map((file) => {
-          //   return {
-          //     value: fs.createReadStream(file.file_path),
-          //     options: {
-          //       filename: file.file_name,
-          //       contentType: null,
-          //     },
-          //   };
-          // }),
-        },
+        // file: {
+        //   value: fs.createReadStream(arg2[0].file_path),
+        //   options: {
+        //     filename: arg2[0].file_name,
+        //     contentType: null,
+        //   },
+
+        jio_files: arg2.jio_files.map((file) => {
+          return {
+            value: fs.createReadStream(file.file_path),
+            options: {
+              filename: file.file_name,
+              contentType: null,
+            },
+          };
+        }),
+
+        voda_files: arg2.voda_files.map((file) => {
+          return {
+            value: fs.createReadStream(file.file_path),
+            options: {
+              filename: file.file_name,
+              contentType: null,
+            },
+          };
+        }),
+
+        airtel_files: arg2.airtel_files.map((file) => {
+          return {
+            value: fs.createReadStream(file.file_path),
+            options: {
+              filename: file.file_name,
+              contentType: null,
+            },
+          };
+        }),
+
+        bsnl_files: arg2.bsnl_files.map((file) => {
+          return {
+            value: fs.createReadStream(file.file_path),
+            options: {
+              filename: file.file_name,
+              contentType: null,
+            },
+          };
+        }),
       },
     };
     request(options, function (error, response) {

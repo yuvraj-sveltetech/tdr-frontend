@@ -1,13 +1,14 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MdFolder } from "react-icons/md";
-import { all_files } from "../../redux/slices/FolderSlice";
+import { all_files, add_subfolder_name } from "../../redux/slices/FolderSlice";
 
 const SubFolder = () => {
   const dispatch = useDispatch();
   const sub_folders = useSelector((state) => state.folder.sub_folders);
 
   const getFiles = async (subfolder_name) => {
+    dispatch(add_subfolder_name(subfolder_name));
     let data = {
       parent_folder_name: sub_folders?.parent_folder,
       subfolder_name: subfolder_name,

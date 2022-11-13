@@ -1,4 +1,4 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 export const folderSlice = createSlice({
   name: "Folder",
@@ -6,6 +6,7 @@ export const folderSlice = createSlice({
     created_folders: [],
     sub_folders: {
       parent_folder: "",
+      subfolder: "",
       folders: {
         name: [],
         path: "",
@@ -18,6 +19,7 @@ export const folderSlice = createSlice({
     folder: (state, action) => {
       return { ...state, created_folders: action.payload };
     },
+
     sub_folder: (state, action) => {
       return {
         ...state,
@@ -32,24 +34,31 @@ export const folderSlice = createSlice({
       };
     },
 
+    add_subfolder_name: (state, action) => {
+      return {
+        ...state,
+        sub_folders: {
+          ...state.sub_folders,
+          subfolder: action.payload,
+        },
+      };
+    },
+
     all_files: (state, action) => {
       return { ...state, all_files: action.payload };
     },
 
     selected_files: (state, action) => {
-      let file_name = "";
-      state.selected_files.forEach((file) => {
-        if (action.payload.file_name === file.file_name) {
-          file_name = action.payload.file_name;
-        }
-      });
+      let file_path = state.selected_files.some(
+        (file) => file.file_path === action.payload.file_path
+      );
 
       return {
         ...state,
         selected_files:
-          state.selected_files.length !== 0 && file_name !== ""
+          state.selected_files.length !== 0 && file_path
             ? state.selected_files.filter(
-                (file) => file.file_name !== action.payload.file_name
+                (file) => file.file_path !== action.payload.file_path
               )
             : [...state.selected_files, action.payload],
       };
@@ -69,6 +78,7 @@ export const folderSlice = createSlice({
 export const {
   folder,
   sub_folder,
+  add_subfolder_name,
   all_files,
   selected_files,
   selected_all_files,
