@@ -93,58 +93,80 @@ module.exports = {
   }),
 
   get_headers: ipcMain.on("get_headers", async (e, arg1, arg2) => {
+    console.log(arg2, "000000000000");
+    // IMPORSTNSN----
+    // let data = {};
+
+    // for (let key in arg2.files) {
+    //   console.log(arg2.files[key], key);
+    //   data[key] = arg2.files[key]?.file_path?.map((file) => {
+    //     return {
+    //       value: fs.createReadStream(file),
+    //       options: {
+    //         filename: `file_name${file}`,
+    //         contentType: null,
+    //       },
+    //     };
+    //   });
+    // }
+    // console.log(data, "--------------");
     var options = {
       method: "POST",
       url: `http://10.5.51.99:8000/tdr/getSubFolder/`,
       headers: {},
+      // formData: data,
+
+      // {
       formData: {
-        // file: {
-        //   value: fs.createReadStream(arg2[0].file_path),
-        //   options: {
-        //     filename: arg2[0].file_name,
-        //     contentType: null,
-        //   },
-
-        jio_files: arg2.jio_files.map((file) => {
-          return {
-            value: fs.createReadStream(file.file_path),
-            options: {
-              filename: file.file_name,
-              contentType: null,
-            },
-          };
-        }),
-
-        voda_files: arg2.voda_files.map((file) => {
-          return {
-            value: fs.createReadStream(file.file_path),
-            options: {
-              filename: file.file_name,
-              contentType: null,
-            },
-          };
-        }),
-
-        airtel_files: arg2.airtel_files.map((file) => {
-          return {
-            value: fs.createReadStream(file.file_path),
-            options: {
-              filename: file.file_name,
-              contentType: null,
-            },
-          };
-        }),
-
-        bsnl_files: arg2.bsnl_files.map((file) => {
-          return {
-            value: fs.createReadStream(file.file_path),
-            options: {
-              filename: file.file_name,
-              contentType: null,
-            },
-          };
-        }),
+        file: {
+          value: fs.createReadStream(arg2[0].file_path),
+          options: {
+            filename: arg2[0].file_name,
+            contentType: null,
+          },
+        },
       },
+
+      // jio_files: arg2.jio?.map((file) => {
+      //   return {
+      //     value: fs.createReadStream(file.file_path),
+      //     options: {
+      //       filename: file.file_name,
+      //       contentType: null,
+      //     },
+      //   };
+      // }),
+
+      // voda_files: arg2.voda?.map((file) => {
+      //   return {
+      //     value: fs.createReadStream(file.file_path),
+      //     options: {
+      //       filename: file.file_name,
+      //       contentType: null,
+      //     },
+      //   };
+      // }),
+
+      // airtel_files: arg2.airtel?.map((file) => {
+      //   return {
+      //     value: fs.createReadStream(file.file_path),
+      //     options: {
+      //       filename: file.file_name,
+      //       contentType: null,
+      //     },
+      //   };
+      // }),
+
+      // bsnl_files: arg2.bsnl?.map((file) => {
+      //   return {
+      //     value: fs.createReadStream(file.file_path),
+      //     options: {
+      //       filename: file.file_name,
+      //       contentType: null,
+      //     },
+      //   };
+      // }),
+      // },
     };
     request(options, function (error, response) {
       if (error) console.log(error);

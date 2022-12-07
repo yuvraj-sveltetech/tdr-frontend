@@ -18,23 +18,44 @@ const DirFiles = () => {
   const files = useSelector((state) => state.folder);
   const operator_files = useSelector((state) => state.operator_files);
   const dispatch = useDispatch();
-  console.log(operator_files, "--------", files);
+  // console.log(files, "-------/-");
+  const ss = useSelector((state) => state.selected_data);
+  console.log(operator_files, "ss------------------------", files);
+
+  // console.log(files, "--", ss);
 
   const selectedFileHandle = (e, file) => {
+    // console.log(file, "file");
     let data = {
       file_data: file,
       type: file?.subfolder_name,
+      parent_folder_name: file.parent_folder_name,
+      count: Object.keys(operator_files.files)?.length + 1,
+    };
+
+    // let data2 = {
+    //   file_data: file,
+    //   count: Object.keys(ss?.selected_data)?.length + 1,
+    // };
+
+    let data2 = {
+      file_data: file,
+      type: file?.subfolder_name,
+      parent_folder_name: file.parent_folder_name,
+      count: Object.keys(operator_files?.selected_data)?.length + 1,
+      // selected_file_length:ss?.selected_data
     };
 
     dispatch(selected_files(file));
     dispatch(select_operator_files(data));
+    dispatch(selected_data(data2));
   };
 
   const getHeaders = async () => {
     let res = await window.to_electron.get_headers(
       "get_headers",
-      // files.selected_files
-      operator_files
+      files.selected_files
+      // operator_files
     );
     dispatch(all_headers(res?.data));
   };
@@ -60,6 +81,13 @@ const DirFiles = () => {
       files: files.all_files,
       operator: files.sub_folders.subfolder,
     };
+    let data3 = {
+      file_data: [],
+      type: files.sub_folders.subfolder,
+      parent_folder_name: files.sub_folders.parent_folder,
+      count: Object.keys(operator_files.files)?.length + 1,
+      isChecked: checked,
+    };
 
     if (checked) {
       let all_data_send = files.all_files?.filter(
@@ -67,8 +95,15 @@ const DirFiles = () => {
       );
 
       data = { ...data, arr: all_data_send, isChecked: true };
+      data3 = {
+        ...data3,
+        file_data: files?.all_files.map((file) => file.file_path),
+      };
+      // data3 = { ...data3, file_data: files.all_files.map((file) => file.file_path) };
+
       dispatch(selected_all_files(data));
-      dispatch(all_operator_wise_files(data2));
+      // dispatch(all_operator_wise_files(data2));
+      dispatch(all_operator_wise_files(data3));
     } else {
       let filter_files = files.selected_files?.filter(
         (e) => !files?.all_files.includes(e)
@@ -77,7 +112,8 @@ const DirFiles = () => {
       data = { ...data, arr: filter_files, isChecked: false };
       data2 = { ...data2, files: [] };
       dispatch(selected_all_files(data));
-      dispatch(all_operator_wise_files(data2));
+      // dispatch(all_operator_wise_files(data2));
+      dispatch(all_operator_wise_files(data3));
     }
   };
 
