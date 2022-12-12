@@ -168,6 +168,26 @@ nav ul li a {
   font-size: 1rem;
 }
 
+.create-folder h6,
+.all-folders h6,
+.all_files h6 {
+  border-top: 1px solid #e5e9f2;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 1rem 0;
+  margin: 0;
+  text-align: left;
+}
+
+.all_files h6 {
+  border: none !important;
+}
+
+.all_files > div:first-child {
+  border-top: 1px solid #e5e9f2;
+}
+
 .main .choose img {
   margin: 0 2rem;
 }

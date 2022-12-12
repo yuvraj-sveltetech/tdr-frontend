@@ -7,7 +7,7 @@ import {
   DirFiles,
   AddFolder,
 } from "../utils/index";
-import tower from "../../assets/images/tower-icon.png";
+import tower from "../../assets/images/tower.png";
 import { useSelector, useDispatch } from "react-redux";
 import { HiHome } from "react-icons/hi";
 import { setShowCount } from "../../redux/slices/BreadCrumbSlice";
@@ -78,7 +78,7 @@ const Dashboard = () => {
                       {files?.sub_folders.parent_folder ||
                       files?.sub_folders.subfolder ? (
                         <div className="d-flex">
-                          <div className="px-1">{">"}</div>
+                          <div className="px-1">{"/"}</div>
                           <p
                             className="m-0"
                             onClick={() => {
@@ -88,7 +88,7 @@ const Dashboard = () => {
                           >
                             {files?.sub_folders.parent_folder}
                           </p>
-                          <div className="px-1">{">"}</div>
+                          <div className="px-1">{"/"}</div>
                           <p
                             className="m-0"
                             onClick={() => {

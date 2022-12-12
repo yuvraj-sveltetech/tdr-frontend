@@ -67,7 +67,7 @@ export const selectedOperatorSlice = createSlice({
       if (!folderName) {
         tempMap[parent_folder_name + type] = "folder" + count;
         data["folder" + count] = {
-          file_name: "file_data.file_name",
+          file_name: "file_data.file_name", 
           file_path: file_data,
           parent_folder_name: parent_folder_name,
           operator: type,

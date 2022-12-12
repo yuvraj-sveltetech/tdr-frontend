@@ -112,7 +112,7 @@ module.exports = {
     // console.log(data, "--------------");
     var options = {
       method: "POST",
-      url: `http://0.0.0.0:8000/tdr/getSubFolder/`,
+      url: `http://localhost:8000/tdr/getSubFolder/`,
       headers: {},
       // formData: data,
 

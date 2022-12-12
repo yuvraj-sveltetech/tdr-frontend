@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 const SelectHeaders = ({ hasValue, setHasValue }) => {
+  const headers = useSelector((state) => state.headers);
   let staticOptions = [
     "SOURCE IP",
     "SOURCE IP ADDRESS",
@@ -10,7 +11,11 @@ const SelectHeaders = ({ hasValue, setHasValue }) => {
     "DESTINATION PORT",
   ];
 
-  const headers = useSelector((state) => state.headers);
+  useEffect(() => {
+    return () => {
+      hasValue.clear();
+    };
+  }, []);
 
   const handleChange = (e, i, keys) => {
     const { value } = e.target;

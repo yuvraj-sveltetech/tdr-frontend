@@ -10,7 +10,6 @@ const SubFolder = () => {
   const files = useSelector((state) => state.folder);
 
   const getFiles = async (subfolder_name) => {
-    dispatch(add_subfolder_name(subfolder_name));
     let data = {
       parent_folder_name: files.sub_folders?.parent_folder,
       subfolder_name: subfolder_name,
@@ -20,6 +19,7 @@ const SubFolder = () => {
       dispatch(all_files(res));
       if (res.length > 0) {
         dispatch(setShowCount(2));
+        dispatch(add_subfolder_name(subfolder_name));
       } else {
         toast.error("File not found!");
       }
@@ -32,6 +32,7 @@ const SubFolder = () => {
     <div className="sub_folder d-flex flex-column align-items-start">
       {/* <h5>{files.sub_folders?.parent_folder}</h5> */}
       <div className="all-folders container">
+        <h6>FOLDER</h6>
         <div className="row list-unstyled">
           {files.sub_folders?.folders?.name?.map((folder) => {
             return (

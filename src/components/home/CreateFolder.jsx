@@ -37,6 +37,7 @@ const CreateFolder = ({ category }) => {
   return (
     <div className="create-folder">
       <div className="container-fluid">
+        <h6>FOLDER</h6>
         <div className="row list-unstyled">
           {folders?.map((folder) => {
             return (

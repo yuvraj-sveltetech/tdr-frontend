@@ -121,9 +121,10 @@ const DirFiles = () => {
   };
 
   return (
-    <div className="all_files ">
-      <div className="d-flex justify-content-end">
-        <label className="select-all d-flex mb-2" htmlFor="selectAll">
+    <div className="all_files">
+      <div className="d-flex justify-content-between align-items-center">
+        <h6>FILES</h6>
+        <label className="select-all d-flex" htmlFor="selectAll">
           <input
             className="me-1"
             type="checkbox"
@@ -150,7 +151,14 @@ const DirFiles = () => {
                 htmlFor={file.file_name}
               >
                 <BsFillFileEarmarkTextFill className="file_icon" size={20} />
-                <p className="ellipsis">{file.file_name}</p>
+                <p
+                  className="ellipsis"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title={file.file_name}
+                >
+                  {file.file_name}
+                </p>
                 <input
                   type="checkbox"
                   id={file.file_name}
@@ -164,13 +172,7 @@ const DirFiles = () => {
         })}
       </div>
 
-      <button
-        type="button"
-        className="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#large_modal"
-        onClick={getHeaders}
-      >
+      <button type="button" className="btn btn-primary" onClick={getHeaders}>
         Select Headers
       </button>
 
