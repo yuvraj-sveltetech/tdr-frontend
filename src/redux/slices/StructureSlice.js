@@ -1,4 +1,4 @@
-import { createSlice, current,  } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 export const structureSlice = createSlice({
   name: "Structure",
@@ -9,8 +9,7 @@ export const structureSlice = createSlice({
   reducers: {
     selected_data: (state, action) => {
       let selected_data = current(state).selected_data;
-      let kkk =current(state);
-      console.log(kkk,'op-00000000000000000')
+
       const { parent_folder_name, type, count, file_data } = action.payload;
 
       let folderOperatorRelation = current(state).folderOperatorRelation;

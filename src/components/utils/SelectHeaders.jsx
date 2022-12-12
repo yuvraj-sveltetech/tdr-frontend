@@ -1,93 +1,31 @@
 import React from "react";
-import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { selected_headers } from "../../redux/slices/HeaderSlice";
-import { add_selected_headers } from "../../redux/slices/SelectedOperaterSlice";
+import { useSelector } from "react-redux";
 
-const SelectHeaders = () => {
-  const [staticOptions, setStaticOptions] = useState([
-    { "SOURCE IP": "", isDisabled: false },
-    { "SOURCE IP ADDRESS": "", isDisabled: false },
-    { "SOURCE PORT": "", isDisabled: false },
-    { "DESTINATION IP": "", isDisabled: false },
-    { "DESTINATION PORT": "", isDisabled: false },
-  ]);
-
-  const [hasValue, setHasValue] = useState([]);
+const SelectHeaders = ({ hasValue, setHasValue }) => {
+  let staticOptions = [
+    "SOURCE IP",
+    "SOURCE IP ADDRESS",
+    "SOURCE PORT",
+    "DESTINATION IP",
+    "DESTINATION PORT",
+  ];
 
   const headers = useSelector((state) => state.headers);
-  const files = useSelector((state) => state.folder.sub_folders);
-  const dispatch = useDispatch();
-
-  const headerSelected = (headerKey) => {
-    dispatch(selected_headers(headerKey));
-  };
-
-  // let staticOptions = [
-  //   
-  // ];
 
   const handleChange = (e, i, keys) => {
     const { value } = e.target;
-    let index = e.target.selectedOptions[0].getAttribute("id");
-    console.log(i);
-    // if(staticOptions)
-    let checkNewState = hasValue?.map((data) => {
-      if (data.id === i) {
-        return { ...data, item: value };
+
+    let data = new Map(hasValue);
+    data.set(i, { id: i, [value]: keys });
+
+    for (const x of data.entries()) {
+      if (Object.keys(x[1])[1] === "default") {
+        data.delete(Object.values(x[1])[0]);
       }
-      return { id: i, item: value };
-    });
-    setHasValue(checkNewState);
-    // let hasValue = staticOptions.filter((item) => {
-    //   // return item[value] == keys;
-    //   return console.log(item["SOURCE PORT"], "ooo");
-    // });
-    console.log(hasValue, "lllll", checkNewState);
-    let existValue = "";
-    let newState = staticOptions.map((obj, i) => { 
-      //   // console.log(obj[value], "-----------");
-      //   //  console.log(Object.keys(obj));
-      //   // console.log(Object.entries(obj));
-      //   for (let option in obj) {
-      //     if (obj[option] == keys) {
-      //       console.log(option, "---ccccc-", typeof option);
-      //       // existValue = option;
-      //       console.log(obj[option],'lll')
-      //       obj[option] = "";
-      //       obj.isDisabled = false;
-      //       console.log("exist value is ", existValue);
-      //     }
+    }
 
-      //     // else {
-      //     //   setExistValue("");
-      //     // }
-      //     // }
-      //     console.log(existValue, "oppppppppppp");
-      //     // console.log(obj, "0-----------");
-      //     // if (existValue) {
-      //     //   return { ...obj, [existValue]: "", isDisabled: false };
-      //   }
-      //   Object.values(obj).fill("");
-      // obj.isDisabled = false;
-
-      if (i == index) {
-        return { [value]: keys, isDisabled: true };
-      }
-
-      return obj;
-    });
-
-    setStaticOptions( );
+    setHasValue(data);
   };
-  let isAllOptionsSelected = Object.values(staticOptions).every(
-    (value) => value !== ""
-  );
-  console.log(staticOptions, "---", hasValue);
-  // staticOptions.map((a) => console.log(Object.keys(a), "op"));
-  // staticOptions.forEach((c) => {
-  //   console.log(c["SOURCE PORT"],'oiiiiiiiiiii')
-  // })
 
   return (
     <div>
@@ -98,53 +36,21 @@ const SelectHeaders = () => {
               Object.keys(headers?.all_headers[0]).map((keys, i) => (
                 <th scope="col" key={`tableHead${i}`}>
                   <label htmlFor={keys}>{keys}</label>
-                  {/* <input
-                    type="checkbox"
-                    value={keys}
-                    id={keys}
-                    className="ms-1"
-                    onChange={(e) => headerSelected(keys)}
-                  /> */}
                   <select
-                    name=""
-                    id=""
+                    name="staticValues"
                     onChange={(e) => handleChange(e, i, keys)}
-                    // disabled={
-                    //   isAllOptionsSelected &&
-                    //   Object.values(staticOptions).every(
-                    //     (value) => value === keys
-                    //   )
-                    //     ? true
-                    //     : false
-                    // }
-                    // disabled={
-                    //   staticOptions[0]['SOURCE IP'] != keys ? true : false
-                    // }
+                    defaultValue="default"
                   >
-                    {/* {console.log(
-                      staticOptions[0]["SOURCE IP"],
-                      "poooooooooooo"
-                    )} */}
-                    <option value="select" selected>
-                      Select
-                    </option>
+                    <option value="default">Select</option>
                     {staticOptions?.map((item, innerIndex) => (
                       <option
-                        value={Object.keys(item)[0]}
-                        // disabled={
-                        //   Object.values(item)[0] != keys &&
-                        //   Object.values(item)[1]
-                        //     ? true
-                        //     : false
-                        // }
+                        value={item}
                         id={innerIndex}
                         key={`headersInOptions${innerIndex}`}
                       >
-                        {/* {console.log(Object.values(item)[0])} */}
-                        {Object.keys(item)[0]}
+                        {item}
                       </option>
                     ))}
-                    {/* <option value="d">dddd</option> */}
                   </select>
                 </th>
               ))}

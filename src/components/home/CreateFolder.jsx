@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./CreateFolder.css";
 import { MdFolder } from "react-icons/md";
-import Modal from "../utils/Modal";
 import { useSelector, useDispatch } from "react-redux";
 import { folder, sub_folder } from "../../redux/slices/FolderSlice";
-import { AddFolder } from "../utils/index";
+import { setShowCount } from "../../redux/slices/BreadCrumbSlice";
 
 const CreateFolder = ({ category }) => {
-  const [modalType, setModalType] = useState("");
   const dispatch = useDispatch();
   const folders = useSelector((state) => state.folder.created_folders);
 
@@ -18,10 +16,6 @@ const CreateFolder = ({ category }) => {
   const getFolders = async () => {
     let res = await window.to_electron.get_folders("get_folders");
     if (res) dispatch(folder(res));
-  };
-
-  const setModal = () => {
-    setModalType("Create Folder");
   };
 
   const getSubfolder = async (folder) => {
@@ -37,12 +31,12 @@ const CreateFolder = ({ category }) => {
       };
       dispatch(sub_folder(data));
     }
+    dispatch(setShowCount(1));
   };
 
   return (
     <div className="create-folder">
-      <AddFolder setModal={setModal} />
-      <div className="container">
+      <div className="container-fluid">
         <div className="row list-unstyled">
           {folders?.map((folder) => {
             return (
@@ -64,7 +58,6 @@ const CreateFolder = ({ category }) => {
           })}
         </div>
       </div>
-      <Modal modalType={modalType} category={category} />
     </div>
   );
 };

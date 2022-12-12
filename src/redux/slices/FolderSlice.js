@@ -44,6 +44,16 @@ export const folderSlice = createSlice({
       };
     },
 
+    add_parentfolder_name: (state, action) => {
+      return {
+        ...state,
+        sub_folders: {
+          ...state.sub_folders,
+          parent_folder: action.payload,
+        },
+      };
+    },
+
     all_files: (state, action) => {
       return { ...state, all_files: action.payload };
     },
@@ -82,5 +92,6 @@ export const {
   all_files,
   selected_files,
   selected_all_files,
+  add_parentfolder_name,
 } = folderSlice.actions;
 export default folderSlice.reducer;

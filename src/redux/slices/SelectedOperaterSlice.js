@@ -1,12 +1,8 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 
 export const selectedOperatorSlice = createSlice({
-  name: "Operators",
+  name: "Operator",
   initialState: {
-    // airtel: [],
-    // jio: [],
-    // bsnl: [],
-    // voda: [],
     files: {},
     selected_data: {},
     folderOperatorRelation: {},
@@ -94,23 +90,37 @@ export const selectedOperatorSlice = createSlice({
     },
 
     add_selected_headers: (state, action) => {
+      const { parent_folder_name, subfolder_name, selected_headers } =
+        action.payload;
+      let files = current(state).files;
+      let folderOperatorRelation = current(state).folderOperatorRelation;
+      let folderName =
+        folderOperatorRelation[parent_folder_name + subfolder_name];
+      let tempMap = { ...folderOperatorRelation };
+      let data = { ...files };
 
+      if (folderName) {
+        let new_data = {};
+        for (let key in selected_headers) {
+          new_data[Object.keys(selected_headers[key])[1]] = Object.values(
+            selected_headers[key]
+          )[1];
+        }
 
+        data[folderName] = {
+          ...data[folderName],
+          ...new_data,
+        };
+      }
 
-
-
-
-
-
-
-
-
-      
-      return { ...state };
+      return { ...state, files: data, folderOperatorRelation: tempMap };
     },
   },
 });
 
-export const { select_operator_files, all_operator_wise_files, add_selected_headers } =
-  selectedOperatorSlice.actions;
+export const {
+  select_operator_files,
+  all_operator_wise_files,
+  add_selected_headers,
+} = selectedOperatorSlice.actions;
 export default selectedOperatorSlice.reducer;

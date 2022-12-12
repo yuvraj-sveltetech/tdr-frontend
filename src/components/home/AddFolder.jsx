@@ -4,7 +4,7 @@ import { MdCreateNewFolder } from "react-icons/md";
 const AddFolder = ({ category, setModal }) => {
   return (
     <div className="folder bb">
-      <h5>{category === "IPDR" ? "I.P.D.R" : "C.D.R"}</h5>
+      {/* <h5>{category === "IPDR" ? "I.P.D.R" : "C.D.R"}</h5> */}
       <button
         className="add-folder d-flex align-items-center btn-color"
         data-bs-toggle="modal"

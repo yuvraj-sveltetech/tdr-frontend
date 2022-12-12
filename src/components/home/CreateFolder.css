@@ -10,8 +10,8 @@
 
 .bb {
   background-color: white;
-  padding: 5px 8px;
 }
+
 .bb h5 {
   margin: auto 0.5rem !important;
 }
@@ -19,11 +19,11 @@
   background-color: #e5e9f2;
   border-color: #e5e9f2;
 }
-.btn-color:hover {
+/* .btn-color:hover {
   color: #fff;
   background: #c3c6ce;
   box-shadow: 195, 198, 206;
-}
+} */
 .subfolder-box {
   height: 5rem !important;
   padding: 23px;
@@ -47,7 +47,9 @@
 
 /* select all button css */
 .select-all {
-  border-radius: 5px;
-  border: 2px solid black;
+  border: 1px solid black;
   justify-content: center;
+  padding: 0 5px;
+  cursor: pointer;
+  user-select: none;
 }

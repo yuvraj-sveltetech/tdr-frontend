@@ -112,16 +112,16 @@ module.exports = {
     // console.log(data, "--------------");
     var options = {
       method: "POST",
-      url: `http://10.5.51.99:8000/tdr/getSubFolder/`,
+      url: `http://0.0.0.0:8000/tdr/getSubFolder/`,
       headers: {},
       // formData: data,
 
       // {
       formData: {
         file: {
-          value: fs.createReadStream(arg2[0].file_path),
+          value: fs.createReadStream(arg2.file_path),
           options: {
-            filename: arg2[0].file_name,
+            filename: arg2.file_name,
             contentType: null,
           },
         },
