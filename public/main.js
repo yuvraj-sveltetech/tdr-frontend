@@ -1,7 +1,13 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const chokidar = require("chokidar");
+const isDev = require("electron-is-dev");
 require("../src/electron/index");
+
+// Handle creating/removing shortcuts on Windows when installing/uninstalling
+if (require("electron-squirrel-startup")) {
+  app.quit();
+} // NEW!
 
 function createWindow() {
   // Create the browser window.
@@ -16,7 +22,12 @@ function createWindow() {
   });
   // ipcMain.handle("ping", () => "pong");
   //load the index.html from a url
-  win.loadURL("http://localhost:3000");
+  // win.loadURL("http://localhost:3000");
+  win.loadURL(
+    isDev
+      ? "http://localhost:3000"
+      : `file://${path.join(__dirname, "../build/index.html")}`
+  );
 
   // Open the DevTools.
   win.webContents.openDevTools();

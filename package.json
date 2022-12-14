@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "main": "public/main.js",
+  "homepage": "./",
+  "author": "sveltetech",
+  "description": "tdr applicaiton",
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.6",
     "@testing-library/jest-dom": "^5.16.5",
@@ -11,7 +14,9 @@
     "axios": "^0.27.2",
     "bootstrap": "^5.2.1",
     "chokidar": "^3.5.3",
-    "electron": "^21.1.0",
+    "cross-env": "^7.0.3",
+    "electron-is-dev": "^1.2.0",
+    "electron-squirrel-startup": "^1.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.0",
     "react-dom": "^18.2.0",
@@ -29,7 +34,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron-dev": "electron ."
+    "electron-dev": "electron .",
+    "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm:electron\"",
+    "electron": "wait-on tcp:3000 && electron-forge start",
+    "package": "react-scripts build && electron-forge package",
+    "make": "react-scripts build && electron-forge make"
   },
   "eslintConfig": {
     "extends": [
@@ -48,5 +57,15 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.4",
+    "@electron-forge/maker-deb": "^6.0.4",
+    "@electron-forge/maker-rpm": "^6.0.4",
+    "@electron-forge/maker-squirrel": "^6.0.4",
+    "@electron-forge/maker-zip": "^6.0.4",
+    "concurrently": "^5.2.0",
+    "electron": "^21.3.3",
+    "wait-on": "^5.1.0"
   }
 }
