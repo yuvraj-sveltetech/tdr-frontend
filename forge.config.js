@@ -1,9 +1,15 @@
 module.exports = {
   packagerConfig: {
     // ignore: ["^\\/node_modules$"],
-    "asar": true
+    asar: true,
   },
   rebuildConfig: {},
+  plugins: [
+    {
+      name: "@electron-forge/plugin-auto-unpack-natives",
+      config: {},
+    },
+  ],
   makers: [
     {
       name: "@electron-forge/maker-squirrel",
