@@ -67,7 +67,7 @@ export const selectedOperatorSlice = createSlice({
       if (!folderName) {
         tempMap[parent_folder_name + type] = "folder" + count;
         data["folder" + count] = {
-          file_name: "file_data.file_name", 
+          file_name: "file_data.file_name",
           file_path: file_data,
           parent_folder_name: parent_folder_name,
           operator: type,
@@ -100,16 +100,19 @@ export const selectedOperatorSlice = createSlice({
       let data = { ...files };
 
       if (folderName) {
-        let new_data = {};
-        for (let key in selected_headers) {
-          new_data[Object.keys(selected_headers[key])[1]] = Object.values(
-            selected_headers[key]
-          )[1];
-        }
+        // let new_data = {};
+        // console.log(selected_headers, "kk");
+
+        // for (let key in selected_headers) {
+        //   new_data[Object.keys(selected_headers[key])[1]] = Object.values(
+        //     selected_headers[key]
+        //   )[1];
+        // }
 
         data[folderName] = {
           ...data[folderName],
-          ...new_data,
+          // headers: { ...new_data },
+          headers: [...selected_headers],
         };
       }
 

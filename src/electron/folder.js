@@ -110,9 +110,9 @@ module.exports = {
     //   });
     // }
     // console.log(data, "--------------");
-    var options = {
+    let options = {
       method: "POST",
-      url: `http://10.5.48.108:8000/tdr/getSubFolder/`,
+      url: `http://192.168.15.193:8001/tdr/getSubFolder/`,
       headers: {},
       // formData: data,
 
@@ -175,5 +175,42 @@ module.exports = {
         e.returnValue = JSON.parse(response?.body);
       }
     });
+  }),
+
+  get_files_data: ipcMain.on("get_files_data", async (e, arg1, arg2) => {
+    console.log(arg2, "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+
+    let data = {};
+
+    for (let key in arg2) {
+      data[key] = arg2[key].file_path?.map((file) => {
+        return {
+          value: fs.createReadStream(file),
+          options: {
+            filename: `file_name${file}`,
+            contentType: null,
+          },
+        };
+      });
+    }
+
+    let options = {
+      method: "POST",
+      url: `http://192.168.15.193:8001/tdr/test/?file_data=${JSON.stringify(
+        arg2
+      )}`,
+      headers: {},
+      formData: data,
+    };
+
+    request(options, function (error, response) {
+      if (error) console.log(error);
+
+      if (response?.statusCode === 200) {
+        e.returnValue = JSON.parse(response?.body);
+      }
+    });
+
+    e.returnValue = "";
   }),
 };

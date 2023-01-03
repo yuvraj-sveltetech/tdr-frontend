@@ -1,8 +1,18 @@
 import React, { useEffect } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
-const SelectHeaders = ({ hasValue, setHasValue }) => {
+const SelectHeaders = ({
+  hasValue,
+  setHasValue,
+  parent_folder,
+  sub_folders,
+  operator_files,
+}) => {
+  const [selectedHeaders, setSelectedHeaders] = useState(new Map());
   const headers = useSelector((state) => state.headers);
+  const [previousHeader, setPreviousHeader] = useState();
+
   let staticOptions = [
     "SOURCE IP",
     "SOURCE IP ADDRESS",
@@ -17,6 +27,34 @@ const SelectHeaders = ({ hasValue, setHasValue }) => {
     };
   }, []);
 
+  useEffect(() => {
+    Object.entries(operator_files.files).forEach((item) => {
+      if (
+        item[1].parent_folder_name === parent_folder &&
+        item[1].operator === sub_folders
+      ) {
+        if (item[1].headers) {
+          setPreviousHeader(item[1].headers);
+        }
+      }
+    });
+  }, [parent_folder, sub_folders]);
+
+  useEffect(() => {
+    if (previousHeader) {
+      Object.entries(previousHeader).forEach((header) => {
+        setSelectedHeaders(
+          new Map(
+            selectedHeaders.set(
+              Object.values(header[1])[0],
+              Object.keys(header[1])[1]
+            )
+          )
+        );
+      });
+    }
+  }, [previousHeader]);
+
   const handleChange = (e, i, keys) => {
     const { value } = e.target;
 
@@ -29,8 +67,11 @@ const SelectHeaders = ({ hasValue, setHasValue }) => {
       }
     }
 
+    selectedHeaders.set(i, value);
     setHasValue(data);
   };
+
+  console.log(selectedHeaders, "selectedHeaders");
 
   return (
     <div>
@@ -44,7 +85,7 @@ const SelectHeaders = ({ hasValue, setHasValue }) => {
                   <select
                     name="staticValues"
                     onChange={(e) => handleChange(e, i, keys)}
-                    defaultValue="default"
+                    value={selectedHeaders.get(i)}
                   >
                     <option value="default">Select</option>
                     {staticOptions?.map((item, innerIndex) => (

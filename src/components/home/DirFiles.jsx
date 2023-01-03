@@ -13,16 +13,25 @@ import {
 } from "../../redux/slices/SelectedOperaterSlice";
 import { selected_data } from "../../redux/slices/StructureSlice";
 import { LargeModal } from "../utils/index";
+import useApiHandle from "../utils/useApiHandle";
+import * as URL from "../utils/ConstantUrl";
 
 const DirFiles = () => {
+  const { data, loading, apiCall } = useApiHandle();
   const [show, setShow] = useState(false);
   const files = useSelector((state) => state.folder);
   const operator_files = useSelector((state) => state.operator_files);
-  console.log(operator_files, "------------------------", files);
+  // console.log(operator_files, "------------------------", files);
   const dispatch = useDispatch();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  // useEffect(() => {
+  //   if (data?.data) {
+  //     console.log(data, "dataaaaaaaaa");
+  //   }
+  // }, [data]);
 
   const selectedFileHandle = (e, file) => {
     let data = {
@@ -120,6 +129,18 @@ const DirFiles = () => {
     }
   };
 
+  const getFilesData = async () => {
+    console.log(operator_files.files, "ppppppppppp");
+    // apiCall("post", URL.GET_FILES_DATA, operator_files.files);
+
+    let res = await window.to_electron.get_files_data(
+      "get_files_data",
+      operator_files.files
+    );
+
+    console.log(res, "res");
+  };
+
   return (
     <div className="all_files">
       <div className="d-flex justify-content-between align-items-center">
@@ -176,10 +197,13 @@ const DirFiles = () => {
         Select Headers
       </button>
 
+      <button onClick={getFilesData}>Sumbit</button>
+
       <LargeModal
         show={show}
         handleClose={handleClose}
         handleShow={handleShow}
+        operator_files={operator_files}
       />
     </div>
   );

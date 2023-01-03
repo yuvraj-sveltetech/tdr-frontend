@@ -6,7 +6,7 @@ import { add_selected_headers } from "../../redux/slices/SelectedOperaterSlice";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-const LargeModal = ({ show, handleClose, handleShow }) => {
+const LargeModal = ({ show, handleClose, handleShow, operator_files }) => {
   const [hasValue, setHasValue] = useState(new Map());
   const files = useSelector((state) => state.folder);
   const dispatch = useDispatch();
@@ -44,7 +44,13 @@ const LargeModal = ({ show, handleClose, handleShow }) => {
         <Modal.Title className="h5">Select Headers</Modal.Title>
       </Modal.Header>
       <Modal.Body className="overflow-auto">
-        <SelectHeaders setHasValue={setHasValue} hasValue={hasValue} />
+        <SelectHeaders
+          setHasValue={setHasValue}
+          hasValue={hasValue}
+          parent_folder={files.sub_folders.parent_folder}
+          sub_folders={files.sub_folders.subfolder}
+          operator_files={operator_files}
+        />
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
