@@ -6,6 +6,8 @@ var fs = require("fs");
 
 let dirpath = path.join(os.homedir(), "Desktop");
 
+const baseUrl = process.env.REACT_APP_API_KEY;
+
 module.exports = {
   create_folder: ipcMain.handle("create_folder", async (e, arg1, arg2) => {
     let destPath;
@@ -93,7 +95,7 @@ module.exports = {
   }),
 
   get_headers: ipcMain.on("get_headers", async (e, arg1, arg2) => {
-    console.log(arg2, "000000000000");
+    console.log(arg2, "000000000000", baseUrl);
     // IMPORSTNSN----
     // let data = {};
 
