@@ -58,21 +58,21 @@ export const folderSlice = createSlice({
       return { ...state, all_files: action.payload };
     },
 
-    selected_files: (state, action) => {
-      let file_path = state.selected_files.some(
-        (file) => file.file_path === action.payload.file_path
-      );
+    // selected_files: (state, action) => {
+    //   let file_path = state.selected_files.some(
+    //     (file) => file.file_path === action.payload.file_path
+    //   );
 
-      return {
-        ...state,
-        selected_files:
-          state.selected_files.length !== 0 && file_path
-            ? state.selected_files.filter(
-                (file) => file.file_path !== action.payload.file_path
-              )
-            : [...state.selected_files, action.payload],
-      };
-    },
+    //   return {
+    //     ...state,
+    //     selected_files:
+    //       state.selected_files.length !== 0 && file_path
+    //         ? state.selected_files.filter(
+    //             (file) => file.file_path !== action.payload.file_path
+    //           )
+    //         : [...state.selected_files, action.payload],
+    //   };
+    // },
 
     selected_all_files: (state, action) => {
       return {

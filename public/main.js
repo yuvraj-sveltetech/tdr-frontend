@@ -43,10 +43,10 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  createWindow();
   installExtension(REDUX_DEVTOOLS)
     .then((name) => console.log(`Added Extension:  ${name}`))
     .catch((err) => console.log("An error occurred: ", err));
-  createWindow();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -65,6 +65,9 @@ app.on("activate", () => {
 
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
+    installExtension(REDUX_DEVTOOLS)
+      .then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log("An error occurred: ", err));
   }
 });
 

@@ -114,7 +114,7 @@ module.exports = {
     // console.log(data, "--------------");
     let options = {
       method: "POST",
-      url: `http://192.168.15.193:8001/tdr/getSubFolder/`,
+      url: `http://192.168.15.193:8000/tdr/getSubFolder/`,
       headers: {},
       // formData: data,
 
@@ -180,12 +180,16 @@ module.exports = {
   }),
 
   get_files_data: ipcMain.on("get_files_data", async (e, arg1, arg2) => {
-    console.log(arg2, "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+    console.log(
+      arg2,
+      "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",
+      JSON.stringify(arg2)
+    );
 
     let data = {};
 
     for (let key in arg2) {
-      data[key] = arg2[key].file_path?.map((file) => {
+      data[key] = arg2[key].path?.map((file) => {
         return {
           value: fs.createReadStream(file),
           options: {
@@ -198,7 +202,7 @@ module.exports = {
 
     let options = {
       method: "POST",
-      url: `http://192.168.15.193:8001/tdr/test/?file_data=${JSON.stringify(
+      url: `http://192.168.15.193:8000/tdr/test/?file_data=${JSON.stringify(
         arg2
       )}`,
       headers: {},
