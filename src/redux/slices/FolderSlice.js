@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 export const folderSlice = createSlice({
   name: "Folder",
@@ -17,7 +17,19 @@ export const folderSlice = createSlice({
   },
   reducers: {
     folder: (state, action) => {
-      return { ...state, created_folders: action.payload };
+      const folder_state = current(state).created_folders;
+      console.log(action.payload, "pay");
+      const result1 =
+        state.created_folders.length > 0
+          ? folder_state.filter(function (o1) {
+              return state.created_folders.some(function (o2) {
+                return o1.folder_name == o2.folder_name; // id is unnique both array object
+              });
+            })
+          : action.payload;
+      // files.all_files.every((v) => allSelectedFiles.includes(v.file_path));
+
+      return { ...state, created_folders: result1 };
     },
 
     sub_folder: (state, action) => {
@@ -58,6 +70,21 @@ export const folderSlice = createSlice({
       return { ...state, all_files: action.payload };
     },
 
+    is_parent_checked: (state, action) => {
+      const { index, checked } = action.payload;
+
+      return {
+        ...state,
+        created_folders: checked
+          ? state.created_folders.map((item, i) =>
+              i === index ? { ...item, isChecked: true } : item
+            )
+          : state.created_folders.map((item, i) =>
+              i === index ? { ...item, isChecked: false } : item
+            ),
+      };
+    },
+
     // selected_files: (state, action) => {
     //   let file_path = state.selected_files.some(
     //     (file) => file.file_path === action.payload.file_path
@@ -88,6 +115,7 @@ export const folderSlice = createSlice({
 export const {
   folder,
   sub_folder,
+  is_parent_checked,
   add_subfolder_name,
   all_files,
   selected_files,

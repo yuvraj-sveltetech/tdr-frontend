@@ -85,18 +85,25 @@ export const selectedFiles = createSlice({
           payload.parent_folder_name + "-" + payload.operator
         );
       }
-
+      console.log(index, "index");
       if (newStructure["folder" + index]) {
         let file_path = newStructure["folder" + index]["path"];
         let [payload_path] = payload.path;
-
+        console.log(
+          file_path.includes(payload_path) && file_path.length > 1,
+          "pppp",
+          payload_path,
+          file_path.length
+        );
         if (file_path.includes(payload_path) && file_path.length > 1) {
           data["folder" + index] = {
             parent_folder_name: payload.parent_folder_name,
             operator: payload.operator,
             path: file_path.filter((path) => path !== payload_path),
           };
+          console.log(index, "index");
         } else if (file_path.length === 1) {
+          console.log(index, "index");
           data = {};
           delete newStructure["folder" + index];
         }
@@ -130,6 +137,44 @@ export const selectedFiles = createSlice({
         };
       } else {
         data["folder" + index] = payload;
+      }
+
+      return {
+        ...state,
+        structure: { ...state.structure, ...data },
+      };
+    },
+
+    select_all_parent_files: (state, action) => {
+      const { all_files, parent_name, operator } = action.payload;
+      let count_state = current(state).count;
+      let structure = current(state).structure;
+      let index;
+      let data = [];
+
+      index = count_state.indexOf(parent_name + "-" + operator);
+
+      if (structure["folder" + index]) {
+        data["folder" + index] = {
+          parent_folder_name: parent_name,
+          operator: operator,
+          path:
+            all_files[operator] !== undefined
+              ? [
+                  ...structure["folder" + index]["path"],
+                  ...all_files[operator]["path"],
+                ]
+              : [],
+        };
+      } else {
+        data["folder" + index] = {
+          parent_folder_name: parent_name,
+          operator: operator,
+          path:
+            all_files[operator] !== undefined
+              ? all_files[operator]["path"]
+              : [],
+        };
       }
 
       return {
@@ -188,6 +233,7 @@ export const {
   unselectect_files,
   counter,
   add_files_into_redux,
+  select_all_parent_files,
   remove_files_into_redux,
   select_all_file,
   unselect_all_file,

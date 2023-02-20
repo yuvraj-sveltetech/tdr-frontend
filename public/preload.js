@@ -10,4 +10,6 @@ contextBridge.exposeInMainWorld("to_electron", {
   get_headers: (arg1, arg2) => ipcRenderer.sendSync("get_headers", arg1, arg2),
   get_files_data: (arg1, arg2) =>
     ipcRenderer.sendSync("get_files_data", arg1, arg2),
+  get_all_folders_files: (arg1, arg2) =>
+    ipcRenderer.sendSync("get_all_folders_files", arg1, arg2),
 });

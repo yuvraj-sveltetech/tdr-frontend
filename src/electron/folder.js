@@ -53,6 +53,7 @@ module.exports = {
             created_folder.push({
               folder_name: folderName,
               folder_path: path.join(dirpath, folderName),
+              isChecked: false,
             });
         }
       }
@@ -93,6 +94,34 @@ module.exports = {
       }
     );
   }),
+
+  get_all_folders_files: ipcMain.on(
+    "get_all_folders_files",
+    (e, arg1, arg2) => {
+      let all_files = [];
+
+      fs.readdir(
+        path.join(dirpath, arg2?.parent_folder_name, arg2?.operator),
+        (err, files) => {
+          files?.forEach((file) => {
+            all_files = [
+              ...all_files,
+              {
+                path: path.join(
+                  dirpath,
+                  arg2?.parent_folder_name,
+                  arg2?.operator,
+                  file
+                ),
+                name: arg2?.operator,
+              },
+            ];
+          });
+          e.returnValue = all_files;
+        }
+      );
+    }
+  ),
 
   get_headers: ipcMain.on("get_headers", async (e, arg1, arg2) => {
     console.log(arg2, "000000000000", baseUrl);

@@ -3,6 +3,7 @@ const {
   get_folders,
   get_subfolders,
   get_files_data,
+  get_all_folders_files,
 } = require("./folder");
 
 module.exports = {
@@ -10,4 +11,5 @@ module.exports = {
   get_folders,
   get_subfolders,
   get_files_data,
+  get_all_folders_files,
 };

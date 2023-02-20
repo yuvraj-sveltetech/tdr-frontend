@@ -10,9 +10,10 @@ const AppRouter = () => {
     <HashRouter>
       <ToastContainer />
       <Routes>
-        <Route index path="/" element={<Login />} />
+        {/* <Route index path="/" element={<Login />} /> */}
+        <Route path="/" element={<Dashboard />} />
         <Route element={<PrivateRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
         </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>
