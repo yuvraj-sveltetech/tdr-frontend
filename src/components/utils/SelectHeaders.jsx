@@ -28,19 +28,34 @@ const SelectHeaders = ({
   }, []);
 
   useEffect(() => {
-    Object.entries(redux_store.structure).forEach((item) => {
-      if (
-        item[1].parent_folder_name === parent_folder &&
-        item[1].operator === sub_folders
-      ) {
-        if (item[1].headers) {
-          setPreviousHeader(item[1].headers);
-          item[1]?.headers?.forEach((header) => {
-            hasValue.set(header.id, header);
-          });
+    // Object.entries(redux_store.structure).forEach((item) => {
+    //   if (
+    //     item[1].parent_folder_name === parent_folder &&
+    //     item[1].operator === sub_folders
+    //   ) {
+    //     if (item[1].headers) {
+    //       setPreviousHeader(item[1].headers);
+    //       item[1]?.headers?.forEach((header) => {
+    //         hasValue.set(header.id, header);
+    //       });
+    //     }
+    //   }
+    // });
+
+    if (
+      redux_store.structure[parent_folder] &&
+      redux_store.structure[parent_folder][sub_folders] &&
+      redux_store.structure[parent_folder][sub_folders]["headers"]
+    ) {
+      setPreviousHeader(
+        redux_store.structure[parent_folder][sub_folders]["headers"]
+      );
+      redux_store.structure[parent_folder][sub_folders]["headers"]?.forEach(
+        (header) => {
+          hasValue.set(header.id, header);
         }
-      }
-    });
+      );
+    }
   }, [parent_folder, sub_folders]);
 
   useEffect(() => {

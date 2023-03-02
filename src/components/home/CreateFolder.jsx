@@ -38,16 +38,10 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
       let data = {
         all_files: allParentFiles.structured_files,
         parent_name: p_folder_name.current,
-        operator: "",
+        operator: sub_folder_names,
       };
 
-      sub_folder_names?.forEach((name) => {
-        dispatch(
-          counter({ name: p_folder_name.current + "-" + name, type: "add" })
-        );
-        data = { ...data, operator: name };
-        dispatch(select_all_parent_files(data));
-      });
+      dispatch(select_all_parent_files(data));
 
       let arr = allParentFiles?.all_files?.map((item) => item.path);
       console.log(arr, "arr");

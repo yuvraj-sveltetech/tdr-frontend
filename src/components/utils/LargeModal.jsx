@@ -6,7 +6,14 @@ import { append_headers } from "../../redux/slices/SelectedFiles";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-const LargeModal = ({ show, handleClose, handleShow, operator_files }) => {
+const LargeModal = ({
+  show,
+  handleClose,
+  handleShow,
+  operator_files,
+  parent_folder,
+  sub_folders,
+}) => {
   const [hasValue, setHasValue] = useState(new Map());
   const files = useSelector((state) => state.folder);
   const dispatch = useDispatch();
@@ -47,8 +54,10 @@ const LargeModal = ({ show, handleClose, handleShow, operator_files }) => {
         <SelectHeaders
           setHasValue={setHasValue}
           hasValue={hasValue}
-          parent_folder={files.sub_folders.parent_folder}
-          sub_folders={files.sub_folders.subfolder}
+          // parent_folder={files.sub_folders.parent_folder}
+          // sub_folders={files.sub_folders.subfolder}
+          parent_folder={parent_folder}
+          sub_folders={sub_folders}
           operator_files={operator_files}
         />
       </Modal.Body>

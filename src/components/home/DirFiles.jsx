@@ -32,19 +32,20 @@ const DirFiles = ({ index }) => {
     return [files.sub_folders.parent_folder, files.sub_folders.subfolder];
   }, [files.sub_folders.parent_folder, files.sub_folders.subfolder]);
 
-  useEffect(() => {
-    if (
-      redux_store.count.includes(folder[0] + "-" + folder[1]) &&
-      Object.keys(redux_store.structure).length > 0 &&
-      redux_store.count.length > -1
-    ) {
-      let index = redux_store.count.indexOf(folder[0] + "-" + folder[1]);
+  console.log(folder, "folder");
 
-      if (redux_store.structure["folder" + index]) {
-        setAllSelectedFiles(redux_store.structure["folder" + index]["path"]);
+  useEffect(() => {
+    if (Object.keys(redux_store.structure).length > 0) {
+      if (
+        redux_store?.structure[folder[0]] &&
+        redux_store?.structure[folder[0]][folder[1]]
+      ) {
+        setAllSelectedFiles(
+          redux_store?.structure[folder[0]][folder[1]]["path"]
+        );
       }
     }
-  }, [redux_store.count, redux_store.structure, redux_store.files, folder]);
+  }, [redux_store, folder]);
 
   // useEffect(() => {
   //   if (data?.data) {
@@ -62,7 +63,7 @@ const DirFiles = ({ index }) => {
   };
 
   let isChecked = () =>
-    files.all_files.every((v) => allSelectedFiles.includes(v.file_path));
+    files?.all_files?.every((v) => allSelectedFiles?.includes(v.file_path));
 
   const selectAllFilesHandle = async (e) => {
     const { checked } = e.target;
@@ -146,12 +147,14 @@ const DirFiles = ({ index }) => {
         Select Headers
       </button>
 
-      <button onClick={getFilesData}>Sumbit</button>
+      <button onClick={getFilesData}>Submit</button>
 
       <LargeModal
         show={show}
         handleClose={handleClose}
         handleShow={handleShow}
+        parent_folder={folder[0]}
+        sub_folders={folder[1]}
         operator_files={redux_store}
       />
     </div>
