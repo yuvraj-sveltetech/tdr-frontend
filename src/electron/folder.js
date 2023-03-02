@@ -143,7 +143,7 @@ module.exports = {
     // console.log(data, "--------------");
     let options = {
       method: "POST",
-      url: `http://192.168.15.193:8000/tdr/getSubFolder/`,
+      url: `http://192.168.15.248:8000/tdr/getSubFolder/`,
       headers: {},
       // formData: data,
 
@@ -231,7 +231,7 @@ module.exports = {
 
     let options = {
       method: "POST",
-      url: `http://192.168.15.193:8000/tdr/test/?file_data=${JSON.stringify(
+      url: `http://192.168.15.248:8000/tdr/test/?file_data=${JSON.stringify(
         arg2
       )}`,
       headers: {},

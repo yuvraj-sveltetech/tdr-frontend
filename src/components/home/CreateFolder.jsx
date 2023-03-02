@@ -12,21 +12,22 @@ import { setShowCount } from "../../redux/slices/BreadCrumbSlice";
 import {
   files,
   selected_files,
+  unselect_all_file,
+  select_unselect_all,
   counter,
   select_all_parent_files,
 } from "../../redux/slices/SelectedFiles";
 
-const CreateFolder = ({ category }) => {
+const CreateFolder = ({ category, setParentFolderIndex }) => {
   const folders = useSelector((state) => state.folder);
-  const selected_files_store = useSelector((state) => state.selected_files);
+  const redux_store = useSelector((state) => state.selected_files);
   const [allParentFiles, setAllParentFiles] = useState({
     all_files: [],
     structured_files: {},
   });
-  // const [allParentFiles]
   const sub_folder_names = ["airtel", "bsnl", "jio", "voda"];
-  const dispatch = useDispatch();
   let p_folder_name = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getFolders();
@@ -41,15 +42,16 @@ const CreateFolder = ({ category }) => {
       };
 
       sub_folder_names?.forEach((name) => {
-        dispatch(counter(p_folder_name.current + "-" + name));
+        dispatch(
+          counter({ name: p_folder_name.current + "-" + name, type: "add" })
+        );
         data = { ...data, operator: name };
         dispatch(select_all_parent_files(data));
       });
 
-      // console.log(allParentFiles, "kkk");
-      allParentFiles.all_files?.forEach((file) => {
-        dispatch(selected_files(file.path));
-      });
+      let arr = allParentFiles?.all_files?.map((item) => item.path);
+      console.log(arr, "arr");
+      dispatch(selected_files({ array: arr, type: "checked_parent" }));
     }
   }, [allParentFiles]);
 
@@ -77,10 +79,12 @@ const CreateFolder = ({ category }) => {
   const getAllSubfolderFiles = (e, parent_folder_name, index) => {
     const { checked } = e.target;
     p_folder_name.current = parent_folder_name;
+    let new_data = [];
+    let path = [];
 
     if (checked) {
       dispatch(is_parent_checked({ index, checked }));
-      let new_data = [];
+      setParentFolderIndex(index);
       let arr = [];
 
       let data = {
@@ -108,6 +112,7 @@ const CreateFolder = ({ category }) => {
           });
 
           new_data = [...new_data, ...res];
+
           setAllParentFiles((prev) => ({
             ...prev,
             all_files: new_data,
@@ -116,11 +121,52 @@ const CreateFolder = ({ category }) => {
         }
       });
     } else {
+      let data = {
+        parent_folder_name: p_folder_name.current,
+        arr: allParentFiles?.all_files,
+      };
+
+      let dt = {
+        arr: [],
+        isCheck: checked,
+      };
+
+      sub_folder_names?.forEach((subfolder_name) => {
+        if (
+          redux_store.count.includes(
+            p_folder_name.current + "-" + subfolder_name
+          ) &&
+          Object.keys(redux_store.structure).length > 0 &&
+          redux_store.count.length > -1
+        ) {
+          let index = redux_store.count.indexOf(
+            p_folder_name.current + "-" + subfolder_name
+          );
+          if (redux_store.structure["folder" + index]) {
+            path = [
+              ...path,
+              ...redux_store.structure["folder" + index]["path"],
+            ];
+            dt = { ...dt, arr: path };
+          }
+        }
+      });
+
+      dispatch(select_unselect_all(dt));
       dispatch(is_parent_checked({ index, checked }));
+
+      sub_folder_names?.forEach(async (subfolder_name) => {
+        data = { ...data, operator: subfolder_name };
+        dispatch(unselect_all_file(data));
+        dispatch(
+          await counter({
+            name: p_folder_name.current + "-" + subfolder_name,
+            type: "remove",
+          })
+        );
+      });
     }
   };
-
-  console.log(allParentFiles, "allParentFiles");
 
   return (
     <div className="create-folder">

@@ -5,34 +5,67 @@ export const selectedFiles = createSlice({
   initialState: { files: [], count: [], structure: {} },
   reducers: {
     selected_files: (state, action) => {
-      const { payload } = action;
+      const { array, type } = action.payload;
+      console.log(array, "payload");
       let all_files = current(state).files;
+
+      if (type === "particular") {
+        if (all_files.indexOf(...array) === -1) {
+          all_files = [...state.files, ...array];
+        } else {
+          let copy_state = [...all_files];
+          copy_state.splice(all_files.indexOf(...array), 1);
+          all_files = [...copy_state];
+        }
+      } else {
+        let copy_arr = array.filter((e) => all_files.indexOf(e) < 0);
+        all_files = [...state.files, ...copy_arr];
+      }
 
       return {
         ...state,
-        files: !all_files.includes(payload)
-          ? [...state.files, payload]
-          : [...state.files],
+        files: all_files,
       };
     },
 
-    unselectect_files: (state, action) => {
+    select_unselect_all: (state, action) => {
       const { payload } = action;
+      let all_files = current(state).files;
+      let data = [];
+
+      if (payload.isCheck) {
+        data = payload.arr?.filter((e) => !all_files?.includes(e));
+      } else {
+        data = all_files?.filter((el) => !payload.arr?.includes(el));
+      }
 
       return {
         ...state,
-        files: state.files.filter((path) => path !== payload),
+        files: payload.isCheck ? [...state.files, ...data] : data,
       };
     },
 
     counter: (state, action) => {
-      const { payload } = action;
+      const { name, type } = action.payload;
+      let counter = current(state).count;
+      console.log(action.payload, "conut");
+
+      if (type === "add") {
+        counter = !state.count.includes(name)
+          ? [...state.count, name]
+          : state.count;
+      } else {
+        console.log(name);
+        counter = state.count?.filter((item) => item !== name);
+        console.log(counter, "oo");
+      }
 
       return {
         ...state,
-        count: !state.count.includes(payload)
-          ? [...state.count, payload]
-          : state.count,
+        // count: !state.count.includes(payload)
+        //   ? [...state.count, payload]
+        //   : state.count,
+        count: counter,
       };
     },
 
@@ -85,25 +118,18 @@ export const selectedFiles = createSlice({
           payload.parent_folder_name + "-" + payload.operator
         );
       }
-      console.log(index, "index");
+
       if (newStructure["folder" + index]) {
         let file_path = newStructure["folder" + index]["path"];
         let [payload_path] = payload.path;
-        console.log(
-          file_path.includes(payload_path) && file_path.length > 1,
-          "pppp",
-          payload_path,
-          file_path.length
-        );
+
         if (file_path.includes(payload_path) && file_path.length > 1) {
           data["folder" + index] = {
             parent_folder_name: payload.parent_folder_name,
             operator: payload.operator,
             path: file_path.filter((path) => path !== payload_path),
           };
-          console.log(index, "index");
         } else if (file_path.length === 1) {
-          console.log(index, "index");
           data = {};
           delete newStructure["folder" + index];
         }
@@ -161,7 +187,7 @@ export const selectedFiles = createSlice({
           path:
             all_files[operator] !== undefined
               ? [
-                  ...structure["folder" + index]["path"],
+                  // ...structure["folder" + index]["path"],
                   ...all_files[operator]["path"],
                 ]
               : [],
@@ -230,7 +256,7 @@ export const selectedFiles = createSlice({
 
 export const {
   selected_files,
-  unselectect_files,
+  select_unselect_all,
   counter,
   add_files_into_redux,
   select_all_parent_files,

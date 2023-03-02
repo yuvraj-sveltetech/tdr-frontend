@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { SelectHeaders } from "../utils/index";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
-import { add_selected_headers } from "../../redux/slices/SelectedOperaterSlice";
 import { append_headers } from "../../redux/slices/SelectedFiles";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -32,7 +31,6 @@ const LargeModal = ({ show, handleClose, handleShow, operator_files }) => {
         };
 
         dispatch(append_headers(data));
-        // dispatch(add_selected_headers(data));
         handleClose();
       }
     } else {

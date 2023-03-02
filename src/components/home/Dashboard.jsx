@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Header,
   SubFolder,
@@ -22,9 +22,11 @@ import Modal from "../utils/Modal";
 const Dashboard = () => {
   const [category, setCategory] = useState("IPDR");
   const [modalType, setModalType] = useState("");
+  const [parentFolderIndex, setParentFolderIndex] = useState(null);
   const files = useSelector((state) => state.folder);
   const showCount = useSelector((state) => state.show_count.show);
   const dispatch = useDispatch();
+
   // useEffect(() => {
   //   console.log(ipcRenderer.sendSync("chokidar"));
   // }, []);
@@ -105,12 +107,19 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {showCount === 0 && <CreateFolder category={category} />}
+              {showCount === 0 && (
+                <CreateFolder
+                  category={category}
+                  setParentFolderIndex={setParentFolderIndex}
+                />
+              )}
+
               {files?.sub_folders.folders.name.length !== 0 &&
               showCount === 1 ? (
                 <SubFolder />
               ) : null}
-              {showCount === 2 && <DirFiles />}
+
+              {showCount === 2 && <DirFiles index={parentFolderIndex} />}
             </div>
           </div>
         </div>

@@ -18,7 +18,7 @@ export const folderSlice = createSlice({
   reducers: {
     folder: (state, action) => {
       const folder_state = current(state).created_folders;
-      console.log(action.payload, "pay");
+
       const result1 =
         state.created_folders.length > 0
           ? folder_state.filter(function (o1) {
@@ -27,7 +27,6 @@ export const folderSlice = createSlice({
               });
             })
           : action.payload;
-      // files.all_files.every((v) => allSelectedFiles.includes(v.file_path));
 
       return { ...state, created_folders: result1 };
     },

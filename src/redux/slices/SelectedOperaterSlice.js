@@ -100,18 +100,8 @@ export const selectedOperatorSlice = createSlice({
       let data = { ...files };
 
       if (folderName) {
-        // let new_data = {};
-        // console.log(selected_headers, "kk");
-
-        // for (let key in selected_headers) {
-        //   new_data[Object.keys(selected_headers[key])[1]] = Object.values(
-        //     selected_headers[key]
-        //   )[1];
-        // }
-
         data[folderName] = {
           ...data[folderName],
-          // headers: { ...new_data },
           headers: [...selected_headers],
         };
       }
