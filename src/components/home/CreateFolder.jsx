@@ -2,19 +2,17 @@ import React, { useEffect, useState, useRef } from "react";
 import "./CreateFolder.css";
 import { MdFolder } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
+import { setShowCount } from "../../redux/slices/BreadCrumbSlice";
 import {
-  all_files,
   folder,
   sub_folder,
   is_parent_checked,
 } from "../../redux/slices/FolderSlice";
-import { setShowCount } from "../../redux/slices/BreadCrumbSlice";
 import {
-  files,
   selected_files,
   unselect_all_file,
   select_unselect_all,
-  counter,
+  // counter,
   select_all_parent_files,
 } from "../../redux/slices/SelectedFiles";
 
@@ -149,15 +147,15 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
       dispatch(select_unselect_all(dt));
       dispatch(is_parent_checked({ index, checked }));
 
-      sub_folder_names?.forEach(async (subfolder_name) => {
+      sub_folder_names?.forEach((subfolder_name) => {
         data = { ...data, operator: subfolder_name };
         dispatch(unselect_all_file(data));
-        dispatch(
-          await counter({
-            name: p_folder_name.current + "-" + subfolder_name,
-            type: "remove",
-          })
-        );
+        // dispatch(
+        //   await counter({
+        //     name: p_folder_name.current + "-" + subfolder_name,
+        //     type: "remove",
+        //   })
+        // );
       });
     }
   };

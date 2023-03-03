@@ -2,7 +2,7 @@ const { ipcMain } = require("electron");
 const path = require("path");
 const os = require("os");
 const request = require("request");
-var fs = require("fs");
+const fs = require("fs");
 
 let dirpath = path.join(os.homedir(), "Desktop");
 
@@ -124,30 +124,10 @@ module.exports = {
   ),
 
   get_headers: ipcMain.on("get_headers", async (e, arg1, arg2) => {
-    console.log(arg2, "000000000000", baseUrl);
-    // IMPORSTNSN----
-    // let data = {};
-
-    // for (let key in arg2.files) {
-    //   console.log(arg2.files[key], key);
-    //   data[key] = arg2.files[key]?.file_path?.map((file) => {
-    //     return {
-    //       value: fs.createReadStream(file),
-    //       options: {
-    //         filename: `file_name${file}`,
-    //         contentType: null,
-    //       },
-    //     };
-    //   });
-    // }
-    // console.log(data, "--------------");
     let options = {
       method: "POST",
       url: `http://192.168.15.248:8000/tdr/getSubFolder/`,
       headers: {},
-      // formData: data,
-
-      // {
       formData: {
         file: {
           value: fs.createReadStream(arg2.file_path),
@@ -157,48 +137,8 @@ module.exports = {
           },
         },
       },
-
-      // jio_files: arg2.jio?.map((file) => {
-      //   return {
-      //     value: fs.createReadStream(file.file_path),
-      //     options: {
-      //       filename: file.file_name,
-      //       contentType: null,
-      //     },
-      //   };
-      // }),
-
-      // voda_files: arg2.voda?.map((file) => {
-      //   return {
-      //     value: fs.createReadStream(file.file_path),
-      //     options: {
-      //       filename: file.file_name,
-      //       contentType: null,
-      //     },
-      //   };
-      // }),
-
-      // airtel_files: arg2.airtel?.map((file) => {
-      //   return {
-      //     value: fs.createReadStream(file.file_path),
-      //     options: {
-      //       filename: file.file_name,
-      //       contentType: null,
-      //     },
-      //   };
-      // }),
-
-      // bsnl_files: arg2.bsnl?.map((file) => {
-      //   return {
-      //     value: fs.createReadStream(file.file_path),
-      //     options: {
-      //       filename: file.file_name,
-      //       contentType: null,
-      //     },
-      //   };
-      // }),
-      // },
     };
+
     request(options, function (error, response) {
       if (error) console.log(error);
 
@@ -209,40 +149,54 @@ module.exports = {
   }),
 
   get_files_data: ipcMain.on("get_files_data", async (e, arg1, arg2) => {
-    console.log(
-      arg2,
-      "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",
-      JSON.stringify(arg2)
-    );
-
+    console.log(arg2, "mmmmmmmmmmmmmmmmmmmmmmmmmmmm");
     let data = {};
+    let new_arg2 = JSON.parse(JSON.stringify(arg2)); // Deep copy of object {arg2}
+
+    for (let key in new_arg2) {
+      for (let path in new_arg2[key]) {
+        delete new_arg2[key][path]["path"];
+      }
+    }
 
     for (let key in arg2) {
-      data[key] = arg2[key].path?.map((file) => {
-        return {
-          value: fs.createReadStream(file),
-          options: {
-            filename: `file_name${file}`,
-            contentType: null,
-          },
-        };
-      });
+      for (let path in arg2[key]) {
+        if (
+          arg2[key][path] !== undefined &&
+          arg2[key][path]["path"]?.length > 0
+        ) {
+          data[key] = arg2[key][path]["path"]?.map((file) => {
+            return {
+              value: fs.createReadStream(file),
+              options: {
+                filename: `file_name${file}`,
+                contentType: null,
+              },
+            };
+          });
+        }
+      }
     }
+
+    console.log(data, "data");
 
     let options = {
       method: "POST",
-      url: `http://192.168.15.248:8000/tdr/test/?file_data=${JSON.stringify(
+      url: `http://192.168.15.248:8000/tdr/processData/?parent_folders_name=${Object.keys(
         arg2
-      )}`,
+      )}&file_data=${JSON.stringify(new_arg2)}`,
       headers: {},
       formData: data,
     };
 
     request(options, function (error, response) {
-      if (error) console.log(error);
+      if (error) e.returnValue = error;
 
       if (response?.statusCode === 200) {
         e.returnValue = JSON.parse(response?.body);
+        console.log(response, "--------", response?.body);
+      } else {
+        e.returnValue = JSON.parse(response?.body)?.Error;
       }
     });
 

@@ -44,29 +44,29 @@ export const selectedFiles = createSlice({
       };
     },
 
-    counter: (state, action) => {
-      const { name, type } = action.payload;
-      let counter = current(state).count;
-      console.log(action.payload, "conut");
+    // counter: (state, action) => {
+    //   const { name, type } = action.payload;
+    //   let counter = current(state).count;
+    //   console.log(action.payload, "conut");
 
-      if (type === "add") {
-        counter = !state.count.includes(name)
-          ? [...state.count, name]
-          : state.count;
-      } else {
-        console.log(name);
-        counter = state.count?.filter((item) => item !== name);
-        console.log(counter, "oo");
-      }
+    //   if (type === "add") {
+    //     counter = !state.count.includes(name)
+    //       ? [...state.count, name]
+    //       : state.count;
+    //   } else {
+    //     console.log(name);
+    //     counter = state.count?.filter((item) => item !== name);
+    //     console.log(counter, "oo");
+    //   }
 
-      return {
-        ...state,
-        // count: !state.count.includes(payload)
-        //   ? [...state.count, payload]
-        //   : state.count,
-        count: counter,
-      };
-    },
+    //   return {
+    //     ...state,
+    //     // count: !state.count.includes(payload)
+    //     //   ? [...state.count, payload]
+    //     //   : state.count,
+    //     count: counter,
+    //   };
+    // },
 
     add_files_into_redux: (state, action) => {
       const { payload } = action;
@@ -242,7 +242,7 @@ export const selectedFiles = createSlice({
 export const {
   selected_files,
   select_unselect_all,
-  counter,
+  // counter,
   add_files_into_redux,
   select_all_parent_files,
   remove_files_into_redux,

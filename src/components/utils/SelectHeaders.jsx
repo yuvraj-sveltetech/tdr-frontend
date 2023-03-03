@@ -6,16 +6,14 @@ const SelectHeaders = ({
   setHasValue,
   parent_folder,
   sub_folders,
-  operator_files,
 }) => {
-  const redux_store = useSelector((state) => state.selected_files);
   const [selectedHeaders, setSelectedHeaders] = useState(new Map());
-  const headers = useSelector((state) => state.headers);
   const [previousHeader, setPreviousHeader] = useState();
+  const redux_store = useSelector((state) => state.selected_files);
+  const headers = useSelector((state) => state.headers);
 
   let staticOptions = [
     "SOURCE IP",
-    "SOURCE IP ADDRESS",
     "SOURCE PORT",
     "DESTINATION IP",
     "DESTINATION PORT",
@@ -28,20 +26,6 @@ const SelectHeaders = ({
   }, []);
 
   useEffect(() => {
-    // Object.entries(redux_store.structure).forEach((item) => {
-    //   if (
-    //     item[1].parent_folder_name === parent_folder &&
-    //     item[1].operator === sub_folders
-    //   ) {
-    //     if (item[1].headers) {
-    //       setPreviousHeader(item[1].headers);
-    //       item[1]?.headers?.forEach((header) => {
-    //         hasValue.set(header.id, header);
-    //       });
-    //     }
-    //   }
-    // });
-
     if (
       redux_store.structure[parent_folder] &&
       redux_store.structure[parent_folder][sub_folders] &&

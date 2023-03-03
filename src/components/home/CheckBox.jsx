@@ -24,12 +24,12 @@ const CheckBox = ({ file, index }) => {
 
     if (checked) {
       dispatch(selected_files({ array: arr, type: "particular" }));
-      dispatch(
-        counter({
-          name: file.parent_folder_name + "-" + file.subfolder_name,
-          type: "add",
-        })
-      );
+      // dispatch(
+      //   counter({
+      //     name: file.parent_folder_name + "-" + file.subfolder_name,
+      //     type: "add",
+      //   })
+      // );
       dispatch(add_files_into_redux(data));
     } else {
       dispatch(is_parent_checked({ index, checked }));
