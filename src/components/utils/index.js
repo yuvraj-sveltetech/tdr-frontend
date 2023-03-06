@@ -9,3 +9,4 @@ export { DirFiles } from "../home/DirFiles";
 export { AddFolder } from "../home/AddFolder";
 export { LargeModal } from "../utils/LargeModal";
 export { SelectHeaders } from "../utils/SelectHeaders";
+export { Report } from "../home/Report";

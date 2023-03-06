@@ -28,6 +28,8 @@ export const folderSlice = createSlice({
             })
           : action.payload;
 
+      // console.log(action.payload, "p", result1);
+
       return { ...state, created_folders: result1 };
     },
 

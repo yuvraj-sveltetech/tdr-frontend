@@ -6,6 +6,7 @@ import selectedOperatorSlice from "../slices/SelectedOperaterSlice";
 import selectedData from "../slices/StructureSlice";
 import breadCrumbSlice from "../slices/BreadCrumbSlice";
 import selectedFiles from "../slices/SelectedFiles";
+import dataForExcel from "../slices/DataForExcel";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     selected_data: selectedData,
     show_count: breadCrumbSlice,
     selected_files: selectedFiles,
+    excelData: dataForExcel,
   },
   middleware: [thunk],
 });

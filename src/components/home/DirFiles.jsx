@@ -91,15 +91,6 @@ const DirFiles = ({ index }) => {
     }
   };
 
-  const getFilesData = async () => {
-    let res = await window.to_electron.get_files_data(
-      "get_files_data",
-      redux_store.structure
-    );
-
-    console.log(res, "res", res?.Error);
-  };
-
   return (
     <div className="all_files">
       <div className="d-flex justify-content-between align-items-center">
@@ -132,8 +123,6 @@ const DirFiles = ({ index }) => {
       <button type="button" className="btn btn-primary" onClick={getHeaders}>
         Select Headers
       </button>
-
-      <button onClick={getFilesData}>Submit</button>
 
       <LargeModal
         show={show}

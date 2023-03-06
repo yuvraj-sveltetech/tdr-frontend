@@ -125,19 +125,15 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
 
       sub_folder_names?.forEach((subfolder_name) => {
         if (
-          redux_store.count.includes(
-            p_folder_name.current + "-" + subfolder_name
-          ) &&
-          Object.keys(redux_store.structure).length > 0 &&
-          redux_store.count.length > -1
+          redux_store.structure[p_folder_name.current] &&
+          Object.keys(redux_store.structure).length > 0
         ) {
-          let index = redux_store.count.indexOf(
-            p_folder_name.current + "-" + subfolder_name
-          );
-          if (redux_store.structure["folder" + index]) {
+          if (redux_store.structure[p_folder_name.current]) {
             path = [
               ...path,
-              ...redux_store.structure["folder" + index]["path"],
+              ...redux_store.structure[p_folder_name.current][subfolder_name][
+                "path"
+              ],
             ];
             dt = { ...dt, arr: path };
           }

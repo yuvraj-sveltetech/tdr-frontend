@@ -2,7 +2,7 @@ import React from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { HashRouter, Route, Routes } from "react-router-dom";
-import { Login, Dashboard, PageNotFound } from "../utils/index";
+import { Login, Dashboard, PageNotFound, Report } from "../utils/index";
 import PrivateRoute from "../utils/PrivateRoute";
 
 const AppRouter = () => {
@@ -15,6 +15,7 @@ const AppRouter = () => {
         <Route element={<PrivateRoute />}>
           {/* <Route path="/dashboard" element={<Dashboard />} /> */}
         </Route>
+        <Route path="/report" element={<Report />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </HashRouter>

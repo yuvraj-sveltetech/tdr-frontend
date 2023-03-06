@@ -126,7 +126,7 @@ module.exports = {
   get_headers: ipcMain.on("get_headers", async (e, arg1, arg2) => {
     let options = {
       method: "POST",
-      url: `http://192.168.15.248:8000/tdr/getSubFolder/`,
+      url: `http://192.168.15.248:8001/tdr/getSubFolder/`,
       headers: {},
       formData: {
         file: {
@@ -149,9 +149,9 @@ module.exports = {
   }),
 
   get_files_data: ipcMain.on("get_files_data", async (e, arg1, arg2) => {
-    console.log(arg2, "mmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+    // console.log(arg2, "ppp");
     let data = {};
-    let new_arg2 = JSON.parse(JSON.stringify(arg2)); // Deep copy of object {arg2}
+    let new_arg2 = JSON.parse(JSON.stringify(arg2.structure)); // Deep copy of object {arg2}
 
     for (let key in new_arg2) {
       for (let path in new_arg2[key]) {
@@ -159,31 +159,43 @@ module.exports = {
       }
     }
 
-    for (let key in arg2) {
-      for (let path in arg2[key]) {
-        if (
-          arg2[key][path] !== undefined &&
-          arg2[key][path]["path"]?.length > 0
-        ) {
-          data[key] = arg2[key][path]["path"]?.map((file) => {
-            return {
-              value: fs.createReadStream(file),
-              options: {
-                filename: `file_name${file}`,
-                contentType: null,
-              },
-            };
-          });
-        }
-      }
+    // for (let key in arg2) {
+    //   for (let path in arg2[key]) {
+    //     if (
+    //       arg2[key][path] !== undefined &&
+    //       arg2[key][path]["path"]?.length > 0
+    //     ) {
+    //       data[key] = arg2[key][path]["path"]?.map((file) => {
+    //         return {
+    //           value: fs.createReadStream(file),
+    //           options: {
+    //             filename: `file_name${file}`,
+    //             contentType: null,
+    //           },
+    //         };
+    //       });
+    //     }
+    //   }
+    // }
+
+    if (arg2.files.length > 0) {
+      data = arg2.files?.map((file) => {
+        return {
+          value: fs.createReadStream(file),
+          options: {
+            filename: file,
+            contentType: null,
+          },
+        };
+      });
     }
 
-    console.log(data, "data");
+    console.log(data, "dataaaaaaaa");
 
     let options = {
       method: "POST",
-      url: `http://192.168.15.248:8000/tdr/processData/?parent_folders_name=${Object.keys(
-        arg2
+      url: `http://192.168.15.248:8001/tdr/processData/?parent_folders_name=${Object.keys(
+        arg2.structure
       )}&file_data=${JSON.stringify(new_arg2)}`,
       headers: {},
       formData: data,
@@ -194,12 +206,12 @@ module.exports = {
 
       if (response?.statusCode === 200) {
         e.returnValue = JSON.parse(response?.body);
-        console.log(response, "--------", response?.body);
+        console.log(response.body, "--------");
       } else {
         e.returnValue = JSON.parse(response?.body)?.Error;
       }
     });
 
-    e.returnValue = "";
+    // e.returnValue = "";
   }),
 };
