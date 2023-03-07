@@ -151,7 +151,8 @@ module.exports = {
   get_files_data: ipcMain.on("get_files_data", async (e, arg1, arg2) => {
     // console.log(arg2, "ppp");
     let data = {};
-    let new_arg2 = JSON.parse(JSON.stringify(arg2.structure)); // Deep copy of object {arg2}
+    let arr = [];
+    let new_arg2 = JSON.parse(JSON.stringify(arg2)); // Deep copy of object {arg2}
 
     for (let key in new_arg2) {
       for (let path in new_arg2[key]) {
@@ -159,35 +160,24 @@ module.exports = {
       }
     }
 
-    // for (let key in arg2) {
-    //   for (let path in arg2[key]) {
-    //     if (
-    //       arg2[key][path] !== undefined &&
-    //       arg2[key][path]["path"]?.length > 0
-    //     ) {
-    //       data[key] = arg2[key][path]["path"]?.map((file) => {
-    //         return {
-    //           value: fs.createReadStream(file),
-    //           options: {
-    //             filename: `file_name${file}`,
-    //             contentType: null,
-    //           },
-    //         };
-    //       });
-    //     }
-    //   }
-    // }
-
-    if (arg2.files.length > 0) {
-      data = arg2.files?.map((file) => {
-        return {
-          value: fs.createReadStream(file),
-          options: {
-            filename: file,
-            contentType: null,
-          },
-        };
-      });
+    for (let key in arg2) {
+      for (let path in arg2[key]) {
+        if (
+          arg2[key][path] !== undefined &&
+          arg2[key][path]["path"]?.length > 0
+        ) {
+          arr = [...arr, ...arg2[key][path]["path"]];
+          data[key] = arr?.map((file) => {
+            return {
+              value: fs.createReadStream(file),
+              options: {
+                filename: `file_name${file}`,
+                contentType: null,
+              },
+            };
+          });
+        }
+      }
     }
 
     console.log(data, "dataaaaaaaa");
@@ -195,7 +185,7 @@ module.exports = {
     let options = {
       method: "POST",
       url: `http://192.168.15.248:8001/tdr/processData/?parent_folders_name=${Object.keys(
-        arg2.structure
+        arg2
       )}&file_data=${JSON.stringify(new_arg2)}`,
       headers: {},
       formData: data,

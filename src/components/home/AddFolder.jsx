@@ -19,9 +19,11 @@ const AddFolder = ({ category, setModal }) => {
     // setIsDone({ ...isDone, loading: true });
 
     // console.log(res, "res", res?.Error);
-    let data = { structure: redux_store.structure, files: redux_store.files };
 
-    let res = window.to_electron.get_files_data("get_files_data", data);
+    let res = window.to_electron.get_files_data(
+      "get_files_data",
+      redux_store.structure
+    );
     console.log(res);
 
     if (res?.file) {

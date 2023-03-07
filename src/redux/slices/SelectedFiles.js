@@ -141,7 +141,11 @@ export const selectedFiles = createSlice({
             ...new_structure[payload.parent_folder_name],
             [payload.operator]: undefined,
           };
-
+          // data = JSON.parse(JSON.stringify(structure));
+          // console.log(data, "ddddd");
+          // data = { ...data, [payload.parent_folder_name]: undefined };
+          // data[payload.parent_folder_name] = undefined;
+          // console.log(data, "dd");
           // delete Parent folder if nothing exists in parnet (remains)
         }
       }
