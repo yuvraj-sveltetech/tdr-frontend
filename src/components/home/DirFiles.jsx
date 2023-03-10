@@ -42,10 +42,10 @@ const DirFiles = ({ index }) => {
   }, [redux_store, folder]);
 
   const getHeaders = async () => {
-    let res = await window.to_electron.get_headers(
-      "get_headers",
-      files.all_files[0]
-    );
+    let res = await window.to_electron.get_headers("get_headers", {
+      file: files.all_files[0],
+      auth_token: localStorage.getItem("auth_token"),
+    });
     dispatch(all_headers(res?.data));
     handleShow();
   };

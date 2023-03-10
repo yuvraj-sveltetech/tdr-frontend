@@ -272,3 +272,24 @@ nav ul li a {
 .file_icon {
   fill: #599def;
 }
+
+.report {
+  padding: 13px;
+}
+
+.report ul {
+  padding: 0;
+  height: 80vh;
+  /* overflow-y: scroll; */
+}
+.report ul li {
+  list-style: none;
+}
+.report ul .item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: lightblue;
+}

@@ -12,8 +12,4 @@ contextBridge.exposeInMainWorld("to_electron", {
     ipcRenderer.invoke("get_files_data", arg1, arg2),
   get_all_folders_files: (arg1, arg2) =>
     ipcRenderer.sendSync("get_all_folders_files", arg1, arg2),
-  API_DATA: (arg) =>
-    ipcRenderer.on("API_DATA", (e, arg) => {
-      console.log(arg);
-    }),
 });

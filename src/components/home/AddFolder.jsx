@@ -9,10 +9,6 @@ const AddFolder = ({ category, setModal }) => {
   const redux_store = useSelector((state) => state.selected_files);
   const dispatch = useDispatch();
 
-  // window.to_electron.API_DATA("API_DATA", (event, result) => {
-  //   console.log(event, result);
-  // });
- 
   useEffect(() => {
     if (Object.keys(redux_store.structure).length > 0) {
       setIsDone({ ...isDone, isDisable: false });
@@ -21,26 +17,14 @@ const AddFolder = ({ category, setModal }) => {
 
   const getFilesData = async () => {
     // setIsDone({ ...isDone, loading: true });
+    let data = {
+      structure: redux_store.structure,
+      auth_token: localStorage.getItem("auth_token"),
+    };
+    let res = await window.to_electron.get_files_data("get_files_data", data);
 
-    // console.log(res, "res", res?.Error);
-
-    let res = await window.to_electron.get_files_data(
-      "get_files_data",
-      redux_store.structure
-    );
-    console.log(res);
-
-    if (res?.file) {
-      // setIsDone({ ...isDone, loading: false });
-      toast.success("Data Process Completed!");
-      dispatch(setExcelData(res?.file));
-    } else {
-      // setIsDone({ ...isDone, loading: false });
-      toast.error("Something went wrong. Please try again.");
-    }
+    console.log(res, "res");
   };
-
-  console.log(isDone.loading);
 
   return (
     <div className="folder bb">

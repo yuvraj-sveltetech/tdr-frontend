@@ -1,9 +1,9 @@
-const { ipcMain } = require("electron");
+const { ipcMain, BrowserWindow, Notification } = require("electron");
 const path = require("path");
 const os = require("os");
 const request = require("request");
 const fs = require("fs");
-
+const { download } = require("electron-dl");
 let dirpath = path.join(os.homedir(), "Desktop");
 
 const baseUrl = process.env.REACT_APP_API_KEY;
@@ -124,15 +124,20 @@ module.exports = {
   ),
 
   get_headers: ipcMain.on("get_headers", async (e, arg1, arg2) => {
+    const { file, auth_token } = arg2;
+
     let options = {
       method: "POST",
       url: `http://192.168.15.248:8001/tdr/getSubFolder/`,
-      headers: {},
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${auth_token}`,
+      },
       formData: {
         file: {
-          value: fs.createReadStream(arg2.file_path),
+          value: fs.createReadStream(file.file_path),
           options: {
-            filename: arg2.file_name,
+            filename: file.file_name,
             contentType: null,
           },
         },
@@ -148,17 +153,19 @@ module.exports = {
     });
   }),
 
-  get_files_data: ipcMain.handle("get_files_data", async (e, arg1, arg2) => {
-    // console.log(arg2, "ppp");
+  get_files_data: ipcMain.handle("get_files_data", async (e, arg1, arg3) => {
+    console.log(arg3, "arg3");
+    let arg2 = arg3.structure;
     let data = {};
     let arr = [];
+    let operators = [];
     let new_arg2 = JSON.parse(JSON.stringify(arg2)); // Deep copy of object {arg2}
 
     for (let key in new_arg2) {
       for (let path in new_arg2[key]) {
         delete new_arg2[key][path]["path"];
       }
-    }
+    } // removed path for sending only headers
 
     if (Object.keys(arg2).length === 1) {
       for (let key in arg2) {
@@ -168,6 +175,7 @@ module.exports = {
             arg2[key][path]["path"]?.length > 0
           ) {
             arr = [...arr, ...arg2[key][path]["path"]];
+            operators = [...operators, path];
             data[key + "_" + path] = arr?.map((file) => {
               return {
                 value: fs.createReadStream(file),
@@ -202,56 +210,48 @@ module.exports = {
       }
     }
 
-    console.log(data, "dataaaaaaaa");
+    let url = `http://192.168.15.248:8001/tdr/processData/?parent_folders_name=${Object.keys(
+      arg2
+    )}&file_data=${JSON.stringify(new_arg2)}`;
 
     let options = {
       method: "POST",
       url:
         Object.keys(arg2).length === 1
-          ? `http://192.168.15.248:8001/tdr/processData/?parent_folders_name=${Object.keys(
-              arg2
-            )}&operators=${Object.keys(data)}&file_data=${JSON.stringify(
-              new_arg2
-            )}`
-          : `http://192.168.15.248:8001/tdr/processData/?parent_folders_name=${Object.keys(
-              arg2
-            )}&file_data=${JSON.stringify(new_arg2)}`,
-      headers: {},
+          ? `${url}&parent_operators=${Object.keys(
+              data
+            )}&operators=${operators}`
+          : url,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${arg3.auth_token}`,
+      },
       formData: data,
     };
 
     request(options, function (error, response) {
-      if (error) e.returnValue = error;
+      if (error) notification("ERROR", "Something went wrong");
 
       if (response?.statusCode === 200) {
-        // e.returnValue = JSON.parse(response?.body);
-        // win.open(
-        //   `http://192.168.15.248:8001${JSON.parse(response?.body).file}`,
-        //   "_blank"
-        // );
+        let url = `http://192.168.15.248:8001${
+          JSON.parse(response?.body).file
+        }`;
 
+        download(BrowserWindow.getFocusedWindow(), url, {
+          directory: path.join(os.homedir(), "Downloads"),
+        });
 
-        let url = `http://192.168.15.248:8001${JSON.parse(response?.body).file}`;
-        let start = (process.platform == 'darwin'? 'open': process.platform == 'win32'? 'start': 'xdg-open');
-        require('child_process').exec(start + ' ' + url);
-
-
-        console.log(
-          JSON.parse(response?.body).file,
-          "--------",
-          response?.body
-        );
-        // e.sender.send("API_DATA", JSON.parse(response?.body));
-        // return JSON.parse(response?.body);
-        // const blob = new Blob([JSON.parse(response?.body).file[0]], {
-        //   type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        // });
+        notification("File Download", "File is downloaded");
       } else {
-        // e.returnValue = JSON.parse(response?.body)?.Error;
-        return JSON.parse(response?.body)?.Error;
+        notification("ERROR", "Something went wrong");
       }
     });
-
-    // e.returnValue = "";
   }),
+};
+
+const notification = (title, body) => {
+  new Notification({
+    title,
+    body,
+  }).show();
 };
