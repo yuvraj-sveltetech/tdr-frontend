@@ -9,18 +9,22 @@ const AddFolder = ({ category, setModal }) => {
   const redux_store = useSelector((state) => state.selected_files);
   const dispatch = useDispatch();
 
+  // window.to_electron.API_DATA("API_DATA", (event, result) => {
+  //   console.log(event, result);
+  // });
+ 
   useEffect(() => {
     if (Object.keys(redux_store.structure).length > 0) {
       setIsDone({ ...isDone, isDisable: false });
     }
   }, [redux_store.structure]);
 
-  const getFilesData = () => {
+  const getFilesData = async () => {
     // setIsDone({ ...isDone, loading: true });
 
     // console.log(res, "res", res?.Error);
 
-    let res = window.to_electron.get_files_data(
+    let res = await window.to_electron.get_files_data(
       "get_files_data",
       redux_store.structure
     );
@@ -43,6 +47,7 @@ const AddFolder = ({ category, setModal }) => {
       {/* <h5>{category === "IPDR" ? "I.P.D.R" : "C.D.R"}</h5> */}
       <button
         className="btn btn-primary me-2"
+        id="send_data"
         onClick={getFilesData}
         disabled={isDone.isDisable}
       >

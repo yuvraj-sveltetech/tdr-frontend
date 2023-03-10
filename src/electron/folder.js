@@ -148,7 +148,7 @@ module.exports = {
     });
   }),
 
-  get_files_data: ipcMain.on("get_files_data", async (e, arg1, arg2) => {
+  get_files_data: ipcMain.handle("get_files_data", async (e, arg1, arg2) => {
     // console.log(arg2, "ppp");
     let data = {};
     let arr = [];
@@ -160,22 +160,44 @@ module.exports = {
       }
     }
 
-    for (let key in arg2) {
-      for (let path in arg2[key]) {
-        if (
-          arg2[key][path] !== undefined &&
-          arg2[key][path]["path"]?.length > 0
-        ) {
-          arr = [...arr, ...arg2[key][path]["path"]];
-          data[key] = arr?.map((file) => {
-            return {
-              value: fs.createReadStream(file),
-              options: {
-                filename: `file_name${file}`,
-                contentType: null,
-              },
-            };
-          });
+    if (Object.keys(arg2).length === 1) {
+      for (let key in arg2) {
+        for (let path in arg2[key]) {
+          if (
+            arg2[key][path] !== undefined &&
+            arg2[key][path]["path"]?.length > 0
+          ) {
+            arr = [...arr, ...arg2[key][path]["path"]];
+            data[key + "_" + path] = arr?.map((file) => {
+              return {
+                value: fs.createReadStream(file),
+                options: {
+                  filename: `file_name${file}`,
+                  contentType: null,
+                },
+              };
+            });
+          }
+        }
+      }
+    } else {
+      for (let key in arg2) {
+        for (let path in arg2[key]) {
+          if (
+            arg2[key][path] !== undefined &&
+            arg2[key][path]["path"]?.length > 0
+          ) {
+            arr = [...arr, ...arg2[key][path]["path"]];
+            data[key] = arr?.map((file) => {
+              return {
+                value: fs.createReadStream(file),
+                options: {
+                  filename: `file_name${file}`,
+                  contentType: null,
+                },
+              };
+            });
+          }
         }
       }
     }
@@ -184,9 +206,16 @@ module.exports = {
 
     let options = {
       method: "POST",
-      url: `http://192.168.15.248:8001/tdr/processData/?parent_folders_name=${Object.keys(
-        arg2
-      )}&file_data=${JSON.stringify(new_arg2)}`,
+      url:
+        Object.keys(arg2).length === 1
+          ? `http://192.168.15.248:8001/tdr/processData/?parent_folders_name=${Object.keys(
+              arg2
+            )}&operators=${Object.keys(data)}&file_data=${JSON.stringify(
+              new_arg2
+            )}`
+          : `http://192.168.15.248:8001/tdr/processData/?parent_folders_name=${Object.keys(
+              arg2
+            )}&file_data=${JSON.stringify(new_arg2)}`,
       headers: {},
       formData: data,
     };
@@ -195,10 +224,31 @@ module.exports = {
       if (error) e.returnValue = error;
 
       if (response?.statusCode === 200) {
-        e.returnValue = JSON.parse(response?.body);
-        console.log(response.body, "--------");
+        // e.returnValue = JSON.parse(response?.body);
+        // win.open(
+        //   `http://192.168.15.248:8001${JSON.parse(response?.body).file}`,
+        //   "_blank"
+        // );
+
+
+        let url = `http://192.168.15.248:8001${JSON.parse(response?.body).file}`;
+        let start = (process.platform == 'darwin'? 'open': process.platform == 'win32'? 'start': 'xdg-open');
+        require('child_process').exec(start + ' ' + url);
+
+
+        console.log(
+          JSON.parse(response?.body).file,
+          "--------",
+          response?.body
+        );
+        // e.sender.send("API_DATA", JSON.parse(response?.body));
+        // return JSON.parse(response?.body);
+        // const blob = new Blob([JSON.parse(response?.body).file[0]], {
+        //   type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        // });
       } else {
-        e.returnValue = JSON.parse(response?.body)?.Error;
+        // e.returnValue = JSON.parse(response?.body)?.Error;
+        return JSON.parse(response?.body)?.Error;
       }
     });
 

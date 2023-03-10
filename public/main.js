@@ -15,7 +15,7 @@ if (require("electron-squirrel-startup")) {
 
 function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  let win = new BrowserWindow({
     autoHideMenuBar: true,
     show: false,
     webPreferences: {
