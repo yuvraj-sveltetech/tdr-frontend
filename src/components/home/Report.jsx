@@ -32,14 +32,16 @@ const Report = () => {
           <div className="dashpage col-md-10">
             <Header />
             <div className="report">
-              <h5 className="mb-3">Download Report</h5>
+              <h5 className="mb-3">Report List</h5>
 
               {loading ? (
                 <>
                   <div class="d-flex justify-content-center">
                     <div class="spinner-border" role="status" />
                   </div>
-                  <span class="sr-only d-flex justify-content-center">Please wait...</span>
+                  <span class="sr-only d-flex justify-content-center">
+                    Please wait...
+                  </span>
                 </>
               ) : (
                 <ul>

@@ -152,6 +152,11 @@ nav ul li a {
   font-weight: 500;
 }
 
+.create-folder .row {
+  overflow-y: scroll;
+  height: 64vh;
+}
+
 .main .choose,
 .create-folder,
 .sub_folder,

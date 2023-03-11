@@ -44,30 +44,6 @@ export const selectedFiles = createSlice({
       };
     },
 
-    // counter: (state, action) => {
-    //   const { name, type } = action.payload;
-    //   let counter = current(state).count;
-    //   console.log(action.payload, "conut");
-
-    //   if (type === "add") {
-    //     counter = !state.count.includes(name)
-    //       ? [...state.count, name]
-    //       : state.count;
-    //   } else {
-    //     console.log(name);
-    //     counter = state.count?.filter((item) => item !== name);
-    //     console.log(counter, "oo");
-    //   }
-
-    //   return {
-    //     ...state,
-    //     // count: !state.count.includes(payload)
-    //     //   ? [...state.count, payload]
-    //     //   : state.count,
-    //     count: counter,
-    //   };
-    // },
-
     add_files_into_redux: (state, action) => {
       const { payload } = action;
       let structure = current(state).structure;
@@ -136,17 +112,17 @@ export const selectedFiles = createSlice({
               path: file_path?.filter((path) => path !== payload_path),
             },
           };
-        } else if (file_path?.length === 1) {
+        } else if (
+          Object.keys(new_structure[payload.parent_folder_name]).length > 1
+        ) {
+          // delete operator if it has 1 file but have multliple operator
           data[payload.parent_folder_name] = {
             ...new_structure[payload.parent_folder_name],
             [payload.operator]: undefined,
           };
-          // data = JSON.parse(JSON.stringify(structure));
-          // console.log(data, "ddddd");
-          // data = { ...data, [payload.parent_folder_name]: undefined };
-          // data[payload.parent_folder_name] = undefined;
-          // console.log(data, "dd");
-          // delete Parent folder if nothing exists in parnet (remains)
+        } else if (file_path?.length === 1) {
+          // delete parent if 1 operator has 1 file
+          data[payload.parent_folder_name] = undefined;
         }
       }
 

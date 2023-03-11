@@ -17,11 +17,11 @@ const AddFolder = ({ category, setModal }) => {
 
   const getFilesData = async () => {
     // setIsDone({ ...isDone, loading: true });
-    let data = {
+
+    let res = await window.to_electron.get_files_data("get_files_data", {
       structure: redux_store.structure,
       auth_token: localStorage.getItem("auth_token"),
-    };
-    let res = await window.to_electron.get_files_data("get_files_data", data);
+    });
 
     console.log(res, "res");
   };

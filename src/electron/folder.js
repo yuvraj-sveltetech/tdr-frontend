@@ -5,8 +5,7 @@ const request = require("request");
 const fs = require("fs");
 const { download } = require("electron-dl");
 let dirpath = path.join(os.homedir(), "Desktop");
-
-const baseUrl = process.env.REACT_APP_API_KEY;
+const baseUrl = "http://127.0.0.1:8000/";
 
 module.exports = {
   create_folder: ipcMain.handle("create_folder", async (e, arg1, arg2) => {
@@ -128,7 +127,7 @@ module.exports = {
 
     let options = {
       method: "POST",
-      url: `http://192.168.15.248:8001/tdr/getSubFolder/`,
+      url: `${baseUrl}tdr/getSubFolder/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${auth_token}`,
@@ -154,12 +153,14 @@ module.exports = {
   }),
 
   get_files_data: ipcMain.handle("get_files_data", async (e, arg1, arg3) => {
-    console.log(arg3, "arg3");
-    let arg2 = arg3.structure;
+    const { structure, auth_token } = arg3;
     let data = {};
     let arr = [];
     let operators = [];
-    let new_arg2 = JSON.parse(JSON.stringify(arg2)); // Deep copy of object {arg2}
+    let new_arg2 = JSON.parse(JSON.stringify(structure)); // Deep copy of object {arg2}
+    let url = `${baseUrl}tdr/processData/?parent_folders_name=${Object.keys(
+      structure
+    )}&file_data=${JSON.stringify(new_arg2)}`;
 
     for (let key in new_arg2) {
       for (let path in new_arg2[key]) {
@@ -167,14 +168,14 @@ module.exports = {
       }
     } // removed path for sending only headers
 
-    if (Object.keys(arg2).length === 1) {
-      for (let key in arg2) {
-        for (let path in arg2[key]) {
+    if (Object.keys(structure).length === 1) {
+      for (let key in structure) {
+        for (let path in structure[key]) {
           if (
-            arg2[key][path] !== undefined &&
-            arg2[key][path]["path"]?.length > 0
+            structure[key][path] !== undefined &&
+            structure[key][path]["path"]?.length > 0
           ) {
-            arr = [...arr, ...arg2[key][path]["path"]];
+            arr = [...arr, ...structure[key][path]["path"]];
             operators = [...operators, path];
             data[key + "_" + path] = arr?.map((file) => {
               return {
@@ -189,13 +190,13 @@ module.exports = {
         }
       }
     } else {
-      for (let key in arg2) {
-        for (let path in arg2[key]) {
+      for (let key in structure) {
+        for (let path in structure[key]) {
           if (
-            arg2[key][path] !== undefined &&
-            arg2[key][path]["path"]?.length > 0
+            structure[key][path] !== undefined &&
+            structure[key][path]["path"]?.length > 0
           ) {
-            arr = [...arr, ...arg2[key][path]["path"]];
+            arr = [...arr, ...structure[key][path]["path"]];
             data[key] = arr?.map((file) => {
               return {
                 value: fs.createReadStream(file),
@@ -210,21 +211,17 @@ module.exports = {
       }
     }
 
-    let url = `http://192.168.15.248:8001/tdr/processData/?parent_folders_name=${Object.keys(
-      arg2
-    )}&file_data=${JSON.stringify(new_arg2)}`;
-
     let options = {
       method: "POST",
       url:
-        Object.keys(arg2).length === 1
+        Object.keys(structure).length === 1
           ? `${url}&parent_operators=${Object.keys(
               data
             )}&operators=${operators}`
           : url,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${arg3.auth_token}`,
+        Authorization: `Bearer ${auth_token}`,
       },
       formData: data,
     };
@@ -233,11 +230,9 @@ module.exports = {
       if (error) notification("ERROR", "Something went wrong");
 
       if (response?.statusCode === 200) {
-        let url = `http://192.168.15.248:8001${
-          JSON.parse(response?.body).file
-        }`;
+        const downloadLink = `${baseUrl + JSON.parse(response?.body).file}`;
 
-        download(BrowserWindow.getFocusedWindow(), url, {
+        download(BrowserWindow.getFocusedWindow(), downloadLink, {
           directory: path.join(os.homedir(), "Downloads"),
         });
 

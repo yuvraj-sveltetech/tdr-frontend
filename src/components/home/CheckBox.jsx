@@ -3,7 +3,6 @@ import { BsFillFileEarmarkTextFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selected_files,
-  counter,
   add_files_into_redux,
   remove_files_into_redux,
 } from "../../redux/slices/SelectedFiles";
@@ -24,23 +23,11 @@ const CheckBox = ({ file, index }) => {
 
     if (checked) {
       dispatch(selected_files({ array: arr, type: "particular" }));
-      // dispatch(
-      //   counter({
-      //     name: file.parent_folder_name + "-" + file.subfolder_name,
-      //     type: "add",
-      //   })
-      // );
       dispatch(add_files_into_redux(data));
     } else {
       dispatch(is_parent_checked({ index, checked }));
       dispatch(selected_files({ array: arr, type: "particular" }));
       dispatch(remove_files_into_redux(data));
-      // dispatch(
-      //   counter({
-      //     name: file.parent_folder_name + "-" + file.subfolder_name,
-      //     type: "remove",
-      //   })
-      // );
     }
   };
 

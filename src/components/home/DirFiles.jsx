@@ -22,8 +22,6 @@ const DirFiles = ({ index }) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  // console.log(operator_files, "------------------------", files);
-
   let folder = useMemo(() => {
     return [files.sub_folders.parent_folder, files.sub_folders.subfolder];
   }, [files.sub_folders.parent_folder, files.sub_folders.subfolder]);
@@ -37,6 +35,8 @@ const DirFiles = ({ index }) => {
         setAllSelectedFiles(
           redux_store?.structure[folder[0]][folder[1]]["path"]
         );
+      } else {
+        setAllSelectedFiles([]);
       }
     }
   }, [redux_store, folder]);
@@ -62,10 +62,6 @@ const DirFiles = ({ index }) => {
       path: files.all_files.map((file) => file.file_path),
     };
 
-    // if (!redux_store.count.includes(folder[0] + "-" + folder[1])) {
-    //   dispatch(counter({ name: folder[0] + "-" + folder[1], type: "add" }));
-    // }
-
     let new_data = {
       arr: files?.all_files?.map((item) => item.file_path),
       isCheck: null,
@@ -80,13 +76,6 @@ const DirFiles = ({ index }) => {
       dispatch(select_unselect_all(new_data));
       dispatch(unselect_all_file(data));
       dispatch(is_parent_checked({ index, checked }));
-      // dispatch(
-      //   await counter({
-      //     name: folder[0] + "-" + folder[1],
-      //     type: "remove",
-      //   })
-      // );
-
       setAllSelectedFiles([]);
     }
   };
