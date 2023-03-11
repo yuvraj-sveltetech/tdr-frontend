@@ -98,7 +98,7 @@ export const selectedFiles = createSlice({
       let structure = current(state).structure;
       let new_structure = { ...structure };
       let data = {};
-
+      console.log(Object.keys(new_structure[payload.parent_folder_name]))
       if (new_structure[payload.parent_folder_name]) {
         let [payload_path] = payload.path;
         let file_path =
@@ -120,7 +120,10 @@ export const selectedFiles = createSlice({
             ...new_structure[payload.parent_folder_name],
             [payload.operator]: undefined,
           };
-        } else if (file_path?.length === 1) {
+        } else if (
+          Object.keys(new_structure[payload.parent_folder_name]).length === 1 &&
+          file_path?.length === 1
+        ) {
           // delete parent if 1 operator has 1 file
           data[payload.parent_folder_name] = undefined;
         }
@@ -185,15 +188,23 @@ export const selectedFiles = createSlice({
     },
 
     unselect_all_file: (state, action) => {
-      const { payload } = action;
+      const { arr, take_action } = action.payload;
       let structure = current(state).structure;
       let new_structure = { ...structure };
-
-      if (new_structure[payload.parent_folder_name]) {
-        new_structure[payload.parent_folder_name] = {
-          ...new_structure[payload.parent_folder_name],
-          [payload.operator]: undefined,
-        };
+      console.log(
+        Object.keys(new_structure[arr.parent_folder_name]),
+        " Object.keys(new_structure[arr.parent_folder_name])"
+      );
+      if (new_structure[arr.parent_folder_name]) {
+        if (
+          take_action === "delete_operator" &&
+          Object.keys(new_structure[arr.parent_folder_name]).length > 1
+        ) {
+          new_structure[arr.parent_folder_name] = {
+            ...new_structure[arr.parent_folder_name],
+            [arr.operator]: undefined,
+          };
+        } else delete new_structure[arr.parent_folder_name];
       }
 
       return { ...state, structure: new_structure };

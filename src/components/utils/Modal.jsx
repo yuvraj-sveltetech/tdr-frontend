@@ -37,7 +37,8 @@ const Modal = ({ modalType, category }) => {
 
   const getFolders = async () => {
     let res = await window.to_electron.get_folders("get_folders");
-    if (res) dispatch(folder(res));
+    if (res)
+      dispatch(folder({ new_data: res, take_action: "create_folder" }));
   };
 
   const conditionalModalContent = () => {

@@ -40,16 +40,14 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
       };
 
       dispatch(select_all_parent_files(data));
-
       let arr = allParentFiles?.all_files?.map((item) => item.path);
-      console.log(arr, "arr");
       dispatch(selected_files({ array: arr, type: "checked_parent" }));
     }
   }, [allParentFiles]);
 
   const getFolders = async () => {
     let res = await window.to_electron.get_folders("get_folders");
-    if (res) dispatch(folder(res));
+    if (res) dispatch(folder({ new_data: res, take_action: "check_folder" }));
   };
 
   const getSubfolder = async (folder) => {
@@ -126,17 +124,18 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
       sub_folder_names?.forEach((subfolder_name) => {
         if (
           redux_store.structure[p_folder_name.current] &&
+          redux_store.structure[p_folder_name.current][subfolder_name] &&
           Object.keys(redux_store.structure).length > 0
         ) {
-          if (redux_store.structure[p_folder_name.current]) {
-            path = [
-              ...path,
-              ...redux_store.structure[p_folder_name.current][subfolder_name][
-                "path"
-              ],
-            ];
-            dt = { ...dt, arr: path };
-          }
+          // if (redux_store.structure[p_folder_name.current]) {
+          path = [
+            ...path,
+            ...redux_store.structure[p_folder_name.current][subfolder_name][
+              "path"
+            ],
+          ];
+          dt = { ...dt, arr: path };
+          // }
         }
       });
 
@@ -145,13 +144,9 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
 
       sub_folder_names?.forEach((subfolder_name) => {
         data = { ...data, operator: subfolder_name };
-        dispatch(unselect_all_file(data));
-        // dispatch(
-        //   await counter({
-        //     name: p_folder_name.current + "-" + subfolder_name,
-        //     type: "remove",
-        //   })
-        // );
+        dispatch(
+          unselect_all_file({ arr: data, take_action: "delete_parent" })
+        );
       });
     }
   };
@@ -161,7 +156,7 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
       <div className="container-fluid">
         <h6>FOLDER</h6>
         <div className="row list-unstyled">
-          {folders.created_folders?.map((folder, index) => {
+          {folders?.created_folders?.map((folder, index) => {
             return (
               <div
                 className="col-md-3"

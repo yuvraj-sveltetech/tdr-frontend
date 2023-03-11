@@ -17,20 +17,52 @@ export const folderSlice = createSlice({
   },
   reducers: {
     folder: (state, action) => {
+      const { new_data, take_action } = action.payload;
       const folder_state = current(state).created_folders;
 
-      const result1 =
-        state.created_folders.length > 0
-          ? folder_state.filter(function (o1) {
-              return state.created_folders.some(function (o2) {
-                return o1.folder_name == o2.folder_name; // id is unnique both array object
-              });
-            })
-          : action.payload;
+      const a = folder_state;
+      const b = new_data;
 
-      // console.log(action.payload, "p", result1);
+      // const result1 =
+      //   state.created_folders.length > 0
+      //     ? folder_state.filter(function (o1) {
+      //         return state.created_folders.some(function (o2) {
+      //           return o1.folder_name == o2.folder_name; // id is unnique both array object
+      //         });
+      //       })
+      //     : action.payload;
 
-      return { ...state, created_folders: result1 };
+      const isChecked = (a, b) => a.isChecked !== b.isChecked;
+      const isNonChecked = (a, b) => a.isChecked === b.isChecked;
+      const createdFolder = (a, b) => a.folder_name === b.folder_name;
+
+      const filterOutData = (left, right, compareFunction) =>
+        left.filter((leftValue) =>
+          right.some((rightValue) => compareFunction(leftValue, rightValue))
+        );
+
+      const filterOutData2 = (left, right, compareFunction) =>
+        left.filter(
+          (leftValue) =>
+            !right.some((rightValue) => compareFunction(leftValue, rightValue))
+        );
+
+      const is_checked_arr = filterOutData(a, b, isChecked);
+      const is_non_checked_arr = filterOutData(a, b, isNonChecked);
+
+      const result = [...is_checked_arr, ...is_non_checked_arr];
+
+      const created_new_folder =
+        take_action === "create_folder"
+          ? filterOutData2(b, result, createdFolder)
+          : [];
+
+      const final_result = [...created_new_folder, ...result];
+
+      return {
+        ...state,
+        created_folders: folder_state.length === 0 ? new_data : final_result,
+      };
     },
 
     sub_folder: (state, action) => {

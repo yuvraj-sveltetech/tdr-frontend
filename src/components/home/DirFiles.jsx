@@ -74,7 +74,9 @@ const DirFiles = ({ index }) => {
     } else {
       new_data = { ...new_data, isCheck: checked };
       dispatch(select_unselect_all(new_data));
-      dispatch(unselect_all_file(data));
+      dispatch(
+        unselect_all_file({ arr: data, take_action: "delete_operator" })
+      );
       dispatch(is_parent_checked({ index, checked }));
       setAllSelectedFiles([]);
     }
