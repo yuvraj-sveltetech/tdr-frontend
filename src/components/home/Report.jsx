@@ -22,7 +22,9 @@ const Report = () => {
     apiCall("get", URL.GET_EXCEL_DATA, "");
   };
 
-  console.log(loading, loading);
+  const downloadFile = async (download_link) => {
+    await window.to_electron.DOWNLOAD_FILE("DOWNLOAD_FILE", download_link);
+  };
 
   return (
     <>
@@ -44,18 +46,16 @@ const Report = () => {
                   </span>
                 </>
               ) : (
-                <ul>
+                <ul
+                  style={
+                    reportData.length > 1
+                      ? { overflowY: "scroll" }
+                      : { overflow: "hidden" }
+                  }
+                >
                   {reportData?.map((item) => {
                     return (
-                      <div
-                        className="item"
-                        key={item.id}
-                        style={
-                          reportData.length > 1
-                            ? { overflowX: "scroll" }
-                            : { overflow: "unset" }
-                        }
-                      >
+                      <div className="item me-1" key={item.id}>
                         <li>
                           <BsFillFileEarmarkTextFill
                             className="file_icon mb-1 me-2"
@@ -63,7 +63,12 @@ const Report = () => {
                           />
                           {item.result_name}
                         </li>
-                        <button className="btn btn-primary">Download</button>
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => downloadFile(item.file_location)}
+                        >
+                          Download
+                        </button>
                       </div>
                     );
                   })}

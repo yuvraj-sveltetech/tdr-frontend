@@ -5,7 +5,7 @@ const request = require("request");
 const fs = require("fs");
 const { download } = require("electron-dl");
 let dirpath = path.join(os.homedir(), "Desktop");
-const baseUrl = "http://127.0.0.1:8000/";
+const baseUrl = "http://192.168.15.248:8001/";
 
 module.exports = {
   create_folder: ipcMain.handle("create_folder", async (e, arg1, arg2) => {
@@ -153,94 +153,108 @@ module.exports = {
   }),
 
   get_files_data: ipcMain.handle("get_files_data", async (e, arg1, arg3) => {
-    const { structure, auth_token } = arg3;
-    let data = {};
-    let arr = [];
-    let operators = [];
-    let new_arg2 = JSON.parse(JSON.stringify(structure)); // Deep copy of object {arg2}
-    let url = `${baseUrl}tdr/processData/?parent_folders_name=${Object.keys(
-      structure
-    )}&file_data=${JSON.stringify(new_arg2)}`;
+    return new Promise((resolve, reject) => {
+      const { structure, auth_token } = arg3;
+      let data = {};
+      let arr = [];
+      let operators = [];
+      let new_arg2 = JSON.parse(JSON.stringify(structure)); // Deep copy of object {arg2}
+      let url = `${baseUrl}tdr/processData/?parent_folders_name=${Object.keys(
+        structure
+      )}&file_data=${JSON.stringify(new_arg2)}`;
 
-    for (let key in new_arg2) {
-      for (let path in new_arg2[key]) {
-        delete new_arg2[key][path]["path"];
-      }
-    } // removed path for sending only headers
+      for (let key in new_arg2) {
+        for (let path in new_arg2[key]) {
+          delete new_arg2[key][path]["path"];
+        }
+      } // removed path for sending only headers\
 
-    if (Object.keys(structure).length === 1) {
-      for (let key in structure) {
-        for (let path in structure[key]) {
-          if (
-            structure[key][path] !== undefined &&
-            structure[key][path]["path"]?.length > 0
-          ) {
-            arr = [...arr, ...structure[key][path]["path"]];
-            operators = [...operators, path];
-            data[key + "_" + path] = arr?.map((file) => {
-              return {
-                value: fs.createReadStream(file),
-                options: {
-                  filename: `file_name${file}`,
-                  contentType: null,
-                },
-              };
-            });
+      if (Object.keys(structure).length === 1) {
+        for (let key in structure) {
+          for (let path in structure[key]) {
+            if (
+              structure[key][path] !== undefined &&
+              structure[key][path]["path"]?.length > 0
+            ) {
+              arr = [...arr, ...structure[key][path]["path"]];
+              operators = [...operators, path];
+              data[key + "_" + path] = arr?.map((file) => {
+                return {
+                  value: fs.createReadStream(file),
+                  options: {
+                    filename: `file_name${file}`,
+                    contentType: null,
+                  },
+                };
+              });
+            }
           }
         }
-      }
-    } else {
-      for (let key in structure) {
-        for (let path in structure[key]) {
-          if (
-            structure[key][path] !== undefined &&
-            structure[key][path]["path"]?.length > 0
-          ) {
-            arr = [...arr, ...structure[key][path]["path"]];
-            data[key] = arr?.map((file) => {
-              return {
-                value: fs.createReadStream(file),
-                options: {
-                  filename: `file_name${file}`,
-                  contentType: null,
-                },
-              };
-            });
-          }
-        }
-      }
-    }
-
-    let options = {
-      method: "POST",
-      url:
-        Object.keys(structure).length === 1
-          ? `${url}&parent_operators=${Object.keys(
-              data
-            )}&operators=${operators}`
-          : url,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${auth_token}`,
-      },
-      formData: data,
-    };
-
-    request(options, function (error, response) {
-      if (error) notification("ERROR", "Something went wrong");
-
-      if (response?.statusCode === 200) {
-        const downloadLink = `${baseUrl + JSON.parse(response?.body).file}`;
-
-        download(BrowserWindow.getFocusedWindow(), downloadLink, {
-          directory: path.join(os.homedir(), "Downloads"),
-        });
-
-        notification("File Download", "File is downloaded");
       } else {
-        notification("ERROR", "Something went wrong");
+        for (let key in structure) {
+          for (let path in structure[key]) {
+            if (
+              structure[key][path] !== undefined &&
+              structure[key][path]["path"]?.length > 0
+            ) {
+              arr = [...arr, ...structure[key][path]["path"]];
+              data[key] = arr?.map((file) => {
+                return {
+                  value: fs.createReadStream(file),
+                  options: {
+                    filename: `file_name${file}`,
+                    contentType: null,
+                  },
+                };
+              });
+            }
+          }
+        }
       }
+
+      let options = {
+        method: "POST",
+        url:
+          Object.keys(structure).length === 1
+            ? `${url}&parent_operators=${Object.keys(
+                data
+              )}&operators=${operators}`
+            : url,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth_token}`,
+        },
+        formData: data,
+      };
+
+      request(options, function (error, response) {
+        if (error) notification("ERROR", "Something went wrong");
+
+        if (response?.statusCode === 200) {
+          resolve(false);
+          notification(
+            "PROCESSED",
+            "Data is processed. Download file from report section"
+          );
+        } else {
+          resolve(false);
+          notification("ERROR", "Something went wrong");
+        }
+      });
     });
+  }),
+
+  DOWNLOAD_FILE: ipcMain.handle("DOWNLOAD_FILE", async (e, arg1, arg2) => {
+    const downloadLink = `${baseUrl + arg2}`;
+    await download(BrowserWindow.getFocusedWindow(), downloadLink, {
+      directory: path.join(os.homedir(), "Downloads"),
+    })
+      .then(() => {
+        notification("FILE DOWNLOADED", "Check your downloads section");
+      })
+      .catch(() => {
+        notification("ERROR", "Something went wrong");
+      });
   }),
 };
 

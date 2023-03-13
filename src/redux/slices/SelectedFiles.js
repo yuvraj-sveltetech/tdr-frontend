@@ -191,10 +191,10 @@ export const selectedFiles = createSlice({
       const { arr, take_action } = action.payload;
       let structure = current(state).structure;
       let new_structure = { ...structure };
-      console.log(
-        Object.keys(new_structure[arr.parent_folder_name]),
-        " Object.keys(new_structure[arr.parent_folder_name])"
-      );
+      // console.log(
+      //   Object.keys(new_structure[arr.parent_folder_name]),
+      //   " Object.keys(new_structure[arr.parent_folder_name])"
+      // );
       if (new_structure[arr.parent_folder_name]) {
         if (
           take_action === "delete_operator" &&

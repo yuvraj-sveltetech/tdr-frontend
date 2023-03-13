@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { MdCreateNewFolder } from "react-icons/md";
-import { useSelector, useDispatch } from "react-redux";
-import { setExcelData } from "../../redux/slices/DataForExcel";
+import { useSelector } from "react-redux";
 
 const AddFolder = ({ category, setModal }) => {
   const [isDone, setIsDone] = useState({ isDisable: true, loading: false });
   const redux_store = useSelector((state) => state.selected_files);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (Object.keys(redux_store.structure).length > 0) {
@@ -16,14 +13,13 @@ const AddFolder = ({ category, setModal }) => {
   }, [redux_store.structure]);
 
   const getFilesData = async () => {
-    // setIsDone({ ...isDone, loading: true });
-
+    setIsDone({ isDisable: true, loading: true });
     let res = await window.to_electron.get_files_data("get_files_data", {
       structure: redux_store.structure,
       auth_token: localStorage.getItem("auth_token"),
     });
 
-    console.log(res, "res");
+    setIsDone({ isDisable: false, loading: res });
   };
 
   return (
@@ -37,7 +33,10 @@ const AddFolder = ({ category, setModal }) => {
       >
         {isDone.loading ? (
           <div>
-            <div class="spinner-border spinner-border-sm me-1" role="status" />
+            <div
+              className="spinner-border spinner-border-sm me-1"
+              role="status"
+            />
             Processing...
           </div>
         ) : (
