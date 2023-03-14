@@ -24,7 +24,7 @@ const AddFolder = ({ category, setModal }) => {
 
   return (
     <div className="folder bb">
-      {/* <h5>{category === "IPDR" ? "I.P.D.R" : "C.D.R"}</h5> */}
+      {/* <h5>{category === "IPDR" ? "I.P.D.R" : "C.DoR"}</h5> */}
       <button
         className="btn btn-primary me-2"
         id="send_data"

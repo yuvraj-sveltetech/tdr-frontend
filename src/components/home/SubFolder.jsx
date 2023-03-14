@@ -24,8 +24,6 @@ const SubFolder = () => {
         toast.error("File not found!");
       }
     }
-
-    // dispatch(setShowCount(2));
   };
 
   return (

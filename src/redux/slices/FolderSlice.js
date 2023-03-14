@@ -23,15 +23,6 @@ export const folderSlice = createSlice({
       const a = folder_state;
       const b = new_data;
 
-      // const result1 =
-      //   state.created_folders.length > 0
-      //     ? folder_state.filter(function (o1) {
-      //         return state.created_folders.some(function (o2) {
-      //           return o1.folder_name == o2.folder_name; // id is unnique both array object
-      //         });
-      //       })
-      //     : action.payload;
-
       const isChecked = (a, b) => a.isChecked !== b.isChecked;
       const isNonChecked = (a, b) => a.isChecked === b.isChecked;
       const createdFolder = (a, b) => a.folder_name === b.folder_name;

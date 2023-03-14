@@ -6,7 +6,6 @@ import {
   select_all_file,
   select_unselect_all,
   unselect_all_file,
-  // counter,
 } from "../../redux/slices/SelectedFiles";
 import { is_parent_checked } from "../../redux/slices/FolderSlice";
 import { LargeModal } from "../utils/index";

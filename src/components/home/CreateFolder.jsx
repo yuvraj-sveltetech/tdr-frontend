@@ -12,7 +12,6 @@ import {
   selected_files,
   unselect_all_file,
   select_unselect_all,
-  // counter,
   select_all_parent_files,
 } from "../../redux/slices/SelectedFiles";
 
@@ -127,7 +126,6 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
           redux_store.structure[p_folder_name.current][subfolder_name] &&
           Object.keys(redux_store.structure).length > 0
         ) {
-          // if (redux_store.structure[p_folder_name.current]) {
           path = [
             ...path,
             ...redux_store.structure[p_folder_name.current][subfolder_name][
@@ -135,7 +133,6 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
             ],
           ];
           dt = { ...dt, arr: path };
-          // }
         }
       });
 

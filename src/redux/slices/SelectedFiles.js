@@ -98,7 +98,7 @@ export const selectedFiles = createSlice({
       let structure = current(state).structure;
       let new_structure = { ...structure };
       let data = {};
-      console.log(Object.keys(new_structure[payload.parent_folder_name]))
+
       if (new_structure[payload.parent_folder_name]) {
         let [payload_path] = payload.path;
         let file_path =
@@ -115,11 +115,8 @@ export const selectedFiles = createSlice({
         } else if (
           Object.keys(new_structure[payload.parent_folder_name]).length > 1
         ) {
-          // delete operator if it has 1 file but have multliple operator
-          data[payload.parent_folder_name] = {
-            ...new_structure[payload.parent_folder_name],
-            [payload.operator]: undefined,
-          };
+          data = JSON.parse(JSON.stringify(structure));
+          delete data[payload.parent_folder_name][payload.operator];
         } else if (
           Object.keys(new_structure[payload.parent_folder_name]).length === 1 &&
           file_path?.length === 1
@@ -191,10 +188,7 @@ export const selectedFiles = createSlice({
       const { arr, take_action } = action.payload;
       let structure = current(state).structure;
       let new_structure = { ...structure };
-      // console.log(
-      //   Object.keys(new_structure[arr.parent_folder_name]),
-      //   " Object.keys(new_structure[arr.parent_folder_name])"
-      // );
+
       if (new_structure[arr.parent_folder_name]) {
         if (
           take_action === "delete_operator" &&
@@ -233,7 +227,6 @@ export const selectedFiles = createSlice({
 export const {
   selected_files,
   select_unselect_all,
-  // counter,
   add_files_into_redux,
   select_all_parent_files,
   remove_files_into_redux,
