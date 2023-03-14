@@ -11,9 +11,9 @@ const Sidebar = () => {
       to: "/dashboard",
     },
     {
-      name: "About",
+      name: "Report",
       icons: <MdOutlineSpaceDashboard id="navicons" />,
-      to: "/dashboard",
+      to: "/report",
     },
   ];
 

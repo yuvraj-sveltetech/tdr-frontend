@@ -152,6 +152,11 @@ nav ul li a {
   font-weight: 500;
 }
 
+.create-folder .row {
+  overflow-y: scroll;
+  height: 64vh;
+}
+
 .main .choose,
 .create-folder,
 .sub_folder,
@@ -166,6 +171,26 @@ nav ul li a {
 .main .choose span {
   font-weight: 700;
   font-size: 1rem;
+}
+
+.create-folder h6,
+.all-folders h6,
+.all_files h6 {
+  border-top: 1px solid #e5e9f2;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 1rem 0;
+  margin: 0;
+  text-align: left;
+}
+
+.all_files h6 {
+  border: none !important;
+}
+
+.all_files > div:first-child {
+  border-top: 1px solid #e5e9f2;
 }
 
 .main .choose img {
@@ -193,7 +218,7 @@ nav ul li a {
 }
 
 .create-folder {
-  height: 50%;
+  height: 74vh;
 }
 .sub_folder {
   height: 50%;
@@ -237,4 +262,39 @@ nav ul li a {
 .all_files {
   height: 50%;
   background-color: rgb(245, 246, 250);
+}
+
+.breadcrumb {
+  font-weight: 500;
+  margin-bottom: 0.5rem !important;
+}
+
+.breadcrumb div p,
+.breadcrumb div svg {
+  cursor: pointer;
+}
+
+.file_icon {
+  fill: #599def;
+}
+
+.report {
+  padding: 13px;
+}
+
+.report ul {
+  padding: 0;
+  height: 80vh;
+  /* overflow-y: scroll; */
+}
+.report ul li {
+  list-style: none;
+}
+.report ul .item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: lightblue;
 }
