@@ -221,6 +221,13 @@ export const selectedFiles = createSlice({
 
       return { ...state, structure: new_structure };
     },
+
+    clear_structure: (state, action) => {
+      return {
+        ...state,
+        structure: {},
+      };
+    },
   },
 });
 
@@ -233,5 +240,6 @@ export const {
   select_all_file,
   unselect_all_file,
   append_headers,
+  clear_structure,
 } = selectedFiles.actions;
 export default selectedFiles.reducer;
