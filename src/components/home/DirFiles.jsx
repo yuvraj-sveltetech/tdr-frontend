@@ -10,6 +10,7 @@ import {
 import { is_parent_checked } from "../../redux/slices/FolderSlice";
 import { LargeModal } from "../utils/index";
 import CheckBox from "./CheckBox";
+import { toast } from "react-toastify";
 
 const DirFiles = ({ index }) => {
   const [show, setShow] = useState(false);
@@ -45,8 +46,11 @@ const DirFiles = ({ index }) => {
       file: files.all_files[0],
       auth_token: localStorage.getItem("auth_token"),
     });
-    dispatch(all_headers(res?.data));
-    handleShow();
+
+    if (res?.data) {
+      dispatch(all_headers(res?.data));
+      handleShow();
+    } else toast.error("Something went wrong");
   };
 
   let isChecked = () =>

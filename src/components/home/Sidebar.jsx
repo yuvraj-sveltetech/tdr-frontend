@@ -2,6 +2,7 @@ import React from "react";
 import tower from "../../assets/images/tower-icon.png";
 import { NavLink } from "react-router-dom";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
+import { TbReportAnalytics } from "react-icons/tb";
 
 const Sidebar = () => {
   const navlinks = [
@@ -12,7 +13,7 @@ const Sidebar = () => {
     },
     {
       name: "Report",
-      icons: <MdOutlineSpaceDashboard id="navicons" />,
+      icons: <TbReportAnalytics id="navicons" />,
       to: "/report",
     },
   ];

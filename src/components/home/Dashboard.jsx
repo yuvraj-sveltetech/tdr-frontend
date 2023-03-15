@@ -56,13 +56,13 @@ const Dashboard = () => {
                   I.P.D.R
                 </button>
 
-                <img src={tower} alt="tower_icon" width="30" height="30" />
-                <button
+                {/* <img src={tower} alt="tower_icon" width="30" height="30" /> */}
+                {/* <button
                   className="btn btn-dark"
                   onClick={() => changeCategory("CDR")}
                 >
                   C.D.R
-                </button>
+                </button> */}
               </div>
 
               <div className="container breadcrumb">
