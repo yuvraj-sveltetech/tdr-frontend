@@ -298,3 +298,10 @@ nav ul li a {
   margin-bottom: 10px;
   background-color: lightblue;
 }
+
+.data-not-found {
+  top: 43%;
+  left: 57%;
+  transform: translate(-50%);
+  position: absolute;
+}
