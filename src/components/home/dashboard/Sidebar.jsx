@@ -1,5 +1,5 @@
 import React from "react";
-import tower from "../../assets/images/tower-icon.png";
+import tower from "../../../assets/images/tower-icon.png";
 import { NavLink } from "react-router-dom";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { TbReportAnalytics } from "react-icons/tb";

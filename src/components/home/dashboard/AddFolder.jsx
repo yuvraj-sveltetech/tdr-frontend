@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MdCreateNewFolder } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
-import { clear_structure } from "../../redux/slices/SelectedFiles";
+import { clear_structure } from "../../../redux/slices/SelectedFiles";
 
 const AddFolder = ({ category, setModal }) => {
   const [isDone, setIsDone] = useState({ isDisable: true, loading: false });

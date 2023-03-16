@@ -6,16 +6,16 @@ import {
   CreateFolder,
   DirFiles,
   AddFolder,
-} from "../utils/index";
-import tower from "../../assets/images/tower.png";
+} from "../../utils/index";
+import tower from "../../../assets/images/tower.png";
 import { useSelector, useDispatch } from "react-redux";
 import { HiHome } from "react-icons/hi";
-import { setShowCount } from "../../redux/slices/BreadCrumbSlice";
+import { setShowCount } from "../../../redux/slices/BreadCrumbSlice";
 import {
   add_subfolder_name,
   add_parentfolder_name,
-} from "../../redux/slices/FolderSlice";
-import Modal from "../utils/Modal";
+} from "../../../redux/slices/FolderSlice";
+import Modal from "../../utils/Modal";
 
 // const ipcRenderer = window.require("electron").ipcRenderer;
 
