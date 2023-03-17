@@ -174,6 +174,7 @@ module.exports = {
     if (Object.keys(structure).length === 1) {
       for (let key in structure) {
         for (let path in structure[key]) {
+          arr = [];
           if (
             structure[key][path] !== undefined &&
             structure[key][path]["path"]?.length > 0
