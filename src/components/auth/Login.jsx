@@ -4,6 +4,7 @@ import logo from "../../assets/images/logo.png";
 import useApiHandle from "../utils/useApiHandle";
 import * as URL from "../utils/ConstantUrl";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const { data, loading, apiCall } = useApiHandle();
@@ -24,7 +25,7 @@ const Login = () => {
       localStorage.setItem("refresh_token", data?.data?.refresh_token);
       localStorage.setItem("user_email", data?.data?.email);
       navigate("/dashboard");
-    }
+    } else toast.error("Something went wrong!");
   }, [data, navigate]);
 
   const handleChange = (e) => {

@@ -1,8 +1,11 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MdFolder } from "react-icons/md";
-import { all_files, add_subfolder_name } from "../../redux/slices/FolderSlice";
-import { setShowCount } from "../../redux/slices/BreadCrumbSlice";
+import {
+  all_files,
+  add_subfolder_name,
+} from "../../../redux/slices/FolderSlice";
+import { setShowCount } from "../../../redux/slices/BreadCrumbSlice";
 import { toast } from "react-toastify";
 
 const SubFolder = () => {

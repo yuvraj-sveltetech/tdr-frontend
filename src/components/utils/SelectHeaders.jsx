@@ -11,10 +11,9 @@ const SelectHeaders = ({
   const [previousHeader, setPreviousHeader] = useState();
   const redux_store = useSelector((state) => state.selected_files);
   const headers = useSelector((state) => state.headers);
-
-  let staticOptions = [
-    "SOURCE IP",
-    "SOURCE PORT",
+  const staticOptions = [
+    "TRANSLATED IP",
+    "TRANSLATED PORT",
     "DESTINATION IP",
     "DESTINATION PORT",
   ];
