@@ -177,7 +177,6 @@ module.exports = {
         .length > 1
     ) {
       // one parent one operator
-      console.log("1");
       let dt = await getSendData("case1", structure);
       data = dt.new_data;
       operators = dt.new_operator;
@@ -186,13 +185,11 @@ module.exports = {
       Object.keys(structure[parent_folder]).length > 1
     ) {
       // one parent multiple operator
-      console.log("2");
       let dt = await getSendData("case2", structure);
       data = dt.new_data;
       operators = dt.new_operator;
     } else if (parent_folder.length > 1) {
       // multiple parent multiple operator
-      console.log("3");
       let dt = await getSendData("case3", structure);
       data = dt.new_data;
       operators = dt.new_operator;
@@ -217,20 +214,20 @@ module.exports = {
 
     return new Promise((resolve, reject) => {
       resolve(false);
-      // request(options, function (error, response) {
-      //   if (error) notification("ERROR", "Something went wrong");
+      request(options, function (error, response) {
+        if (error) notification("ERROR", "Something went wrong");
 
-      //   if (response?.statusCode === 200) {
-      //     resolve(false);
-      //     notification(
-      //       "PROCESSED",
-      //       "Data is processed. Download file from report section"
-      //     );
-      //   } else {
-      //     resolve(false);
-      //     notification("ERROR", "Something went wrong");
-      //   }
-      // });
+        if (response?.statusCode === 200) {
+          resolve(false);
+          notification(
+            "PROCESSED",
+            "Data is processed. Download file from report section"
+          );
+        } else {
+          resolve(false);
+          notification("ERROR", "Something went wrong");
+        }
+      });
     });
   }),
 
