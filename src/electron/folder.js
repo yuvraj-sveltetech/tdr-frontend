@@ -213,7 +213,6 @@ module.exports = {
     };
 
     return new Promise((resolve, reject) => {
-      resolve(false);
       request(options, function (error, response) {
         if (error) notification("ERROR", "Something went wrong");
 
