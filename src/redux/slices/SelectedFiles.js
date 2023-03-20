@@ -225,6 +225,7 @@ export const selectedFiles = createSlice({
     clear_structure: (state, action) => {
       return {
         ...state,
+        files: [],
         structure: {},
       };
     },

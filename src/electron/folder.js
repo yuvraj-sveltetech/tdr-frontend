@@ -5,7 +5,7 @@ const request = require("request");
 const fs = require("fs");
 const { download } = require("electron-dl");
 let dirpath = path.join(os.homedir(), "Desktop");
-const baseUrl = "http://192.168.15.248:8001/";
+const baseUrl = "http://192.168.15.36:8001/";
 
 module.exports = {
   create_folder: ipcMain.handle("create_folder", async (e, arg1, arg2) => {
@@ -148,7 +148,6 @@ module.exports = {
         if (error) resolve(error);
 
         if (response?.statusCode === 200) {
-          // e.returnValue = JSON.parse(response?.body);
           resolve(JSON.parse(response?.body));
         }
       });
@@ -157,8 +156,8 @@ module.exports = {
 
   get_files_data: ipcMain.handle("get_files_data", async (e, arg1, arg3) => {
     const { structure, auth_token } = arg3;
+    let parent_folder = Object.keys(structure);
     let data = {};
-    let arr = [];
     let operators = [];
     let new_arg2 = JSON.parse(JSON.stringify(structure)); // Deep copy of object {arg2}
     let url = `${baseUrl}tdr/processData/?parent_folders_name=${Object.keys(
@@ -169,51 +168,34 @@ module.exports = {
       for (let path in new_arg2[key]) {
         delete new_arg2[key][path]["path"];
       }
-    } // removed path for sending only headers\
+    } // removed path for sending only headers
 
-    if (Object.keys(structure).length === 1) {
-      for (let key in structure) {
-        for (let path in structure[key]) {
-          arr = [];
-          if (
-            structure[key][path] !== undefined &&
-            structure[key][path]["path"]?.length > 0
-          ) {
-            arr = [...arr, ...structure[key][path]["path"]];
-            operators = [...operators, path];
-            data[key + "_" + path] = arr?.map((file) => {
-              return {
-                value: fs.createReadStream(file),
-                options: {
-                  filename: `file_name${file}`,
-                  contentType: null,
-                },
-              };
-            });
-          }
-        }
-      }
-    } else {
-      for (let key in structure) {
-        for (let path in structure[key]) {
-          if (
-            structure[key][path] !== undefined &&
-            structure[key][path]["path"]?.length > 0
-          ) {
-            arr = [...arr, ...structure[key][path]["path"]];
-            data[key] = arr?.map((file) => {
-              return {
-                value: fs.createReadStream(file),
-                options: {
-                  filename: `file_name${file}`,
-                  contentType: null,
-                },
-              };
-            });
-          }
-        }
-      }
+    if (
+      parent_folder.length === 1 &&
+      Object.keys(structure[parent_folder]).length === 1 &&
+      structure[parent_folder][Object.keys(structure[parent_folder])]["path"]
+        .length > 1
+    ) {
+      // one parent one operator
+      let dt = await getSendData("case1", structure);
+      data = dt.new_data;
+      operators = dt.new_operator;
+    } else if (
+      parent_folder.length === 1 &&
+      Object.keys(structure[parent_folder]).length > 1
+    ) {
+      // one parent multiple operator
+      let dt = await getSendData("case2", structure);
+      data = dt.new_data;
+      operators = dt.new_operator;
+    } else if (parent_folder.length > 1) {
+      // multiple parent multiple operator
+      let dt = await getSendData("case3", structure);
+      data = dt.new_data;
+      operators = dt.new_operator;
     }
+
+    console.log(data, "dataa aaa aaaa aaaaa");
 
     let options = {
       method: "POST",
@@ -260,6 +242,45 @@ module.exports = {
         notification("ERROR", "Something went wrong");
       });
   }),
+};
+
+const myMap = (arr) => {
+  return arr?.map((file) => {
+    return {
+      value: fs.createReadStream(file),
+      options: {
+        filename: `file_name${file}`,
+        contentType: null,
+      },
+    };
+  });
+};
+
+const getSendData = (target, structure) => {
+  let arr = [];
+  let operators = [];
+  let data = {};
+
+  return new Promise((resolve, reject) => {
+    for (let key in structure) {
+      for (let path in structure[key]) {
+        if (target !== "case3") arr = [];
+        if (
+          structure[key][path] !== undefined &&
+          structure[key][path]["path"]?.length > 0
+        ) {
+          arr = [...arr, ...structure[key][path]["path"]];
+          if (target === "case3") {
+            data[key] = myMap(arr);
+          } else {
+            operators = [...operators, path];
+            data[key + "_" + path] = myMap(arr);
+          }
+        }
+      }
+    }
+    resolve({ new_data: data, new_operator: operators });
+  });
 };
 
 const notification = (title, body) => {
