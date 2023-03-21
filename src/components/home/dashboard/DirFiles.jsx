@@ -38,6 +38,8 @@ const DirFiles = ({ index }) => {
       } else {
         setAllSelectedFiles([]);
       }
+    } else {
+      setAllSelectedFiles([]);
     }
   }, [redux_store, folder]);
 

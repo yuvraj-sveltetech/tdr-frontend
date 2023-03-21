@@ -25,7 +25,7 @@ const Login = () => {
       localStorage.setItem("refresh_token", data?.data?.refresh_token);
       localStorage.setItem("user_email", data?.data?.email);
       navigate("/dashboard");
-    } else toast.error("Something went wrong!");
+    }
   }, [data, navigate]);
 
   const handleChange = (e) => {
