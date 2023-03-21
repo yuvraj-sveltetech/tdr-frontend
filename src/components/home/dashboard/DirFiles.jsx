@@ -27,6 +27,7 @@ const DirFiles = ({ index }) => {
   }, [files.sub_folders.parent_folder, files.sub_folders.subfolder]);
 
   useEffect(() => {
+    console.log("calling", Object.keys(redux_store.structure));
     if (Object.keys(redux_store.structure).length > 0) {
       if (
         redux_store?.structure[folder[0]] &&
@@ -38,6 +39,8 @@ const DirFiles = ({ index }) => {
       } else {
         setAllSelectedFiles([]);
       }
+    } else {
+      setAllSelectedFiles([]);
     }
   }, [redux_store, folder]);
 
@@ -55,6 +58,8 @@ const DirFiles = ({ index }) => {
 
   let isChecked = () =>
     files?.all_files?.every((v) => allSelectedFiles?.includes(v.file_path));
+
+  console.log(files.all_files, "-------", allSelectedFiles);
 
   const selectAllFilesHandle = async (e) => {
     const { checked } = e.target;

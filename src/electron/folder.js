@@ -177,7 +177,6 @@ module.exports = {
       structure[parent_folder][Object.keys(structure[parent_folder])]["path"]
         .length > 1
     ) {
-      console.log(1);
       // one parent one operator
       let dt = await getSendData("case1", structure);
       data = dt.new_data;
@@ -186,18 +185,16 @@ module.exports = {
       parent_folder.length === 1 &&
       Object.keys(structure[parent_folder]).length > 1
     ) {
-      console.log(2);
       // one parent multiple operator
       let dt = await getSendData("case2", structure);
       data = dt.new_data;
       operators = dt.new_operator;
     } else if (parent_folder.length > 1) {
-      console.log(3);
       // multiple parent multiple operator
       let dt = await getSendData("case3", structure);
       data = dt.new_data;
     }
-    console.log(data, "dataaa");
+
     let options = {
       method: "POST",
       url:

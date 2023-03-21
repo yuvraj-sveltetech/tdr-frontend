@@ -2,7 +2,7 @@ import { createSlice, current } from "@reduxjs/toolkit";
 
 export const selectedFiles = createSlice({
   name: "Selected Files",
-  initialState: { files: [], count: [], structure: {} },
+  initialState: { files: [], structure: {} },
   reducers: {
     selected_files: (state, action) => {
       const { array, type } = action.payload;
