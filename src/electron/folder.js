@@ -160,9 +160,6 @@ module.exports = {
     let data = {};
     let operators = [];
     let new_arg2 = JSON.parse(JSON.stringify(structure)); // Deep copy of object {arg2}
-    let url = `${baseUrl}tdr/processData/?parent_folders_name=${Object.keys(
-      structure
-    )}&file_data=${JSON.stringify(new_arg2)}`;
 
     for (let key in new_arg2) {
       for (let path in new_arg2[key]) {
@@ -170,12 +167,17 @@ module.exports = {
       }
     } // removed path for sending only headers
 
+    let url = `${baseUrl}tdr/processData/?parent_folders_name=${Object.keys(
+      structure
+    )}&file_data=${JSON.stringify(new_arg2)}`;
+
     if (
       parent_folder.length === 1 &&
       Object.keys(structure[parent_folder]).length === 1 &&
       structure[parent_folder][Object.keys(structure[parent_folder])]["path"]
         .length > 1
     ) {
+      console.log(1);
       // one parent one operator
       let dt = await getSendData("case1", structure);
       data = dt.new_data;
@@ -184,19 +186,18 @@ module.exports = {
       parent_folder.length === 1 &&
       Object.keys(structure[parent_folder]).length > 1
     ) {
+      console.log(2);
       // one parent multiple operator
       let dt = await getSendData("case2", structure);
       data = dt.new_data;
       operators = dt.new_operator;
     } else if (parent_folder.length > 1) {
+      console.log(3);
       // multiple parent multiple operator
       let dt = await getSendData("case3", structure);
       data = dt.new_data;
-      operators = dt.new_operator;
     }
-
-    console.log(data, "dataa aaa aaaa aaaaa");
-
+    console.log(data, "dataaa");
     let options = {
       method: "POST",
       url:
@@ -263,8 +264,9 @@ const getSendData = (target, structure) => {
 
   return new Promise((resolve, reject) => {
     for (let key in structure) {
+      if (target === "case3") arr = [];
       for (let path in structure[key]) {
-        if (target !== "case3") arr = [];
+        if (target === "case2") arr = [];
         if (
           structure[key][path] !== undefined &&
           structure[key][path]["path"]?.length > 0
