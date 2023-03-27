@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Sidebar, Header, ViewData } from "../../utils/index";
 import { useDispatch, useSelector } from "react-redux";
 import useApiHandle from "../../utils/useApiHandle";
@@ -16,6 +16,7 @@ const Report = () => {
   const { data, loading, apiCall } = useApiHandle();
   const [reportData, setReportData] = useState([]);
   const toComp = useSelector((state) => state.show_count.switch_component);
+  const downloadLink = useRef(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -39,6 +40,7 @@ const Report = () => {
   const switchTo = (data, component) => {
     dispatch(excelData(data));
     dispatch(switchComponent(component));
+    downloadLink.current = ''
   };
 
   return (

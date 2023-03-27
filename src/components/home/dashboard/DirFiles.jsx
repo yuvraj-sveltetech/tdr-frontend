@@ -26,6 +26,20 @@ const DirFiles = ({ index }) => {
     return [files.sub_folders.parent_folder, files.sub_folders.subfolder];
   }, [files.sub_folders.parent_folder, files.sub_folders.subfolder]);
 
+  let modal = useMemo(() => {
+    return (
+      <LargeModal
+        show={show}
+        handleClose={handleClose}
+        handleShow={handleShow}
+        parent_folder={folder[0]}
+        sub_folders={folder[1]}
+        operator_files={redux_store}
+      />
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [show]);
+
   useEffect(() => {
     if (Object.keys(redux_store.structure).length > 0) {
       if (
@@ -122,14 +136,7 @@ const DirFiles = ({ index }) => {
         </button>
       </div>
 
-      <LargeModal
-        show={show}
-        handleClose={handleClose}
-        handleShow={handleShow}
-        parent_folder={folder[0]}
-        sub_folders={folder[1]}
-        operator_files={redux_store}
-      />
+      {modal}
     </div>
   );
 };

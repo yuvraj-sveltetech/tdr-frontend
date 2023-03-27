@@ -334,3 +334,11 @@ nav ul li a {
 .data_table td {
   text-align: center;
 }
+
+#mynetwork {
+  /* width: 600px; */
+  background: #3d3d3d;
+  height: 400px;
+  border: 1px solid lightgray;
+  margin: 10px 8px 0 8px;
+}

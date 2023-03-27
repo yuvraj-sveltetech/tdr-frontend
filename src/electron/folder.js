@@ -8,7 +8,7 @@ let dirpath = path.join(os.homedir(), "Desktop");
 const baseUrl = "http://192.168.15.36:8001/";
 
 module.exports = {
-  create_folder: ipcMain.handle("create_folder", async (e, arg1, arg2) => {
+  create_folder: ipcMain.handle("create_folder", (e, arg1, arg2) => {
     let destPath;
 
     if (dirpath === undefined) {
@@ -20,11 +20,11 @@ module.exports = {
         destPath = path.join(dirpath, arg2);
 
         if (fs.existsSync(destPath) === false) {
-          await fs.mkdirSync(destPath);
-          await fs.mkdirSync(path.join(destPath, "airtel"));
-          await fs.mkdirSync(path.join(destPath, "jio"));
-          await fs.mkdirSync(path.join(destPath, "bsnl"));
-          await fs.mkdirSync(path.join(destPath, "voda"));
+          fs.mkdirSync(destPath);
+          fs.mkdirSync(path.join(destPath, "airtel"));
+          fs.mkdirSync(path.join(destPath, "jio"));
+          fs.mkdirSync(path.join(destPath, "bsnl"));
+          fs.mkdirSync(path.join(destPath, "voda"));
           return true;
         } else {
           return false;

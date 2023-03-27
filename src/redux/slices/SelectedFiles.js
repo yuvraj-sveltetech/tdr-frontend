@@ -62,6 +62,7 @@ export const selectedFiles = createSlice({
             data[payload.parent_folder_name] = {
               ...new_structure[payload.parent_folder_name],
               [payload.operator]: {
+                ...new_structure[payload.parent_folder_name][payload.operator],
                 path: [
                   ...new_structure[payload.parent_folder_name][
                     payload.operator
