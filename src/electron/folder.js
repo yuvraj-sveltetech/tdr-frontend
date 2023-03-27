@@ -169,7 +169,7 @@ module.exports = {
 
     let url = `${baseUrl}tdr/processData/?parent_folders_name=${Object.keys(
       structure
-    )}&file_data=${JSON.stringify(new_arg2)}`;
+    )}`;
 
     if (
       parent_folder.length === 1 &&
@@ -194,6 +194,8 @@ module.exports = {
       let dt = await getSendData("case3", structure);
       data = dt.new_data;
     }
+
+    data = { ...data, file_data: JSON.stringify(new_arg2) };
 
     let options = {
       method: "POST",
