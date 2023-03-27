@@ -12,6 +12,13 @@ const SelectHeaders = ({
   const redux_store = useSelector((state) => state.selected_files);
   const headers = useSelector((state) => state.headers);
   const staticOptions = [
+    "MSISDN",
+    "IMEI",
+    "IMSI",
+    "SESSION START TIME",
+    "SESSION END TIME",
+    "DURATION",
+    "CELL ID",
     "TRANSLATED IP",
     "TRANSLATED PORT",
     "DESTINATION IP",
