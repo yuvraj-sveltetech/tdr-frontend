@@ -5,7 +5,7 @@ import {
 } from "../../../redux/slices/BreadCrumbSlice";
 import { IoArrowBack } from "react-icons/io5";
 import { useDispatch } from "react-redux";
-import { DataOnDom } from "../../utils/index";
+import { DataOnDom, Chart } from "../../utils/index";
 
 const ViewData = () => {
   const dispatch = useDispatch();
@@ -32,8 +32,8 @@ const ViewData = () => {
         </button>
         <button className="btn btn-success">Download</button>
       </div>
-
-      <div className="data_table table-responsive mt-3 mx-2">
+      {/* <Chart /> */}
+      <div className="data_table table-responsive mt-4 mx-2">
         <DataOnDom />
       </div>
     </>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Header,
   SubFolder,
@@ -10,7 +10,10 @@ import {
 import tower from "../../../assets/images/tower.png";
 import { useSelector, useDispatch } from "react-redux";
 import { HiHome } from "react-icons/hi";
-import { setShowCount } from "../../../redux/slices/BreadCrumbSlice";
+import {
+  setShowCount,
+  switchComponent,
+} from "../../../redux/slices/BreadCrumbSlice";
 import {
   add_subfolder_name,
   add_parentfolder_name,
@@ -30,6 +33,10 @@ const Dashboard = () => {
   // useEffect(() => {
   //   console.log(ipcRenderer.sendSync("chokidar"));
   // }, []);
+
+  useEffect(() => {
+    dispatch(switchComponent(""));
+  }, []);
 
   const changeCategory = (item) => {
     setCategory(item);
