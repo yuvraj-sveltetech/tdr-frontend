@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { SelectHeaders } from "../utils/index";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,6 +15,7 @@ const LargeModal = ({
 }) => {
   const [hasValue, setHasValue] = useState(new Map());
   const files = useSelector((state) => state.folder);
+  const headerCount = useRef(null);
   const dispatch = useDispatch();
 
   const sendHeader = () => {
@@ -28,19 +29,20 @@ const LargeModal = ({
 
     if (arr.length > 0) {
       if (findUnique.size < arr.length) {
-        toast.error("Duplicate Header Found!");
+        toast.error("Duplicate header found!");
+      } else if (findUnique.size !== headerCount.current) {
+        toast.warning("Please select remaining headers!");
       } else {
         let data = {
           parent_folder_name: files.sub_folders.parent_folder,
           operator: files.sub_folders.subfolder,
           selected_headers: arr,
         };
-
         dispatch(append_headers(data));
         handleClose();
       }
     } else {
-      toast.warning("Please Select Header!");
+      toast.warning("Please select header!");
     }
   };
 
@@ -56,6 +58,7 @@ const LargeModal = ({
           parent_folder={parent_folder}
           sub_folders={sub_folders}
           operator_files={operator_files}
+          headerCount={headerCount}
         />
       </Modal.Body>
       <Modal.Footer>
