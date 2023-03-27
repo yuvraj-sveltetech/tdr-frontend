@@ -6,6 +6,7 @@ const SelectHeaders = ({
   setHasValue,
   parent_folder,
   sub_folders,
+  headerCount,
 }) => {
   const [selectedHeaders, setSelectedHeaders] = useState(new Map());
   const [previousHeader, setPreviousHeader] = useState();
@@ -26,6 +27,7 @@ const SelectHeaders = ({
   ];
 
   useEffect(() => {
+    headerCount.current = staticOptions.length;
     return () => {
       hasValue.clear();
     };
