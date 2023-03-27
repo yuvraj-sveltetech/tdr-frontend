@@ -15,7 +15,7 @@ const LargeModal = ({
 }) => {
   const [hasValue, setHasValue] = useState(new Map());
   const files = useSelector((state) => state.folder);
-  let headerCount = useRef(null);
+  const headerCount = useRef(null);
   const dispatch = useDispatch();
 
   const sendHeader = () => {
