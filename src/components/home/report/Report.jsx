@@ -16,7 +16,7 @@ const Report = () => {
   const { data, loading, apiCall } = useApiHandle();
   const [reportData, setReportData] = useState([]);
   const toComp = useSelector((state) => state.show_count.switch_component);
-  const downloadLink = useRef(null);
+  const download_link = useRef(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -37,10 +37,10 @@ const Report = () => {
     await window.to_electron.DOWNLOAD_FILE("DOWNLOAD_FILE", download_link);
   };
 
-  const switchTo = (data, component) => {
+  const switchTo = (data, component, link) => {
     dispatch(excelData(data));
     dispatch(switchComponent(component));
-    downloadLink.current = ''
+    download_link.current = link;
   };
 
   return (
@@ -51,7 +51,10 @@ const Report = () => {
           <div className="dashpage col-md-10">
             <Header />
             {toComp === "/view-data" ? (
-              <ViewData />
+              <ViewData
+                downloadFile={downloadFile}
+                downloadLink={download_link.current}
+              />
             ) : (
               <div className="report">
                 <h5 className="mb-3">Report List</h5>
@@ -90,7 +93,11 @@ const Report = () => {
                               data-placement="top"
                               title="View"
                               onClick={() =>
-                                switchTo(item.result_data, "/view-data")
+                                switchTo(
+                                  item.result_data,
+                                  "/view-data",
+                                  item.file_location
+                                )
                               }
                             >
                               <FaEye />
