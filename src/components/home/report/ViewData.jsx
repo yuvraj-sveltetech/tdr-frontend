@@ -7,7 +7,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { DataOnDom, Chart } from "../../utils/index";
 
-const ViewData = () => {
+const ViewData = ({ downloadFile, downloadLink }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -16,6 +16,10 @@ const ViewData = () => {
 
   const switchTo = () => {
     dispatch(switchComponent("/report"));
+  };
+
+  const downloadExcel = () => {
+    downloadFile(downloadLink);
   };
 
   return (
@@ -30,7 +34,9 @@ const ViewData = () => {
         >
           <IoArrowBack />
         </button>
-        <button className="btn btn-success">Download</button>
+        <button className="btn btn-success" onClick={downloadExcel}>
+          Download
+        </button>
       </div>
       {/* <Chart /> */}
       <div className="data_table table-responsive mt-4 mx-2">
