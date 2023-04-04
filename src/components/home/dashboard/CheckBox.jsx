@@ -5,8 +5,8 @@ import {
   selected_files,
   add_files_into_redux,
   remove_files_into_redux,
-} from "../../redux/slices/SelectedFiles";
-import { is_parent_checked } from "../../redux/slices/FolderSlice";
+} from "../../../redux/slices/SelectedFiles";
+import { is_parent_checked } from "../../../redux/slices/FolderSlice";
 
 const CheckBox = ({ file, index }) => {
   const files = useSelector((state) => state.selected_files.files);

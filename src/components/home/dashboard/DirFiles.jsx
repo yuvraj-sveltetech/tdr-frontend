@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "./CreateFolder.css";
 import { useSelector, useDispatch } from "react-redux";
-import { all_headers } from "../../redux/slices/HeaderSlice";
+import { all_headers } from "../../../redux/slices/HeaderSlice";
 import {
   select_all_file,
   select_unselect_all,
   unselect_all_file,
-} from "../../redux/slices/SelectedFiles";
-import { is_parent_checked } from "../../redux/slices/FolderSlice";
-import { LargeModal } from "../utils/index";
+} from "../../../redux/slices/SelectedFiles";
+import { is_parent_checked } from "../../../redux/slices/FolderSlice";
+import { LargeModal } from "../../utils/index";
 import CheckBox from "./CheckBox";
+import { toast } from "react-toastify";
 
 const DirFiles = ({ index }) => {
   const [show, setShow] = useState(false);
@@ -25,6 +26,20 @@ const DirFiles = ({ index }) => {
     return [files.sub_folders.parent_folder, files.sub_folders.subfolder];
   }, [files.sub_folders.parent_folder, files.sub_folders.subfolder]);
 
+  let modal = useMemo(() => {
+    return (
+      <LargeModal
+        show={show}
+        handleClose={handleClose}
+        handleShow={handleShow}
+        parent_folder={folder[0]}
+        sub_folders={folder[1]}
+        operator_files={redux_store}
+      />
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [show]);
+
   useEffect(() => {
     if (Object.keys(redux_store.structure).length > 0) {
       if (
@@ -37,6 +52,8 @@ const DirFiles = ({ index }) => {
       } else {
         setAllSelectedFiles([]);
       }
+    } else {
+      setAllSelectedFiles([]);
     }
   }, [redux_store, folder]);
 
@@ -45,8 +62,11 @@ const DirFiles = ({ index }) => {
       file: files.all_files[0],
       auth_token: localStorage.getItem("auth_token"),
     });
-    dispatch(all_headers(res?.data));
-    handleShow();
+
+    if (res?.data) {
+      dispatch(all_headers(res?.data));
+      handleShow();
+    } else toast.error("Something went wrong");
   };
 
   let isChecked = () =>
@@ -110,18 +130,13 @@ const DirFiles = ({ index }) => {
         })}
       </div>
 
-      <button type="button" className="btn btn-primary" onClick={getHeaders}>
-        Select Headers
-      </button>
+      <div className="header-btn">
+        <button type="button" className="btn btn-primary" onClick={getHeaders}>
+          Select Headers
+        </button>
+      </div>
 
-      <LargeModal
-        show={show}
-        handleClose={handleClose}
-        handleShow={handleShow}
-        parent_folder={folder[0]}
-        sub_folders={folder[1]}
-        operator_files={redux_store}
-      />
+      {modal}
     </div>
   );
 };

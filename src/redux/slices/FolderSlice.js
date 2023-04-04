@@ -9,12 +9,11 @@ export const folderSlice = createSlice({
       subfolder: "",
       folders: {
         name: [],
-        path: "",
       },
     },
     all_files: [],
-    selected_files: [],
   },
+
   reducers: {
     folder: (state, action) => {
       const { new_data, take_action } = action.payload;
@@ -109,12 +108,12 @@ export const folderSlice = createSlice({
       };
     },
 
-    selected_all_files: (state, action) => {
+    uncheck_all_parent: (state, action) => {
       return {
         ...state,
-        selected_files: action?.payload?.isChecked
-          ? [...state.selected_files, ...action.payload?.arr]
-          : action.payload?.arr,
+        created_folders: state.created_folders.map((item, i) =>
+          item.isChecked === true ? { ...item, isChecked: false } : item
+        ),
       };
     },
   },
@@ -124,10 +123,10 @@ export const {
   folder,
   sub_folder,
   is_parent_checked,
+  uncheck_all_parent,
   add_subfolder_name,
   all_files,
   selected_files,
-  selected_all_files,
   add_parentfolder_name,
 } = folderSlice.actions;
 export default folderSlice.reducer;

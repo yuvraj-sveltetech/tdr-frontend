@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { MdCreateNewFolder } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { clear_structure } from "../../../redux/slices/SelectedFiles";
+import { uncheck_all_parent } from "../../../redux/slices/FolderSlice";
 
 const AddFolder = ({ category, setModal }) => {
   const [isDone, setIsDone] = useState({ isDisable: true, loading: false });
   const redux_store = useSelector((state) => state.selected_files);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (Object.keys(redux_store.structure).length > 0) {
@@ -20,6 +23,8 @@ const AddFolder = ({ category, setModal }) => {
     });
 
     setIsDone({ isDisable: false, loading: res });
+    dispatch(clear_structure());
+    dispatch(uncheck_all_parent());
   };
 
   return (

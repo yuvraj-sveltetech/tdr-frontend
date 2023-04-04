@@ -5,14 +5,14 @@ const request = require("request");
 const fs = require("fs");
 const { download } = require("electron-dl");
 let dirpath = path.join(os.homedir(), "Desktop");
-const baseUrl = "http://192.168.15.248:8001/";
+const baseUrl = "http://192.168.15.36:8001/";
 
 module.exports = {
-  create_folder: ipcMain.handle("create_folder", async (e, arg1, arg2) => {
+  create_folder: ipcMain.handle("create_folder", (e, arg1, arg2) => {
     let destPath;
 
     if (dirpath === undefined) {
-      console.log("Please enter a valid directory path with quotes");
+      notification("WARNING", "Please enter a valid directory path with quotes");
     } else {
       let doesExist = fs.existsSync(dirpath);
 
@@ -20,17 +20,17 @@ module.exports = {
         destPath = path.join(dirpath, arg2);
 
         if (fs.existsSync(destPath) === false) {
-          await fs.mkdirSync(destPath);
-          await fs.mkdirSync(path.join(destPath, "airtel"));
-          await fs.mkdirSync(path.join(destPath, "jio"));
-          await fs.mkdirSync(path.join(destPath, "bsnl"));
-          await fs.mkdirSync(path.join(destPath, "voda"));
+          fs.mkdirSync(destPath);
+          fs.mkdirSync(path.join(destPath, "airtel"));
+          fs.mkdirSync(path.join(destPath, "jio"));
+          fs.mkdirSync(path.join(destPath, "bsnl"));
+          fs.mkdirSync(path.join(destPath, "voda"));
           return true;
         } else {
           return false;
         }
       } else {
-        console.log("Please enter a valid path");
+        notification("WARNING", "Please enter a valid path");
       }
     }
   }),
@@ -122,7 +122,7 @@ module.exports = {
     }
   ),
 
-  get_headers: ipcMain.on("get_headers", async (e, arg1, arg2) => {
+  get_headers: ipcMain.handle("get_headers", async (e, arg1, arg2) => {
     const { file, auth_token } = arg2;
 
     let options = {
@@ -143,90 +143,74 @@ module.exports = {
       },
     };
 
-    request(options, function (error, response) {
-      if (error) console.log(error);
+    return new Promise((resolve, reject) => {
+      request(options, function (error, response) {
+        if (error) resolve(error);
 
-      if (response?.statusCode === 200) {
-        e.returnValue = JSON.parse(response?.body);
-      }
+        if (response?.statusCode === 200) {
+          resolve(JSON.parse(response?.body));
+        }
+      });
     });
   }),
 
   get_files_data: ipcMain.handle("get_files_data", async (e, arg1, arg3) => {
-    return new Promise((resolve, reject) => {
-      const { structure, auth_token } = arg3;
-      let data = {};
-      let arr = [];
-      let operators = [];
-      let new_arg2 = JSON.parse(JSON.stringify(structure)); // Deep copy of object {arg2}
-      let url = `${baseUrl}tdr/processData/?parent_folders_name=${Object.keys(
-        structure
-      )}&file_data=${JSON.stringify(new_arg2)}`;
+    const { structure, auth_token } = arg3;
+    let parent_folder = Object.keys(structure);
+    let data = {};
+    let operators = [];
+    let new_arg2 = JSON.parse(JSON.stringify(structure)); // Deep copy of object {arg2}
 
-      for (let key in new_arg2) {
-        for (let path in new_arg2[key]) {
-          delete new_arg2[key][path]["path"];
-        }
-      } // removed path for sending only headers\
-
-      if (Object.keys(structure).length === 1) {
-        for (let key in structure) {
-          for (let path in structure[key]) {
-            if (
-              structure[key][path] !== undefined &&
-              structure[key][path]["path"]?.length > 0
-            ) {
-              arr = [...arr, ...structure[key][path]["path"]];
-              operators = [...operators, path];
-              data[key + "_" + path] = arr?.map((file) => {
-                return {
-                  value: fs.createReadStream(file),
-                  options: {
-                    filename: `file_name${file}`,
-                    contentType: null,
-                  },
-                };
-              });
-            }
-          }
-        }
-      } else {
-        for (let key in structure) {
-          for (let path in structure[key]) {
-            if (
-              structure[key][path] !== undefined &&
-              structure[key][path]["path"]?.length > 0
-            ) {
-              arr = [...arr, ...structure[key][path]["path"]];
-              data[key] = arr?.map((file) => {
-                return {
-                  value: fs.createReadStream(file),
-                  options: {
-                    filename: `file_name${file}`,
-                    contentType: null,
-                  },
-                };
-              });
-            }
-          }
-        }
+    for (let key in new_arg2) {
+      for (let path in new_arg2[key]) {
+        delete new_arg2[key][path]["path"];
       }
+    } // removed path for sending only headers
 
-      let options = {
-        method: "POST",
-        url:
-          Object.keys(structure).length === 1
-            ? `${url}&parent_operators=${Object.keys(
-                data
-              )}&operators=${operators}`
-            : url,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth_token}`,
-        },
-        formData: data,
-      };
+    let url = `${baseUrl}tdr/processData/?parent_folders_name=${Object.keys(
+      structure
+    )}`;
 
+    if (
+      parent_folder.length === 1 &&
+      Object.keys(structure[parent_folder]).length === 1
+    ) {
+      // one parent one operator
+      let dt = await getSendData("case1", structure);
+      data = dt.new_data;
+      operators = dt.new_operator;
+    } else if (
+      parent_folder.length === 1 &&
+      Object.keys(structure[parent_folder]).length > 1
+    ) {
+      // one parent multiple operator
+      let dt = await getSendData("case2", structure);
+      data = dt.new_data;
+      operators = dt.new_operator;
+    } else if (parent_folder.length > 1) {
+      // multiple parent multiple operator
+      let dt = await getSendData("case3", structure);
+      data = dt.new_data;
+    }
+
+    data = { ...data, file_data: JSON.stringify(new_arg2) };
+    let parent_operators = Object.keys(data);
+    parent_operators.pop();
+
+    let options = {
+      method: "POST",
+      url:
+        Object.keys(structure).length === 1
+          ? `${url}&parent_operators=${parent_operators}&operators=${operators}`
+          : url,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${auth_token}`,
+      },
+      formData: data,
+    };
+
+    return new Promise((resolve, reject) => {
       request(options, function (error, response) {
         if (error) notification("ERROR", "Something went wrong");
 
@@ -256,6 +240,46 @@ module.exports = {
         notification("ERROR", "Something went wrong");
       });
   }),
+};
+
+const myMap = (arr) => {
+  return arr?.map((file) => {
+    return {
+      value: fs.createReadStream(file),
+      options: {
+        filename: `file_name${file}`,
+        contentType: null,
+      },
+    };
+  });
+};
+
+const getSendData = (target, structure) => {
+  let arr = [];
+  let operators = [];
+  let data = {};
+
+  return new Promise((resolve, reject) => {
+    for (let key in structure) {
+      if (target === "case3") arr = [];
+      for (let path in structure[key]) {
+        if (target === "case2") arr = [];
+        if (
+          structure[key][path] !== undefined &&
+          structure[key][path]["path"]?.length > 0
+        ) {
+          arr = [...arr, ...structure[key][path]["path"]];
+          if (target === "case3") {
+            data[key] = myMap(arr);
+          } else {
+            operators = [...operators, path];
+            data[key + "_" + path] = myMap(arr);
+          }
+        }
+      }
+    }
+    resolve({ new_data: data, new_operator: operators });
+  });
 };
 
 const notification = (title, body) => {

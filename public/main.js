@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow } = require("electron");
 const {
   default: installExtension,
   REDUX_DEVTOOLS,
@@ -6,11 +6,16 @@ const {
 const path = require("path");
 const chokidar = require("chokidar");
 const isDev = require("electron-is-dev");
+const os = require("os");
 require("../src/electron/index");
+
+let dirpath = path.join(os.homedir(), "Desktop");
+let watcher = null;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling
 if (require("electron-squirrel-startup")) {
   app.quit();
+  watcher.close();
 } // NEW
 
 function createWindow() {
@@ -35,8 +40,12 @@ function createWindow() {
 
   // Open the DevTools.
   // win.webContents.openDevTools();
-
   win.maximize();
+
+  watcher = chokidar.watch([dirpath], {
+    persistent: true,
+  });
+  watching();
 }
 
 // This method will be called when Electron has finished
@@ -56,6 +65,7 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
+    watcher.close();
   }
 });
 
@@ -74,19 +84,12 @@ app.on("activate", () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.on("chokidar", (event, arg) => {
-  const watcher = chokidar.watch(
-    ["C:\\Users\\Yuvi\\Desktop\\ddd_IPDR\\airtel\\"],
-    {
-      // ignored: /(^|[\/\\])\../, // ignore dotfiles
-      persistent: true,
-    }
-  );
-  watcher.on("ready", (path) => {
-    console.log(path, "Ready to watch");
-  });
-
-  watcher.on("add", (path) => {
-    console.log(path, "path............");
-  });
-});
+const watching = () => {
+  watcher
+    .on("add", (path) => console.log(`File ${path} has been added`))
+    .on("change", (path) => console.log(`File ${path} has been changed`))
+    .on("unlink", (path) => console.log(`File ${path} has been removed`))
+    .on("unlinkDir", (path) =>
+      console.log(`Directory ${path} has been removed`)
+    );
+};

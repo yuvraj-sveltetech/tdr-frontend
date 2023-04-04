@@ -6,20 +6,28 @@ const SelectHeaders = ({
   setHasValue,
   parent_folder,
   sub_folders,
+  headerCount,
 }) => {
   const [selectedHeaders, setSelectedHeaders] = useState(new Map());
   const [previousHeader, setPreviousHeader] = useState();
   const redux_store = useSelector((state) => state.selected_files);
   const headers = useSelector((state) => state.headers);
-
-  let staticOptions = [
-    "SOURCE IP",
-    "SOURCE PORT",
+  const staticOptions = [
+    "MSISDN",
+    "IMEI",
+    "IMSI",
+    "SESSION START TIME",
+    "SESSION END TIME",
+    "DURATION",
+    "CELL ID",
+    "TRANSLATED IP",
+    "TRANSLATED PORT",
     "DESTINATION IP",
     "DESTINATION PORT",
   ];
 
   useEffect(() => {
+    headerCount.current = staticOptions.length;
     return () => {
       hasValue.clear();
     };

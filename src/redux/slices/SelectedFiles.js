@@ -2,7 +2,7 @@ import { createSlice, current } from "@reduxjs/toolkit";
 
 export const selectedFiles = createSlice({
   name: "Selected Files",
-  initialState: { files: [], count: [], structure: {} },
+  initialState: { files: [], structure: {} },
   reducers: {
     selected_files: (state, action) => {
       const { array, type } = action.payload;
@@ -62,6 +62,7 @@ export const selectedFiles = createSlice({
             data[payload.parent_folder_name] = {
               ...new_structure[payload.parent_folder_name],
               [payload.operator]: {
+                ...new_structure[payload.parent_folder_name][payload.operator],
                 path: [
                   ...new_structure[payload.parent_folder_name][
                     payload.operator
@@ -221,6 +222,14 @@ export const selectedFiles = createSlice({
 
       return { ...state, structure: new_structure };
     },
+
+    clear_structure: (state, action) => {
+      return {
+        ...state,
+        files: [],
+        structure: {},
+      };
+    },
   },
 });
 
@@ -233,5 +242,6 @@ export const {
   select_all_file,
   unselect_all_file,
   append_headers,
+  clear_structure,
 } = selectedFiles.actions;
 export default selectedFiles.reducer;
