@@ -12,7 +12,7 @@ module.exports = {
     let destPath;
 
     if (dirpath === undefined) {
-      console.log("Please enter a valid directory path with quotes");
+      notification("WARNING", "Please enter a valid directory path with quotes");
     } else {
       let doesExist = fs.existsSync(dirpath);
 
@@ -30,7 +30,7 @@ module.exports = {
           return false;
         }
       } else {
-        console.log("Please enter a valid path");
+        notification("WARNING", "Please enter a valid path");
       }
     }
   }),
@@ -173,9 +173,7 @@ module.exports = {
 
     if (
       parent_folder.length === 1 &&
-      Object.keys(structure[parent_folder]).length === 1 &&
-      structure[parent_folder][Object.keys(structure[parent_folder])]["path"]
-        .length > 1
+      Object.keys(structure[parent_folder]).length === 1
     ) {
       // one parent one operator
       let dt = await getSendData("case1", structure);
@@ -196,14 +194,14 @@ module.exports = {
     }
 
     data = { ...data, file_data: JSON.stringify(new_arg2) };
+    let parent_operators = Object.keys(data);
+    parent_operators.pop();
 
     let options = {
       method: "POST",
       url:
         Object.keys(structure).length === 1
-          ? `${url}&parent_operators=${Object.keys(
-              data
-            )}&operators=${operators}`
+          ? `${url}&parent_operators=${parent_operators}&operators=${operators}`
           : url,
       headers: {
         "Content-Type": "application/json",
