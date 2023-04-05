@@ -28,7 +28,13 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
 
   useEffect(() => {
     getFolders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    watchOnThese();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [folders?.created_folders]);
 
   useEffect(() => {
     if (allParentFiles.all_files?.length > 0) {
@@ -42,7 +48,15 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
       let arr = allParentFiles?.all_files?.map((item) => item.path);
       dispatch(selected_files({ array: arr, type: "checked_parent" }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allParentFiles]);
+
+  const watchOnThese = async () => {
+    await window.to_electron.WATCH_THESE_FOLDERS(
+      "WATCH_THESE_FOLDERS",
+      folders.created_folders.map((folder) => folder.folder_path)
+    );
+  };
 
   const getFolders = async () => {
     let res = await window.to_electron.get_folders("get_folders");

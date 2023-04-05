@@ -7,10 +7,14 @@ import {
   select_unselect_all,
   unselect_all_file,
 } from "../../../redux/slices/SelectedFiles";
-import { is_parent_checked } from "../../../redux/slices/FolderSlice";
+import {
+  is_parent_checked,
+  all_files,
+} from "../../../redux/slices/FolderSlice";
 import { LargeModal } from "../../utils/index";
 import CheckBox from "./CheckBox";
 import { toast } from "react-toastify";
+import io from "socket.io-client";
 
 const DirFiles = ({ index }) => {
   const [show, setShow] = useState(false);
@@ -41,6 +45,21 @@ const DirFiles = ({ index }) => {
   }, [show]);
 
   useEffect(() => {
+   
+
+    const socket = io("http://localhost:7575");
+
+    socket.on("file_changed", (data) => {
+      console.log(data);
+      getFiles();
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
     if (Object.keys(redux_store.structure).length > 0) {
       if (
         redux_store?.structure[folder[0]] &&
@@ -56,6 +75,17 @@ const DirFiles = ({ index }) => {
       setAllSelectedFiles([]);
     }
   }, [redux_store, folder]);
+
+  const getFiles = async () => {
+    let data = {
+      parent_folder_name: files.sub_folders.parent_folder,
+      subfolder_name: files.sub_folders.subfolder,
+    };
+    let res = await window.to_electron.get_files("get_files", data);
+    if (res) {
+      dispatch(all_files(res));
+    }
+  };
 
   const getHeaders = async () => {
     let res = await window.to_electron.get_headers("get_headers", {
