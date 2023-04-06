@@ -45,12 +45,9 @@ const DirFiles = ({ index }) => {
   }, [show]);
 
   useEffect(() => {
-   
-
     const socket = io("http://localhost:7575");
 
     socket.on("file_changed", (data) => {
-      console.log(data);
       getFiles();
     });
 
