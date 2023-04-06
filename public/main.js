@@ -1,16 +1,22 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
+const path = require("path");
+const chokidar = require("chokidar");
+const isDev = require("electron-is-dev");
 const {
   default: installExtension,
   REDUX_DEVTOOLS,
 } = require("electron-devtools-installer");
-const path = require("path");
-const chokidar = require("chokidar");
-const isDev = require("electron-is-dev");
-const os = require("os");
 require("../src/electron/index");
 
-let dirpath = path.join(os.homedir(), "Desktop");
 let watcher = null;
+const server = require("http").createServer(app);
+
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+server.listen(7575);
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling
 if (require("electron-squirrel-startup")) {
@@ -31,27 +37,21 @@ function createWindow() {
   });
 
   //load the index.html from a url
-  // win.loadURL("http://localhost:3000");
+
   win.loadURL(
     isDev
       ? "http://localhost:3000"
       : `file://${path.join(__dirname, "../build/index.html")}`
   );
 
-  // Open the DevTools.
-  // win.webContents.openDevTools();
   win.maximize();
-
-  watcher = chokidar.watch([dirpath], {
-    persistent: true,
-  });
-  watching();
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  folderToWatch();
   createWindow();
   installExtension(REDUX_DEVTOOLS)
     .then((name) => console.log(`Added Extension:  ${name}`))
@@ -84,12 +84,20 @@ app.on("activate", () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-const watching = () => {
-  watcher
-    .on("add", (path) => console.log(`File ${path} has been added`))
-    .on("change", (path) => console.log(`File ${path} has been changed`))
-    .on("unlink", (path) => console.log(`File ${path} has been removed`))
-    .on("unlinkDir", (path) =>
-      console.log(`Directory ${path} has been removed`)
-    );
+const socketON = () => {
+  io.on("connection", (socket) => {
+    watcher.on("all", (e, path) => {
+      console.log(e, path);
+      socket.emit("file_changed", e);
+    });
+  });
+};
+
+const folderToWatch = () => {
+  ipcMain.handle("WATCH_THESE_FOLDERS", (e, arg1, arg2) => {
+    watcher = chokidar.watch([arg2], {
+      persistent: true,
+    });
+    socketON();
+  });
 };
