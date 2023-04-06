@@ -87,7 +87,6 @@ app.on("activate", () => {
 const socketON = () => {
   io.on("connection", (socket) => {
     watcher.on("all", (e, path) => {
-      console.log(e, path);
       socket.emit("file_changed", e);
     });
   });

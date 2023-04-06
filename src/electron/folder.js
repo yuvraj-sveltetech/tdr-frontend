@@ -12,7 +12,10 @@ module.exports = {
     let destPath;
 
     if (dirpath === undefined) {
-      notification("WARNING", "Please enter a valid directory path with quotes");
+      notification(
+        "WARNING",
+        "Please enter a valid directory path with quotes"
+      );
     } else {
       let doesExist = fs.existsSync(dirpath);
 
@@ -155,7 +158,7 @@ module.exports = {
   }),
 
   get_files_data: ipcMain.handle("get_files_data", async (e, arg1, arg3) => {
-    const { structure, auth_token } = arg3;
+    const { structure, auth_token, type } = arg3;
     let parent_folder = Object.keys(structure);
     let data = {};
     let operators = [];
@@ -167,7 +170,7 @@ module.exports = {
       }
     } // removed path for sending only headers
 
-    let url = `${baseUrl}tdr/processData/?parent_folders_name=${Object.keys(
+    let url = `${baseUrl}tdr/processData/?type=${type}&parent_folders_name=${Object.keys(
       structure
     )}`;
 
