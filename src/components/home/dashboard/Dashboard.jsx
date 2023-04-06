@@ -30,10 +30,6 @@ const Dashboard = () => {
   const showCount = useSelector((state) => state.show_count.show);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   console.log(ipcRenderer.sendSync("chokidar"));
-  // }, []);
-
   useEffect(() => {
     dispatch(switchComponent(""));
   }, []);
