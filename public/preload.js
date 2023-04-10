@@ -14,4 +14,6 @@ contextBridge.exposeInMainWorld("to_electron", {
     ipcRenderer.sendSync("get_all_folders_files", arg1, arg2),
   DOWNLOAD_FILE: (arg1, arg2) =>
     ipcRenderer.invoke("DOWNLOAD_FILE", arg1, arg2),
+  WATCH_THESE_FOLDERS: (arg1, arg2) =>
+    ipcRenderer.invoke("WATCH_THESE_FOLDERS", arg1, arg2),
 });

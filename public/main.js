@@ -8,9 +8,11 @@ const chokidar = require("chokidar");
 const isDev = require("electron-is-dev");
 require("../src/electron/index");
 
+let watcher = null;
 // Handle creating/removing shortcuts on Windows when installing/uninstalling
 if (require("electron-squirrel-startup")) {
   app.quit();
+  watcher.close()
 } // NEW
 
 function createWindow() {
@@ -35,7 +37,6 @@ function createWindow() {
 
   // Open the DevTools.
   // win.webContents.openDevTools();
-
   win.maximize();
 }
 
@@ -43,6 +44,7 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  folderToWatch();
   createWindow();
   installExtension(REDUX_DEVTOOLS)
     .then((name) => console.log(`Added Extension:  ${name}`))
@@ -56,6 +58,7 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
+    watcher.close();
   }
 });
 
@@ -74,19 +77,16 @@ app.on("activate", () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.on("chokidar", (event, arg) => {
-  const watcher = chokidar.watch(
-    ["C:\\Users\\Yuvi\\Desktop\\ddd_IPDR\\airtel\\"],
-    {
-      // ignored: /(^|[\/\\])\../, // ignore dotfiles
-      persistent: true,
-    }
-  );
-  watcher.on("ready", (path) => {
-    console.log(path, "Ready to watch");
-  });
+const watching = () => {
+  // watcher.on("all", (e, path) => console.log(e, path));
+  watcher.on("all", (e, path) => localStorage.setItem("is_watching", e));
+};
 
-  watcher.on("add", (path) => {
-    console.log(path, "path............");
+const folderToWatch = () => {
+  ipcMain.handle("WATCH_THESE_FOLDERS", (e, arg1, arg2) => {
+    watcher = chokidar.watch([arg2], {
+      persistent: true,
+    });
+    watching();
   });
-});
+};

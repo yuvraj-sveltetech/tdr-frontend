@@ -31,6 +31,17 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
   }, []);
 
   useEffect(() => {
+    watchOnThese();
+  }, [folders?.created_folders]);
+
+  const watchOnThese = async () => {
+    await window.to_electron.WATCH_THESE_FOLDERS(
+      "WATCH_THESE_FOLDERS",
+      folders.created_folders.map((folder) => folder.folder_path)
+    );
+  };
+
+  useEffect(() => {
     if (allParentFiles.all_files?.length > 0) {
       let data = {
         all_files: allParentFiles.structured_files,

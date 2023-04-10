@@ -6,9 +6,12 @@ import {
   select_all_file,
   select_unselect_all,
   unselect_all_file,
-} from "../../redux/slices/SelectedFiles";
-import { is_parent_checked } from "../../redux/slices/FolderSlice";
-import { LargeModal } from "../utils/index";
+} from "../../../redux/slices/SelectedFiles";
+import {
+  is_parent_checked,
+  all_files,
+} from "../../../redux/slices/FolderSlice";
+import { LargeModal } from "../../utils/index";
 import CheckBox from "./CheckBox";
 
 const DirFiles = ({ index }) => {
@@ -25,6 +28,29 @@ const DirFiles = ({ index }) => {
     return [files.sub_folders.parent_folder, files.sub_folders.subfolder];
   }, [files.sub_folders.parent_folder, files.sub_folders.subfolder]);
 
+  let modal = useMemo(() => {
+    return (
+      <LargeModal
+        show={show}
+        handleClose={handleClose}
+        handleShow={handleShow}
+        parent_folder={folder[0]}
+        sub_folders={folder[1]}
+        operator_files={redux_store}
+      />
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [show]);
+
+  window.to_electron.handleCounter((event, value) => {
+    const newValue = "pppp";
+    event.sender.send("counter-value", newValue);
+  });
+
+  useEffect(() => {
+    getFiles();
+  }, []);
+
   useEffect(() => {
     if (Object.keys(redux_store.structure).length > 0) {
       if (
@@ -39,6 +65,17 @@ const DirFiles = ({ index }) => {
       }
     }
   }, [redux_store, folder]);
+
+  const getFiles = async () => {
+    let data = {
+      parent_folder_name: files.sub_folders.parent_folder,
+      subfolder_name: files.sub_folders.subfolder,
+    };
+    let res = await window.to_electron.get_files("get_files", data);
+    if (res) {
+      dispatch(all_files(res));
+    }
+  };
 
   const getHeaders = async () => {
     let res = await window.to_electron.get_headers("get_headers", {
@@ -114,14 +151,7 @@ const DirFiles = ({ index }) => {
         Select Headers
       </button>
 
-      <LargeModal
-        show={show}
-        handleClose={handleClose}
-        handleShow={handleShow}
-        parent_folder={folder[0]}
-        sub_folders={folder[1]}
-        operator_files={redux_store}
-      />
+      {modal}
     </div>
   );
 };
