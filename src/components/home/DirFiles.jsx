@@ -6,12 +6,12 @@ import {
   select_all_file,
   select_unselect_all,
   unselect_all_file,
-} from "../../../redux/slices/SelectedFiles";
+} from "../../redux/slices/SelectedFiles";
 import {
   is_parent_checked,
   all_files,
-} from "../../../redux/slices/FolderSlice";
-import { LargeModal } from "../../utils/index";
+} from "../../redux/slices/FolderSlice";
+import { LargeModal } from "../utils/index";
 import CheckBox from "./CheckBox";
 
 const DirFiles = ({ index }) => {
