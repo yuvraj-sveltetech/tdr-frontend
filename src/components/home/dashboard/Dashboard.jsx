@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Header,
   SubFolder,
@@ -6,16 +6,19 @@ import {
   CreateFolder,
   DirFiles,
   AddFolder,
-} from "../utils/index";
-import tower from "../../assets/images/tower.png";
+} from "../../utils/index";
+import tower from "../../../assets/images/tower.png";
 import { useSelector, useDispatch } from "react-redux";
 import { HiHome } from "react-icons/hi";
-import { setShowCount } from "../../redux/slices/BreadCrumbSlice";
+import {
+  setShowCount,
+  switchComponent,
+} from "../../../redux/slices/BreadCrumbSlice";
 import {
   add_subfolder_name,
   add_parentfolder_name,
-} from "../../redux/slices/FolderSlice";
-import Modal from "../utils/Modal";
+} from "../../../redux/slices/FolderSlice";
+import Modal from "../../utils/Modal";
 
 // const ipcRenderer = window.require("electron").ipcRenderer;
 
@@ -27,9 +30,9 @@ const Dashboard = () => {
   const showCount = useSelector((state) => state.show_count.show);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   console.log(ipcRenderer.sendSync("chokidar"));
-  // }, []);
+  useEffect(() => {
+    dispatch(switchComponent(""));
+  }, []);
 
   const changeCategory = (item) => {
     setCategory(item);
@@ -56,13 +59,13 @@ const Dashboard = () => {
                   I.P.D.R
                 </button>
 
-                <img src={tower} alt="tower_icon" width="30" height="30" />
-                <button
+                {/* <img src={tower} alt="tower_icon" width="30" height="30" /> */}
+                {/* <button
                   className="btn btn-dark"
                   onClick={() => changeCategory("CDR")}
                 >
                   C.D.R
-                </button>
+                </button> */}
               </div>
 
               <div className="container breadcrumb">

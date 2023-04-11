@@ -151,12 +151,16 @@ nav ul li a {
 .dropdown-menu a {
   font-weight: 500;
 }
-
 .create-folder .row {
+  width: 100%;
+}
+.parent_folder {
   overflow-y: scroll;
   height: 64vh;
 }
-
+.parent_folder .row {
+  height: unset;
+}
 .main .choose,
 .create-folder,
 .sub_folder,
@@ -221,7 +225,7 @@ nav ul li a {
   height: 74vh;
 }
 .sub_folder {
-  height: 50%;
+  height: 74vh;
 }
 .subfolder-box {
   cursor: pointer;
@@ -234,10 +238,14 @@ nav ul li a {
   font-size: 1.1rem;
 }
 .add-folder {
+  width: 10rem;
   background: #fff;
   border-radius: 0.2rem;
   border: none;
   padding: 0.4rem;
+}
+.form-select {
+  width: 32% !important;
 }
 .all-folders {
   width: 100%;
@@ -260,8 +268,19 @@ nav ul li a {
 }
 
 .all_files {
-  height: 50%;
+  position: relative;
+  height: 74vh;
   background-color: rgb(245, 246, 250);
+}
+
+.all_files .row {
+  height: 57vh;
+  overflow-y: scroll;
+}
+
+.header-btn {
+  bottom: 2%;
+  position: absolute;
 }
 
 .breadcrumb {
@@ -297,4 +316,33 @@ nav ul li a {
   padding: 10px;
   margin-bottom: 10px;
   background-color: lightblue;
+}
+
+.data-not-found {
+  top: 43%;
+  left: 57%;
+  transform: translate(-50%);
+  position: absolute;
+}
+
+.data_table {
+  overflow: scroll;
+  height: 69vh;
+}
+.data_table thead {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+}
+.data_table th,
+.data_table td {
+  text-align: center;
+}
+
+#mynetwork {
+  /* width: 600px; */
+  background: #3d3d3d;
+  height: 400px;
+  border: 1px solid lightgray;
+  margin: 10px 8px 0 8px;
 }

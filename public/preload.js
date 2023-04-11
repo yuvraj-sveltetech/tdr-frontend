@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld("to_electron", {
   get_subfolders: (arg1, arg2) =>
     ipcRenderer.sendSync("get_subfolders", arg1, arg2),
   get_files: (arg1, arg2) => ipcRenderer.sendSync("get_files", arg1, arg2),
-  get_headers: (arg1, arg2) => ipcRenderer.sendSync("get_headers", arg1, arg2),
+  get_headers: (arg1, arg2) => ipcRenderer.invoke("get_headers", arg1, arg2),
   get_files_data: (arg1, arg2) =>
     ipcRenderer.invoke("get_files_data", arg1, arg2),
   get_all_folders_files: (arg1, arg2) =>

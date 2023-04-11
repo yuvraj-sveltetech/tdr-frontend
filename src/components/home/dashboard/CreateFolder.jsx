@@ -2,18 +2,18 @@ import React, { useEffect, useState, useRef } from "react";
 import "./CreateFolder.css";
 import { MdFolder } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
-import { setShowCount } from "../../redux/slices/BreadCrumbSlice";
+import { setShowCount } from "../../../redux/slices/BreadCrumbSlice";
 import {
   folder,
   sub_folder,
   is_parent_checked,
-} from "../../redux/slices/FolderSlice";
+} from "../../../redux/slices/FolderSlice";
 import {
   selected_files,
   unselect_all_file,
   select_unselect_all,
   select_all_parent_files,
-} from "../../redux/slices/SelectedFiles";
+} from "../../../redux/slices/SelectedFiles";
 
 const CreateFolder = ({ category, setParentFolderIndex }) => {
   const folders = useSelector((state) => state.folder);
@@ -28,18 +28,13 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
 
   useEffect(() => {
     getFolders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     watchOnThese();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [folders?.created_folders]);
-
-  const watchOnThese = async () => {
-    await window.to_electron.WATCH_THESE_FOLDERS(
-      "WATCH_THESE_FOLDERS",
-      folders.created_folders.map((folder) => folder.folder_path)
-    );
-  };
 
   useEffect(() => {
     if (allParentFiles.all_files?.length > 0) {
@@ -53,7 +48,15 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
       let arr = allParentFiles?.all_files?.map((item) => item.path);
       dispatch(selected_files({ array: arr, type: "checked_parent" }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allParentFiles]);
+
+  const watchOnThese = async () => {
+    await window.to_electron.WATCH_THESE_FOLDERS(
+      "WATCH_THESE_FOLDERS",
+      folders.created_folders.map((folder) => folder.folder_path)
+    );
+  };
 
   const getFolders = async () => {
     let res = await window.to_electron.get_folders("get_folders");
@@ -163,34 +166,36 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
     <div className="create-folder">
       <div className="container-fluid">
         <h6>FOLDER</h6>
-        <div className="row list-unstyled">
-          {folders?.created_folders?.map((folder, index) => {
-            return (
-              <div
-                className="col-md-3"
-                key={`CreatedFolder${folder?.folder_name}`}
-              >
+        <div className="parent_folder">
+          <div className="row list-unstyled">
+            {folders?.created_folders?.map((folder, index) => {
+              return (
                 <div
-                  className="folder rr d-flex flex-column justify-content-center my-2"
-                  onClick={(e) => getSubfolder(folder)}
+                  className="col-md-3"
+                  key={`CreatedFolder${folder?.folder_name}`}
                 >
-                  <input
-                    type="checkbox"
-                    checked={folder.isChecked}
-                    onChange={(e) =>
-                      getAllSubfolderFiles(e, folder?.folder_name, index)
-                    }
-                    onClick={(e) => e.stopPropagation()}
-                    className="align-self-end me-2"
-                  />
-                  <li onClick={(e) => getSubfolder(folder)}>
-                    <MdFolder size="70" className="folderIcon" />
-                  </li>
-                  <p>{folder?.folder_name}</p>
+                  <div
+                    className="folder rr d-flex flex-column justify-content-center my-2"
+                    onClick={(e) => getSubfolder(folder)}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={folder.isChecked}
+                      onChange={(e) =>
+                        getAllSubfolderFiles(e, folder?.folder_name, index)
+                      }
+                      onClick={(e) => e.stopPropagation()}
+                      className="align-self-end me-2"
+                    />
+                    <li onClick={(e) => getSubfolder(folder)}>
+                      <MdFolder size="70" className="folderIcon" />
+                    </li>
+                    <p>{folder?.folder_name}</p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

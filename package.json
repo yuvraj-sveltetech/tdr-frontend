@@ -31,6 +31,9 @@
     "redux-thunk": "^2.4.1",
     "remote-redux-devtools": "^0.5.16",
     "request": "^2.88.2",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1",
+    "vis-network": "^9.1.4",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
   },

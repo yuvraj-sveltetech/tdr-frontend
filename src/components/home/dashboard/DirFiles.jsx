@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "./CreateFolder.css";
 import { useSelector, useDispatch } from "react-redux";
-import { all_headers } from "../../redux/slices/HeaderSlice";
+import { all_headers } from "../../../redux/slices/HeaderSlice";
 import {
   select_all_file,
   select_unselect_all,
   unselect_all_file,
-} from "../../redux/slices/SelectedFiles";
+} from "../../../redux/slices/SelectedFiles";
 import {
   is_parent_checked,
   all_files,
-} from "../../redux/slices/FolderSlice";
-import { LargeModal } from "../utils/index";
+} from "../../../redux/slices/FolderSlice";
+import { LargeModal } from "../../utils/index";
 import CheckBox from "./CheckBox";
+import { toast } from "react-toastify";
+import io from "socket.io-client";
 
 const DirFiles = ({ index }) => {
   const [show, setShow] = useState(false);
@@ -42,13 +44,16 @@ const DirFiles = ({ index }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show]);
 
-  window.to_electron.handleCounter((event, value) => {
-    const newValue = "pppp";
-    event.sender.send("counter-value", newValue);
-  });
-
   useEffect(() => {
-    getFiles();
+    const socket = io("http://localhost:7575");
+
+    socket.on("file_changed", (data) => {
+      getFiles();
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -63,6 +68,8 @@ const DirFiles = ({ index }) => {
       } else {
         setAllSelectedFiles([]);
       }
+    } else {
+      setAllSelectedFiles([]);
     }
   }, [redux_store, folder]);
 
@@ -82,8 +89,11 @@ const DirFiles = ({ index }) => {
       file: files.all_files[0],
       auth_token: localStorage.getItem("auth_token"),
     });
-    dispatch(all_headers(res?.data));
-    handleShow();
+
+    if (res?.data) {
+      dispatch(all_headers(res?.data));
+      handleShow();
+    } else toast.error("Something went wrong");
   };
 
   let isChecked = () =>
@@ -147,9 +157,11 @@ const DirFiles = ({ index }) => {
         })}
       </div>
 
-      <button type="button" className="btn btn-primary" onClick={getHeaders}>
-        Select Headers
-      </button>
+      <div className="header-btn">
+        <button type="button" className="btn btn-primary" onClick={getHeaders}>
+          Select Headers
+        </button>
+      </div>
 
       {modal}
     </div>
