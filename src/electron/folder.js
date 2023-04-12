@@ -5,7 +5,7 @@ const request = require("request");
 const fs = require("fs");
 const { download } = require("electron-dl");
 let dirpath = path.join(os.homedir(), "Desktop");
-const baseUrl = "http://192.168.15.36:8001/";
+const baseUrl = "http://192.168.15.36:8000/";
 
 module.exports = {
   create_folder: ipcMain.handle("create_folder", (e, arg1, arg2) => {
@@ -232,7 +232,7 @@ module.exports = {
   }),
 
   DOWNLOAD_FILE: ipcMain.handle("DOWNLOAD_FILE", async (e, arg1, arg2) => {
-    const downloadLink = `${baseUrl + arg2}`;
+    const downloadLink = `${baseUrl.slice(0, baseUrl.lastIndexOf('/')) + arg2}`;
     await download(BrowserWindow.getFocusedWindow(), downloadLink, {
       directory: path.join(os.homedir(), "Downloads"),
     })

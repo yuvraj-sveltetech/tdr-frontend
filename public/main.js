@@ -2,18 +2,19 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const chokidar = require("chokidar");
 const isDev = require("electron-is-dev");
+require("../src/electron/index");
 const {
   default: installExtension,
   REDUX_DEVTOOLS,
 } = require("electron-devtools-installer");
-require("../src/electron/index");
+
 
 let watcher = null;
 const server = require("http").createServer(app);
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3005",
   },
 });
 server.listen(7575);
@@ -40,7 +41,7 @@ function createWindow() {
 
   win.loadURL(
     isDev
-      ? "http://localhost:3000"
+      ? "http://localhost:3005"
       : `file://${path.join(__dirname, "../build/index.html")}`
   );
 
@@ -65,7 +66,6 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
-    watcher.close();
   }
 });
 
