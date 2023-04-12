@@ -3,10 +3,10 @@ const path = require("path");
 const chokidar = require("chokidar");
 const isDev = require("electron-is-dev");
 require("../src/electron/index");
-const {
-  default: installExtension,
-  REDUX_DEVTOOLS,
-} = require("electron-devtools-installer");
+// const {
+//   default: installExtension,
+//   REDUX_DEVTOOLS,
+// } = require("electron-devtools-installer");
 
 
 let watcher = null;
@@ -17,7 +17,7 @@ const io = require("socket.io")(server, {
     origin: "http://localhost:3005",
   },
 });
-server.listen(7575);
+server.listen(7572);
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling
 if (require("electron-squirrel-startup")) {
@@ -54,9 +54,9 @@ function createWindow() {
 app.whenReady().then(() => {
   folderToWatch();
   createWindow();
-  installExtension(REDUX_DEVTOOLS)
-    .then((name) => console.log(`Added Extension:  ${name}`))
-    .catch((err) => console.log("An error occurred: ", err));
+  // installExtension(REDUX_DEVTOOLS)
+  //   .then((name) => console.log(`Added Extension:  ${name}`))
+  //   .catch((err) => console.log("An error occurred: ", err));
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -66,6 +66,7 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
+    // watcher.close();
   }
 });
 
@@ -75,9 +76,9 @@ app.on("activate", () => {
 
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
-    installExtension(REDUX_DEVTOOLS)
-      .then((name) => console.log(`Added Extension:  ${name}`))
-      .catch((err) => console.log("An error occurred: ", err));
+    // installExtension(REDUX_DEVTOOLS)
+    //   .then((name) => console.log(`Added Extension:  ${name}`))
+    //   .catch((err) => console.log("An error occurred: ", err));
   }
 });
 
