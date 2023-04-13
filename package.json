@@ -6,6 +6,7 @@
   "homepage": "./",
   "author": "sveltetech",
   "description": "tdr applicaiton",
+  "license": "UNLICENSED",
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.6",
     "@testing-library/jest-dom": "^5.16.5",
@@ -68,8 +69,10 @@
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.4",
+    "@electron-forge/maker-wix": "^6.1.1",
     "@electron-forge/maker-deb": "^6.0.4",
-    "@electron-forge/maker-rpm": "^6.0.4",
+    "@electron-forge/maker-dmg": "^6.1.1",
+    "@electron-forge/maker-rpm": "^6.1.1",
     "@electron-forge/maker-squirrel": "^6.0.4",
     "@electron-forge/maker-zip": "^6.0.4",
     "@electron-forge/plugin-auto-unpack-natives": "^6.0.4",
