@@ -5,7 +5,7 @@ const request = require("request");
 const fs = require("fs");
 const { download } = require("electron-dl");
 let dirpath = path.join(os.homedir(), "Desktop");
-const baseUrl = "http://10.1.100.210:8005/";
+const baseUrl = "http://192.168.15.36:8000/";
 
 module.exports = {
   create_folder: ipcMain.handle("create_folder", (e, arg1, arg2) => {
@@ -221,8 +221,11 @@ module.exports = {
           resolve(false);
           notification(
             "PROCESSED",
-            "Data is processed. Download file from report section"
+            "Data is processed. Download file from report section."
           );
+        } else if (response?.body) {
+          resolve(false);
+          notification("ERROR", JSON.parse(response?.body).Error);
         } else {
           resolve(false);
           notification("ERROR", "Something went wrong");
@@ -232,7 +235,7 @@ module.exports = {
   }),
 
   DOWNLOAD_FILE: ipcMain.handle("DOWNLOAD_FILE", async (e, arg1, arg2) => {
-    const downloadLink = `${baseUrl.slice(0, baseUrl.lastIndexOf('/')) + arg2}`;
+    const downloadLink = `${baseUrl.slice(0, baseUrl.lastIndexOf("/")) + arg2}`;
     await download(BrowserWindow.getFocusedWindow(), downloadLink, {
       directory: path.join(os.homedir(), "Downloads"),
     })
