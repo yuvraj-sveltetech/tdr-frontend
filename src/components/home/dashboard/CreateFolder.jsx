@@ -166,37 +166,45 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
     <div className="create-folder">
       <div className="container-fluid">
         <h6>FOLDER</h6>
-        <div className="parent_folder">
-          <div className="row list-unstyled">
-            {folders?.created_folders?.map((folder, index) => {
-              return (
-                <div
-                  className="col-md-3"
-                  key={`CreatedFolder${folder?.folder_name}`}
-                >
-                  <div
-                    className="folder rr d-flex flex-column justify-content-center my-2"
-                    onClick={(e) => getSubfolder(folder)}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={folder.isChecked}
-                      onChange={(e) =>
-                        getAllSubfolderFiles(e, folder?.folder_name, index)
-                      }
-                      onClick={(e) => e.stopPropagation()}
-                      className="align-self-end me-2"
-                    />
-                    <li onClick={(e) => getSubfolder(folder)}>
-                      <MdFolder size="70" className="folderIcon" />
-                    </li>
-                    <p>{folder?.folder_name}</p>
-                  </div>
-                </div>
-              );
-            })}
+        {folders?.created_folders?.length === 0 ? (
+          <div className="center-div">
+            <h6 style={{ color: "red" }}>
+              Folder does not exist. Please create one
+            </h6>
           </div>
-        </div>
+        ) : (
+          <div className="parent_folder">
+            <div className="row list-unstyled">
+              {folders?.created_folders?.map((folder, index) => {
+                return (
+                  <div
+                    className="col-md-3"
+                    key={`CreatedFolder${folder?.folder_name}`}
+                  >
+                    <div
+                      className="folder rr d-flex flex-column justify-content-center my-2"
+                      onClick={(e) => getSubfolder(folder)}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={folder.isChecked}
+                        onChange={(e) =>
+                          getAllSubfolderFiles(e, folder?.folder_name, index)
+                        }
+                        onClick={(e) => e.stopPropagation()}
+                        className="align-self-end me-2"
+                      />
+                      <li onClick={(e) => getSubfolder(folder)}>
+                        <MdFolder size="70" className="folderIcon" />
+                      </li>
+                      <p>{folder?.folder_name}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

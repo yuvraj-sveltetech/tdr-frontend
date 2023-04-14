@@ -66,7 +66,7 @@ const Dashboard = () => {
                 </button> */}
               </div>
 
-              <div className="container breadcrumb">
+              <div className="container-fluid breadcrumb">
                 <div className="row ps-2 w-100">
                   <div className="d-flex align-items-center justify-content-between pe-0">
                     <div className="d-flex align-items-center">
