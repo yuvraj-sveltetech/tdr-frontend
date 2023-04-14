@@ -167,8 +167,12 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
       <div className="container-fluid">
         <h6>FOLDER</h6>
         {folders?.created_folders?.length === 0 ? (
-          <div className="center-div"><h6>FOLDER</h6></div>
-        ) : ( 
+          <div className="center-div">
+            <h6 style={{ color: "red" }}>
+              Folder does not exist. Please create one
+            </h6>
+          </div>
+        ) : (
           <div className="parent_folder">
             <div className="row list-unstyled">
               {folders?.created_folders?.map((folder, index) => {
