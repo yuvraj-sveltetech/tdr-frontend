@@ -177,7 +177,7 @@ nav ul li a {
   font-size: 1rem;
 }
 
-.create-folder h6 ,
+.create-folder h6,
 .all-folders h6,
 .all_files h6 {
   border-top: 1px solid #e5e9f2;
@@ -189,7 +189,7 @@ nav ul li a {
   text-align: left;
 }
 
-.center-div h6{
+.center-div h6 {
   border: none;
 }
 
@@ -276,10 +276,13 @@ nav ul li a {
   height: 74vh;
   background-color: rgb(245, 246, 250);
 }
-
-.all_files .row {
+.allFiles {
   height: 57vh;
   overflow-y: scroll;
+}
+
+.all_files .row {
+  height: auto;
 }
 
 .header-btn {

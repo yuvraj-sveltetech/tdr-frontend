@@ -147,14 +147,16 @@ const DirFiles = ({ index }) => {
         </label>
       </div>
 
-      <div className="row">
-        {files?.all_files?.map((file) => {
-          return (
-            <div className="col-md-3" key={`all_files${file.file_name}`}>
-              <CheckBox file={file} index={index} />
-            </div>
-          );
-        })}
+      <div className="container-fluid allFiles">
+        <div className="row">
+          {files?.all_files?.map((file) => {
+            return (
+              <div className="col-md-3" key={`all_files${file.file_name}`}>
+                <CheckBox file={file} index={index} />
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       <div className="header-btn">
