@@ -35,12 +35,6 @@ module.exports = {
       },
     },
     {
-      name: "@electron-forge/maker-wix",
-      config: {
-        icon: "./src/assets/images/tower.ico",
-      },
-    },
-    {
       name: "@electron-forge/maker-rpm",
       config: {},
     },

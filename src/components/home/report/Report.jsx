@@ -58,6 +58,7 @@ const Report = () => {
             ) : (
               <div className="report">
                 <h5 className="mb-3">Report List</h5>
+                <hr />
                 {loading ? (
                   <div className="data-not-found">
                     <div className="d-flex justify-content-center">
