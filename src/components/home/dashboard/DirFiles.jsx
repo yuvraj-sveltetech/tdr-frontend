@@ -88,6 +88,7 @@ const DirFiles = ({ index }) => {
     let res = await window.to_electron.get_headers("get_headers", {
       file: files.all_files[0],
       auth_token: localStorage.getItem("auth_token"),
+      refreshToken: localStorage.getItem("refresh_token"),
     });
 
     if (res?.data) {
