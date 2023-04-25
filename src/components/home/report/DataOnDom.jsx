@@ -19,6 +19,8 @@ const DataOnDom = () => {
     </tr>
   );
 
+
+  
   const tableRows =
     data.length > 0 &&
     data?.map((item, i) => (
@@ -28,12 +30,20 @@ const DataOnDom = () => {
         ))}
       </tr>
     ));
+  
+  
 
   return (
-    <table className="table table-striped table-bordered table-sm">
-      <thead>{tableHeaders}</thead>
-      <tbody>{tableRows}</tbody>
-    </table>
+    <>
+      <table
+        className="table table-striped table-bordered table-sm"
+        id="table-excel"
+      >
+        <thead>{tableHeaders}</thead>
+        <tbody>{tableRows}</tbody>
+      </table>
+
+    </>
   );
 };
 
