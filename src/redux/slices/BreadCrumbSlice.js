@@ -7,7 +7,7 @@ export const breadCrumbSlice = createSlice({
     switch_component: "",
     is_selected: "compare",
     isProccesed: { isDisable: false, loading: false },
-    excel_data: {},
+    excel_data: { fileName: "", data: {} },
   },
   reducers: {
     setShowCount: (state, action) => {
@@ -25,9 +25,10 @@ export const breadCrumbSlice = createSlice({
     },
 
     excelData: (state, action) => {
+      const { result_name, result_data } = action.payload;
       return {
         ...state,
-        excel_data: action.payload,
+        excel_data: { fileName: result_name, data: result_data },
       };
     },
 
