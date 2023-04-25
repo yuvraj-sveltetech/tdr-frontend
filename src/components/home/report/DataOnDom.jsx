@@ -2,12 +2,12 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const DataOnDom = () => {
-  const data = useSelector((state) => state.show_count.excel_data);
+  const excelData = useSelector((state) => state.show_count.excel_data);
 
   const tableHeaders = (
     <tr>
-      {data.length > 0 &&
-        Object.keys(data[0])?.map((head, i) => (
+      {excelData.data?.length > 0 &&
+        Object.keys(excelData.data[0])?.map((head, i) => (
           <th key={`head${head + i}`}>
             {head
               .replace(/_/g, " ")
@@ -20,8 +20,8 @@ const DataOnDom = () => {
   );
 
   const tableRows =
-    data.length > 0 &&
-    data?.map((item, i) => (
+    excelData.data?.length > 0 &&
+    excelData.data?.map((item, i) => (
       <tr key={`row${item + i}`}>
         {Object.values(item)?.map((inner_item, i) => (
           <td key={`row${inner_item + i}`}>{inner_item}</td>

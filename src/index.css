@@ -362,3 +362,7 @@ nav ul li a {
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
+
+.header-btn button{
+  float: left;
+}
