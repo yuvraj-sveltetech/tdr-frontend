@@ -37,10 +37,10 @@ const Report = () => {
     await window.to_electron.DOWNLOAD_FILE("DOWNLOAD_FILE", download_link);
   };
 
-  const switchTo = (data, component, link) => {
-    dispatch(excelData(data));
+  const switchTo = (item, component) => {
+    dispatch(excelData(item));
     dispatch(switchComponent(component));
-    download_link.current = link;
+    download_link.current = item.file_location;
   };
 
   return (
@@ -93,13 +93,7 @@ const Report = () => {
                               data-toggle="tooltip"
                               data-placement="top"
                               title="View"
-                              onClick={() =>
-                                switchTo(
-                                  item.result_data,
-                                  "/view-data",
-                                  item.file_location
-                                )
-                              }
+                              onClick={() => switchTo(item, "/view-data")}
                             >
                               <FaEye />
                             </button>
