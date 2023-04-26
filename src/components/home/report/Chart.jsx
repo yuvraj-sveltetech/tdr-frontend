@@ -9,7 +9,7 @@ import {
 const Chart = () => {
   const excelData = useSelector((state) => state.show_count.excel_data);
   let tempProps = JSON.parse(JSON.stringify(excelData));
-  console.log(excelData);
+  // console.log(excelData);
   // A reference to the div rendered by this component
   const domNode = useRef(null);
 
