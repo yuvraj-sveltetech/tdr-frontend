@@ -3,10 +3,7 @@ import { Sidebar, Header, ViewData } from "../../utils/index";
 import { useDispatch, useSelector } from "react-redux";
 import useApiHandle from "../../utils/useApiHandle";
 import * as URL from "../../utils/ConstantUrl";
-import {
-  switchComponent,
-  excelData,
-} from "../../../redux/slices/BreadCrumbSlice";
+import { switchComponent } from "../../../redux/slices/BreadCrumbSlice";
 import { BsFillFileEarmarkTextFill } from "react-icons/bs";
 import { FaEye } from "react-icons/fa";
 import { FcDownload } from "react-icons/fc";
@@ -18,6 +15,8 @@ const Report = () => {
   const toComp = useSelector((state) => state.show_count.switch_component);
   const download_link = useRef(null);
   const dispatch = useDispatch();
+  const report_id = useRef(null);
+  const created_file_name = useRef(null);
 
   useEffect(() => {
     if (data?.data) {
@@ -26,10 +25,10 @@ const Report = () => {
   }, [data]);
 
   useEffect(() => {
-    getExcelData();
+    getGeneratedReport();
   }, []);
 
-  const getExcelData = () => {
+  const getGeneratedReport = () => {
     apiCall("get", URL.GET_EXCEL_DATA, "");
   };
 
@@ -38,9 +37,10 @@ const Report = () => {
   };
 
   const switchTo = (item, component) => {
-    dispatch(excelData(item));
-    dispatch(switchComponent(component));
+    report_id.current = item?.id;
+    created_file_name.current = item?.result_name;
     download_link.current = item.file_location;
+    dispatch(switchComponent(component));
   };
 
   return (
@@ -54,6 +54,8 @@ const Report = () => {
               <ViewData
                 downloadFile={downloadFile}
                 downloadLink={download_link.current}
+                report_id={report_id.current}
+                created_file_name={created_file_name.current}
               />
             ) : (
               <div className="report">
