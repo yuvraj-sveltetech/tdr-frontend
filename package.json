@@ -8,6 +8,7 @@
   "description": "tdr applicaiton",
   "license": "UNLICENSED",
   "dependencies": {
+    "@amcharts/amcharts4": "^4.10.35",
     "@reduxjs/toolkit": "^1.8.6",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

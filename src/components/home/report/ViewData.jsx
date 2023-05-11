@@ -5,6 +5,7 @@ import * as URL from "../../utils/ConstantUrl";
 import { IoArrowBack } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { DataOnDom, Chart } from "../../utils/index";
+import { MdBubbleChart } from "react-icons/md";
 
 const ViewData = ({
   downloadFile,
@@ -15,14 +16,18 @@ const ViewData = ({
   const { data, loading, apiCall } = useApiHandle();
   const [pageNo, setPageNo] = useState(1);
   const [items, setItems] = useState([]);
+  const [number, setNumber] = useState("");
+  const [singleNoData, setSingleNoData] = useState([]);
   const divRef = useRef(null);
   const isAllDataFetched = useRef(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (data?.data) {
+    if (data?.data?.result_data) {
       setItems([...items, ...data.data?.result_data]);
       isAllDataFetched.current = data.data?.result_data.length;
+    } else if (data?.data?.data) {
+      setSingleNoData(data?.data?.data);
     }
   }, [data]);
 
@@ -41,6 +46,22 @@ const ViewData = ({
     return () => copiedRef.removeEventListener("scroll", handleScroll);
   }, [pageNo]);
 
+  useEffect(() => {
+    let getSingleNoData = "";
+    if (number.length > 0) {
+      getSingleNoData = setTimeout(() => {
+        apiCall(
+          "get",
+          URL.SINGLE_NUMBER_CHART_DATA + `${report_id}/?number=${number}`,
+          ""
+        );
+      }, 2000);
+    } else if (number === "") {
+      setSingleNoData([]);
+    }
+    return () => clearInterval(getSingleNoData);
+  }, [number]);
+
   const handleScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = divRef.current;
     if (scrollTop + clientHeight === scrollHeight) {
@@ -54,6 +75,16 @@ const ViewData = ({
   const downloadExcel = () => {
     downloadFile(downloadLink);
   };
+
+  let style =
+    items.length > 0
+      ? {
+          visibility: "visible",
+        }
+      : {
+          visibility: "hidden",
+          height: "0px",
+        };
 
   return (
     <>
@@ -70,21 +101,49 @@ const ViewData = ({
           </button>
           <h6 className="m-0 ms-2">{created_file_name}</h6>
         </div>
-        <button className="btn btn-success" onClick={downloadExcel}>
-          Download
-        </button>
+
+        <div className="d-flex align-items-center">
+          <div class="input-group me-3">
+            <div class="input-group-prepend">
+              <span
+                className="input-group-text"
+                id="basic-addon1"
+                style={{ borderRadius: "0.375rem 0 0 0.375rem" }}
+              >
+                <MdBubbleChart size={24} />
+              </span>
+            </div>
+
+            <input
+              type="text"
+              className="form-control shadow-none"
+              placeholder="Enter mobile number"
+              aria-label="Mobile number"
+              aria-describedby="basic-addon1"
+              onChange={(e) => setNumber(e.target.value)}
+            />
+          </div>
+          <button className="btn btn-success" onClick={downloadExcel}>
+            Download
+          </button>
+        </div>
       </div>
       <hr className="m-0 mx-2" />
-      {/* <Chart /> */}
 
-      <div className="data_table table-responsive mt-4 mx-2" ref={divRef}>
-        <DataOnDom items={items} loading={loading} />
+      <Chart
+        singleNoData={singleNoData}
+        report_id={report_id}
+        itemsLength={items.length}
+        number={number}
+      />
+
+      <div
+        className="data_table table-responsive my-4 mx-2"
+        ref={divRef}
+        style={style}
+      >
+        {items.length > 0 && <DataOnDom items={items} loading={loading} />}
       </div>
-      {/* <div className="table-spinner">
-        <div className="text-center">
-          <div className="spinner-border" role="status" />
-        </div>
-      </div> */}
     </>
   );
 };
