@@ -77,9 +77,9 @@ const Chart = ({ report_id, itemsLength, singleNoData }) => {
   return (
     <div className="chartdiv" style={{ width: "100%", height: "500px" }}>
       {chartData.length === 0 && itemsLength === 0 && (
-        <div class="d-flex justify-content-center align-items-center h-100">
+        <div className="d-flex justify-content-center align-items-center h-100">
           <div className="d-flex flex-column justify-content-center align-items-center">
-            <div class="spinner-border" role="status" />
+            <div className="spinner-border" role="status" />
             <h6>Preparing Chart...</h6>
           </div>
         </div>
