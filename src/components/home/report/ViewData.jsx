@@ -103,8 +103,8 @@ const ViewData = ({
         </div>
 
         <div className="d-flex align-items-center">
-          <div class="input-group me-3">
-            <div class="input-group-prepend">
+          <div className="input-group me-3">
+            <div className="input-group-prepend">
               <span
                 className="input-group-text"
                 id="basic-addon1"
