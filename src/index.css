@@ -11,8 +11,23 @@ body {
   padding: 3rem 5rem;
 }
 
-.login img {
+.login .row img:first-child {
   width: 16rem;
+}
+
+.login .row img:nth-child(3) {
+  height: 7rem;
+  width: 9rem;
+}
+
+.vl {
+  width: 1px !important;
+  margin: 0 20px 0 10px;
+  border-right: 1px solid #fff;
+}
+
+.reportListName {
+  width: 30%;
 }
 
 .login .row:nth-child(1),
@@ -41,6 +56,14 @@ body {
   border-radius: 0.3rem;
   padding: 0 0.5rem;
 }
+
+.dropdown-menu li {
+  font-size: 14px;
+}
+
+/* .header .dropdown-menu button {
+  color: #000 !important;
+} */
 
 .submit-login button {
   text-align: center;
@@ -144,7 +167,6 @@ nav ul li a {
 }
 .dropdown button {
   border: none;
-  color: #fff !important;
   font-weight: 500;
   font-size: 0.9rem;
 }

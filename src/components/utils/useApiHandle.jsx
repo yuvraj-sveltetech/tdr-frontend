@@ -50,7 +50,6 @@ const useApiHandle = () => {
         accessToken = response.data.access_token;
         localStorage.setItem("auth_token", response.data.access_token);
       } catch (err) {
-        console.error(err);
         localStorage.clear();
         navigate("/");
         throw err;
@@ -90,6 +89,7 @@ const useApiHandle = () => {
       .catch((err) => {
         toast.error(err?.response?.data?.Error);
         setLoading(false);
+        setData([]);
       });
   };
 
