@@ -7,3 +7,4 @@ export const GET_EXCEL_PAGINATION = "tdr/getResultData/";
 export const VOIP_GRAPH = "/tdr/VoipDiagramData/";
 export const SINGLE_NUMBER_CHART_DATA = "/tdr/getSingleVoipChart/";
 export const CREATE_USER_ACCOUNT = "user/signUp/";
+export const USER_LOGS = "user/userList/";

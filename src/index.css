@@ -20,6 +20,16 @@ body {
   width: 9rem;
 }
 
+.user_log_table {
+  height: 81vh;
+}
+
+.user_log_table table thead {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+}
+
 .vl {
   width: 1px !important;
   margin: 0 20px 0 10px;

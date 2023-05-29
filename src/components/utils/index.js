@@ -13,3 +13,5 @@ export { Report } from "../home/report/Report";
 export { ViewData } from "../home/report/ViewData";
 export { DataOnDom } from "../home/report/DataOnDom";
 export { Chart } from "../home/report/Chart";
+export { CreateUserModal } from "../home/modals/CreateUserModal";
+export { UserLog } from "../home/dashboard/UserLog";

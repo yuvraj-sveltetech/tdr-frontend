@@ -27,6 +27,7 @@ const AddFolder = ({ category, setModal }) => {
       auth_token: localStorage.getItem("auth_token"),
       type: type,
     });
+    console.log(res, "res");
     dispatch(isProccesed({ isDisable: false, loading: res }));
     dispatch(clear_structure());
     dispatch(uncheck_all_parent());

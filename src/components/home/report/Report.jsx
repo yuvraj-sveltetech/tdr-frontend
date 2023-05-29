@@ -61,7 +61,7 @@ const Report = () => {
               />
             ) : (
               <div className="report">
-                <h5 className="mb-3">Report List</h5>
+                <h6 className="mb-3">Report List</h6>
                 <hr />
                 {loading ? (
                   <div className="data-not-found">
