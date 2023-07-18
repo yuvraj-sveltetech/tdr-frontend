@@ -8,6 +8,7 @@ import {
   PageNotFound,
   Report,
   UserLog,
+  UploadSdr,
 } from "../utils/index";
 import PrivateRoute from "../utils/PrivateRoute";
 
@@ -21,6 +22,7 @@ const AppRouter = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/report" element={<Report />} />
           <Route path="/user-log" element={<UserLog />} />
+          <Route path="/upload-sdr" element={<UploadSdr />} />
         </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>

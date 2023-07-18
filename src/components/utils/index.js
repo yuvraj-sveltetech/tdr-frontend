@@ -15,3 +15,6 @@ export { DataOnDom } from "../home/report/DataOnDom";
 export { Chart } from "../home/report/Chart";
 export { CreateUserModal } from "../home/modals/CreateUserModal";
 export { UserLog } from "../home/dashboard/UserLog";
+export { UploadSdr } from "../home/sdr/UploadSdr";
+export { SdrTableData } from "../home/sdr/SdrTableData";
+export { SdrHeaders } from "../home/sdr/SdrHeaders";

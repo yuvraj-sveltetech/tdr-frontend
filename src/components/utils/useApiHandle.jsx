@@ -19,7 +19,8 @@ const useApiHandle = () => {
     const axiosInstance = axios.create({
       baseURL: baseUrl,
       headers: {
-        "Content-Type": "application/json",
+        // "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
     });
 
@@ -27,7 +28,11 @@ const useApiHandle = () => {
     axiosInstance.interceptors.request.use(
       async function (config) {
         // Do something before request is sent
-        config.data = { ...config.data, ...payload };
+        // config.data = { ...config.data, ...payload };
+        config.data =
+          payload instanceof FormData
+            ? payload
+            : { ...config.data, ...payload };
         if (localStorage.getItem("auth_token")) {
           config.headers["Authorization"] = `Bearer ${localStorage.getItem(
             "auth_token"
@@ -80,7 +85,8 @@ const useApiHandle = () => {
       }
     );
 
-    axiosInstance[method](url)
+    // axiosInstance[method](url)
+    axiosInstance[method](url, payload)
       .then((res) => {
         setData(res);
         setLoading(false);
