@@ -147,7 +147,7 @@ const SdrHeaders = ({
         )}/?table_name=${localStorage.getItem(
           "sdrTableName"
         )}&operator=${operator}`,
-        ""
+        postData
       );
     } else {
       toast.warn("Make sure columns have unique headers.");
@@ -186,7 +186,7 @@ const SdrHeaders = ({
               className="mr-2"
             />
             <span className="visually-hidden">Loading...</span>
-           <span className="ps-2">Uploading...</span> 
+            <span className="ps-2">Uploading...</span>
           </Button>
         ) : (
           <button
