@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { TbReportAnalytics } from "react-icons/tb";
 import { FiActivity } from "react-icons/fi";
+import { HiOutlineUpload } from "react-icons/hi";
 
 const Sidebar = () => {
   const navlinks = [
@@ -24,7 +25,7 @@ const Sidebar = () => {
     },
     {
       name: "Upload SDR",
-      icons: <FiActivity id="navicons" size={19} />,
+      icons: <HiOutlineUpload id="navicons" size={19} />,
       to: "/upload-sdr",
     },
   ];
