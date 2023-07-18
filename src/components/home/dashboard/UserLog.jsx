@@ -14,8 +14,6 @@ const UserLog = () => {
     }
   }, [data]);
 
-  console.log(userLog, "pp");
-
   useEffect(() => {
     getUserLogs();
   }, []);

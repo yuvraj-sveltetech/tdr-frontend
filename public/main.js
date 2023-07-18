@@ -3,10 +3,10 @@ const path = require("path");
 const chokidar = require("chokidar");
 const isDev = require("electron-is-dev");
 require("../src/electron/index");
-// const {
-//   default: installExtension,
-//   REDUX_DEVTOOLS,
-// } = require("electron-devtools-installer");
+const {
+  default: installExtension,
+  REDUX_DEVTOOLS,
+} = require("electron-devtools-installer");
 
 let watcher = null;
 const server = require("http").createServer(app);
@@ -48,9 +48,9 @@ function createWindow() {
 app.whenReady().then(() => {
   folderToWatch();
   createWindow();
-  // installExtension(REDUX_DEVTOOLS)
-  //   .then((name) => console.log(`Added Extension:  ${name}`))
-  //   .catch((err) => console.log("An error occurred: ", err));
+  installExtension(REDUX_DEVTOOLS)
+    .then((name) => console.log(`Added Extension:  ${name}`))
+    .catch((err) => console.log("An error occurred: ", err));
 });
 
 app.on("window-all-closed", () => {
@@ -62,9 +62,9 @@ app.on("window-all-closed", () => {
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
-    // installExtension(REDUX_DEVTOOLS)
-    //   .then((name) => console.log(`Added Extension:  ${name}`))
-    //   .catch((err) => console.log("An error occurred: ", err));
+    installExtension(REDUX_DEVTOOLS)
+      .then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log("An error occurred: ", err));
   }
 });
 

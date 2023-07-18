@@ -22,6 +22,11 @@ const Sidebar = () => {
       icons: <FiActivity id="navicons" size={19} />,
       to: "/user-log",
     },
+    {
+      name: "Upload SDR",
+      icons: <FiActivity id="navicons" size={19} />,
+      to: "/upload-sdr",
+    },
   ];
 
   return (
