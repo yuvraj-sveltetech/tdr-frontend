@@ -1,75 +1,91 @@
-import React, { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
-import {
-  DataSet,
-  Network,
-  Options,
-  Data,
-} from "vis-network/standalone/esm/vis-network";
-const Chart = () => {
-  const excelData = useSelector((state) => state.show_count.excel_data);
-  let tempProps = JSON.parse(JSON.stringify(excelData));
-  console.log(excelData);
-  // A reference to the div rendered by this component
-  const domNode = useRef(null);
+import React, { useState, useEffect, useLayoutEffect } from "react";
+import useApiHandle from "../../utils/useApiHandle";
+import { VOIP_GRAPH } from "../../utils/ConstantUrl";
+import * as am4core from "@amcharts/amcharts4/core";
+import * as am4plugins_forceDirected from "@amcharts/amcharts4/plugins/forceDirected";
+import { create } from "@amcharts/amcharts4/core";
+import { ForceDirectedSeries } from "@amcharts/amcharts4/plugins/forceDirected";
 
-  // A reference to the vis network instance
-  const network = useRef(null);
-
-  // An array of nodes
+const Chart = ({ report_id, itemsLength, singleNoData }) => {
+  const { data, loading, apiCall } = useApiHandle();
+  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
-    if (tempProps.length > 0) {
-      // const nodes = new DataSet(tempProps);
-      const nodes = new DataSet([
-        { id: 1, label: "Node 1" },
-        { id: 2, label: "Node 2" },
-        { id: 3, label: "Node 3" },
-        { id: 4, label: "Node 4" },
-        { id: 5, label: "Node 5" },
-      ]);
+    getChartData();
+  }, []);
 
-      // An array of edges
-      const edges = new DataSet([
-        { from: 1, to: 3 },
-        { from: 1, to: 2 },
-        { from: 2, to: 4 },
-        { from: 2, to: 5 },
-      ]);
-      const data = {
-        nodes,
-        edges,
-      };
-
-      const options = {
-        nodes: {
-          shape: "dot",
-          size: 10,
-          font: {
-            color: "#fff",
-          },
-        },
-        physics: {
-          forceAtlas2Based: {
-            gravitationalConstant: -26,
-            centralGravity: 0.005,
-            springLength: 230,
-            springConstant: 0.18,
-          },
-          maxVelocity: 146,
-          solver: "forceAtlas2Based",
-          timestep: 0.35,
-          stabilization: { iterations: 150 },
-        },
-      };
-
-      if (domNode.current) {
-        network.current = new Network(domNode.current, data, options);
+  useEffect(() => {
+    if (singleNoData.length === 0) {
+      if (data?.data) {
+        setChartData(data?.data?.data);
       }
+    } else {
+      setChartData(singleNoData);
     }
-  }, [domNode, network, tempProps]);
+  }, [data, singleNoData]);
 
-  return <div ref={domNode} id="mynetwork"></div>;
+  // Create root and chart
+
+  useLayoutEffect(() => {
+    if (chartData.length > 0) {
+      // Create chart instance
+      const chart = create(
+        "chartdiv",
+        am4plugins_forceDirected.ForceDirectedTree
+      );
+
+      // Set chart data
+      chart.data = chartData;
+
+      // Create series
+      const series = chart.series.push(new ForceDirectedSeries());
+      series.dataFields.value = "value";
+      series.dataFields.name = "name";
+      series.dataFields.children = "children";
+
+      // Customize other series properties
+
+      series.nodes.template.label.text = "{name}";
+      series.nodes.template.tooltipText = "{name}";
+      series.maxLevels = 1;
+      series.dataFields.collapsed = "off";
+      series.nodes.template.label.text = "{name}";
+      series.nodes.template.distance = 1;
+      series.fontSize = 12;
+      series.minRadius = 35;
+      series.maxRadius = 50;
+      series.colors.list = [
+        am4core.color("#272727"),
+        am4core.color("#FF847C"),
+        am4core.color("#116466"),
+        am4core.color("#2C3531"),
+      ];
+
+      // ... (customize other series properties if needed)
+
+      // Clean up chart when the component unmounts
+      return () => {
+        chart.dispose();
+      };
+    }
+  }, [chartData]);
+
+  const getChartData = async () => {
+    apiCall("get", VOIP_GRAPH + `${report_id}/`, "");
+  };
+
+  return (
+    <div className="chartdiv" style={{ width: "100%", height: "500px" }}>
+      {chartData.length === 0 && itemsLength === 0 && (
+        <div className="d-flex justify-content-center align-items-center h-100">
+          <div className="d-flex flex-column justify-content-center align-items-center">
+            <div className="spinner-border" role="status" />
+            <h6>Preparing Chart...</h6>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export { Chart };

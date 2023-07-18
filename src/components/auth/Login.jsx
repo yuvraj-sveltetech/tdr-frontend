@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import background_img from "../../assets/images/background_img.jpg";
 import logo from "../../assets/images/logo.png";
+import client_logo from "../../assets/images/client_logo.png";
 import useApiHandle from "../utils/useApiHandle";
 import * as URL from "../utils/ConstantUrl";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 const Login = () => {
   const { data, loading, apiCall } = useApiHandle();
@@ -24,6 +24,7 @@ const Login = () => {
       localStorage.setItem("auth_token", data?.data?.access_token);
       localStorage.setItem("refresh_token", data?.data?.refresh_token);
       localStorage.setItem("user_email", data?.data?.email);
+      localStorage.setItem("superuser", data?.data?.superuser);
       navigate("/dashboard");
     }
   }, [data, navigate]);
@@ -46,6 +47,8 @@ const Login = () => {
     >
       <div className="row">
         <img src={logo} alt="sveltetech_logo" />
+        <div className="vl" />
+        <img src={client_logo} alt="client_logo" height="300" width="200" />
       </div>
 
       <div className="row h-75">

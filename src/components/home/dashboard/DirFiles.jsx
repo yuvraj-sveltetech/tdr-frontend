@@ -19,6 +19,7 @@ import io from "socket.io-client";
 const DirFiles = ({ index }) => {
   const [show, setShow] = useState(false);
   const [allSelectedFiles, setAllSelectedFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
   const files = useSelector((state) => state.folder);
   const redux_store = useSelector((state) => state.selected_files);
   const dispatch = useDispatch();
@@ -45,7 +46,7 @@ const DirFiles = ({ index }) => {
   }, [show]);
 
   useEffect(() => {
-    const socket = io("http://localhost:7575");
+    const socket = io("http://localhost:7572");
 
     socket.on("file_changed", (data) => {
       getFiles();
@@ -85,15 +86,21 @@ const DirFiles = ({ index }) => {
   };
 
   const getHeaders = async () => {
+    setLoading(true);
+
     let res = await window.to_electron.get_headers("get_headers", {
       file: files.all_files[0],
       auth_token: localStorage.getItem("auth_token"),
     });
 
     if (res?.data) {
+      setLoading(false);
       dispatch(all_headers(res?.data));
       handleShow();
-    } else toast.error("Something went wrong");
+    } else {
+      setLoading(false);
+      toast.error("Something went wrong");
+    }
   };
 
   let isChecked = () =>
@@ -147,19 +154,36 @@ const DirFiles = ({ index }) => {
         </label>
       </div>
 
-      <div className="row">
-        {files?.all_files?.map((file) => {
-          return (
-            <div className="col-md-3" key={`all_files${file.file_name}`}>
-              <CheckBox file={file} index={index} />
-            </div>
-          );
-        })}
+      <div className="container-fluid allFiles">
+        <div className="row">
+          {files?.all_files?.map((file) => {
+            return (
+              <div className="col-md-3" key={`all_files${file.file_name}`}>
+                <CheckBox file={file} index={index} />
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="header-btn">
-        <button type="button" className="btn btn-primary" onClick={getHeaders}>
-          Select Headers
+      <div className="header-btn w-25">
+        <button
+          type="button"
+          className="btn btn-primary w-50"
+          disabled={loading}
+          onClick={getHeaders}
+        >
+          {loading ? (
+            <div className="spinner">
+              <div
+                className="spinner-border spinner-border-sm me-2"
+                role="status"
+              />
+              loading...
+            </div>
+          ) : (
+            "Select Headers"
+          )}
         </button>
       </div>
 

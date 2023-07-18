@@ -1,31 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { MdCreateNewFolder } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import { clear_structure } from "../../../redux/slices/SelectedFiles";
 import { uncheck_all_parent } from "../../../redux/slices/FolderSlice";
-import { is_selected } from "../../../redux/slices/BreadCrumbSlice";
+import {
+  is_selected,
+  isProccesed,
+} from "../../../redux/slices/BreadCrumbSlice";
+import { toast } from "react-toastify";
 
 const AddFolder = ({ category, setModal }) => {
-  const [isDone, setIsDone] = useState({ isDisable: true, loading: false });
   const redux_store = useSelector((state) => state.selected_files);
   const type = useSelector((state) => state.show_count.is_selected);
+  const is_processed = useSelector((state) => state.show_count.isProccesed);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (Object.keys(redux_store.structure).length > 0) {
-      setIsDone({ ...isDone, isDisable: false });
-    }
-  }, [redux_store.structure]);
-
   const getFilesData = async () => {
-    setIsDone({ isDisable: true, loading: true });
+    if (Object.keys(redux_store.structure).length === 0) {
+      toast.warn("Please select file to process");
+      return;
+    }
+
+    dispatch(isProccesed({ isDisable: true, loading: true }));
     let res = await window.to_electron.get_files_data("get_files_data", {
       structure: redux_store.structure,
       auth_token: localStorage.getItem("auth_token"),
       type: type,
     });
 
-    setIsDone({ isDisable: false, loading: res });
+    dispatch(isProccesed({ isDisable: false, loading: res }));
     dispatch(clear_structure());
     dispatch(uncheck_all_parent());
   };
@@ -51,9 +54,9 @@ const AddFolder = ({ category, setModal }) => {
         className="btn btn-primary mx-2"
         id="send_data"
         onClick={getFilesData}
-        disabled={isDone.isDisable}
+        disabled={is_processed.isDisable}
       >
-        {isDone.loading ? (
+        {is_processed.loading ? (
           <div className="d-flex align-items-center">
             <div
               className="spinner-border spinner-border-sm me-1"

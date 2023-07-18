@@ -3,6 +3,7 @@ import tower from "../../../assets/images/tower-icon.png";
 import { NavLink } from "react-router-dom";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { TbReportAnalytics } from "react-icons/tb";
+import { FiActivity } from "react-icons/fi";
 
 const Sidebar = () => {
   const navlinks = [
@@ -15,6 +16,16 @@ const Sidebar = () => {
       name: "Report",
       icons: <TbReportAnalytics id="navicons" />,
       to: "/report",
+    },
+    {
+      name: "User Log",
+      icons: <FiActivity id="navicons" size={19} />,
+      to: "/user-log",
+    },
+    {
+      name: "Upload SDR",
+      icons: <FiActivity id="navicons" size={19} />,
+      to: "/upload-sdr",
     },
   ];
 

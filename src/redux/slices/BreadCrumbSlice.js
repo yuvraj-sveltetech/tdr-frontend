@@ -6,7 +6,7 @@ export const breadCrumbSlice = createSlice({
     show: 0,
     switch_component: "",
     is_selected: "compare",
-    excel_data: {},
+    isProccesed: { isDisable: false, loading: false },
   },
   reducers: {
     setShowCount: (state, action) => {
@@ -23,22 +23,23 @@ export const breadCrumbSlice = createSlice({
       };
     },
 
-    excelData: (state, action) => {
-      return {
-        ...state,
-        excel_data: action.payload,
-      };
-    },
-
     is_selected: (state, action) => {
       return {
         ...state,
         is_selected: action.payload,
       };
     },
+
+    isProccesed: (state, action) => {
+      const { isDisable, loading } = action.payload;
+      return {
+        ...state,
+        isProccesed: { ...state.isProccesed, isDisable, loading },
+      };
+    },
   },
 });
 
-export const { setShowCount, switchComponent, excelData, is_selected } =
+export const { setShowCount, switchComponent, is_selected, isProccesed } =
   breadCrumbSlice.actions;
 export default breadCrumbSlice.reducer;

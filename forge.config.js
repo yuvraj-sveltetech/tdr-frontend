@@ -2,6 +2,7 @@ module.exports = {
   packagerConfig: {
     // ignore: ["^\\/node_modules$"],
     asar: true,
+    icon: "./src/assets/images/tower",
   },
   rebuildConfig: {},
   plugins: [
@@ -13,7 +14,7 @@ module.exports = {
   makers: [
     {
       name: "@electron-forge/maker-squirrel",
-      config: {},
+      config: { setupIcon: "./src/assets/images/tower.ico" },
     },
     {
       name: "@electron-forge/maker-zip",
@@ -21,7 +22,17 @@ module.exports = {
     },
     {
       name: "@electron-forge/maker-deb",
-      config: {},
+      config: {
+        options: {
+          icon: "./src/assets/images/tower.png",
+        },
+      },
+    },
+    {
+      name: "@electron-forge/maker-dmg",
+      config: {
+        icon: "./src/assets/images/tower.icns",
+      },
     },
     {
       name: "@electron-forge/maker-rpm",

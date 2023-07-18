@@ -1,5 +1,14 @@
 export const LOGIN = "user/userLogin/";
+export const REFRESH = "user/refreshtoken/";
 export const CREATE_FOLDER = "tdr/tdrFolder/";
 export const GET_HEADERS = "tdr/getSubFolder/";
-export const GET_FILES_DATA = "tdr/test/";
 export const GET_EXCEL_DATA = "tdr/getUserExcelData/";
+export const GET_EXCEL_PAGINATION = "tdr/getResultData/";
+export const VOIP_GRAPH = "/tdr/VoipDiagramData/";
+export const SINGLE_NUMBER_CHART_DATA = "/tdr/getSingleVoipChart/";
+export const CREATE_USER_ACCOUNT = "user/signUp/";
+export const USER_LOGS = "user/userList/";
+export const GET_SDR_FILE_DATA = "airtel/getAllFileList/";
+export const UPLOAD_SDR_FILE = "airtel/createSdrData/";
+export const GET_SDR_TOP_ROWS = "airtel/getTopRowSdr/";
+export const PROCESS_SDR_FILE = "airtel/processSdrData/";

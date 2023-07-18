@@ -3,13 +3,12 @@ import { Sidebar, Header, ViewData } from "../../utils/index";
 import { useDispatch, useSelector } from "react-redux";
 import useApiHandle from "../../utils/useApiHandle";
 import * as URL from "../../utils/ConstantUrl";
-import {
-  switchComponent,
-  excelData,
-} from "../../../redux/slices/BreadCrumbSlice";
+import { switchComponent } from "../../../redux/slices/BreadCrumbSlice";
 import { BsFillFileEarmarkTextFill } from "react-icons/bs";
+import { BiTime } from "react-icons/bi";
 import { FaEye } from "react-icons/fa";
 import { FcDownload } from "react-icons/fc";
+import { CiCalendarDate } from "react-icons/ci";
 import notFound from "../../../assets/images/data-not-found.png";
 
 const Report = () => {
@@ -18,6 +17,8 @@ const Report = () => {
   const toComp = useSelector((state) => state.show_count.switch_component);
   const download_link = useRef(null);
   const dispatch = useDispatch();
+  const report_id = useRef(null);
+  const created_file_name = useRef(null);
 
   useEffect(() => {
     if (data?.data) {
@@ -26,10 +27,10 @@ const Report = () => {
   }, [data]);
 
   useEffect(() => {
-    getExcelData();
+    getGeneratedReport();
   }, []);
 
-  const getExcelData = () => {
+  const getGeneratedReport = () => {
     apiCall("get", URL.GET_EXCEL_DATA, "");
   };
 
@@ -37,10 +38,11 @@ const Report = () => {
     await window.to_electron.DOWNLOAD_FILE("DOWNLOAD_FILE", download_link);
   };
 
-  const switchTo = (data, component, link) => {
-    dispatch(excelData(data));
+  const switchTo = (item, component) => {
+    report_id.current = item?.id;
+    created_file_name.current = item?.result_name;
+    download_link.current = item.file_location;
     dispatch(switchComponent(component));
-    download_link.current = link;
   };
 
   return (
@@ -54,10 +56,13 @@ const Report = () => {
               <ViewData
                 downloadFile={downloadFile}
                 downloadLink={download_link.current}
+                report_id={report_id.current}
+                created_file_name={created_file_name.current}
               />
             ) : (
               <div className="report">
-                <h5 className="mb-3">Report List</h5>
+                <h6 className="mb-3">Report List</h6>
+                <hr />
                 {loading ? (
                   <div className="data-not-found">
                     <div className="d-flex justify-content-center">
@@ -78,12 +83,28 @@ const Report = () => {
                     {reportData?.map((item) => {
                       return (
                         <div className="item me-1" key={item.id}>
-                          <li>
-                            <BsFillFileEarmarkTextFill
-                              className="file_icon mb-1 me-2"
-                              size={20}
-                            />
-                            {item.result_name}
+                          <li className="w-75 d-flex justify-content-between">
+                            <div className="reportListName">
+                              <BsFillFileEarmarkTextFill
+                                className="file_icon mb-1 me-2"
+                                size={20}
+                              />
+                              {item.result_name}
+                            </div>
+
+                            <div className="date">
+                              <span className="d-flex align-items-center">
+                                <CiCalendarDate size={20} className="me-1" />
+                                {item.created_date}
+                              </span>
+                            </div>
+
+                            <div className="time">
+                              <span className="d-flex align-items-center">
+                                <BiTime className="me-1" />
+                                {item.created_time}
+                              </span>
+                            </div>
                           </li>
 
                           <div className="btns">
@@ -92,13 +113,7 @@ const Report = () => {
                               data-toggle="tooltip"
                               data-placement="top"
                               title="View"
-                              onClick={() =>
-                                switchTo(
-                                  item.result_data,
-                                  "/view-data",
-                                  item.file_location
-                                )
-                              }
+                              onClick={() => switchTo(item, "/view-data")}
                             >
                               <FaEye />
                             </button>

@@ -7,7 +7,7 @@ import {
   DirFiles,
   AddFolder,
 } from "../../utils/index";
-import tower from "../../../assets/images/tower.png";
+// import tower from "../../../assets/images/tower.png";
 import { useSelector, useDispatch } from "react-redux";
 import { HiHome } from "react-icons/hi";
 import {
@@ -19,8 +19,6 @@ import {
   add_parentfolder_name,
 } from "../../../redux/slices/FolderSlice";
 import Modal from "../../utils/Modal";
-
-// const ipcRenderer = window.require("electron").ipcRenderer;
 
 const Dashboard = () => {
   const [category, setCategory] = useState("IPDR");
@@ -68,7 +66,7 @@ const Dashboard = () => {
                 </button> */}
               </div>
 
-              <div className="container breadcrumb">
+              <div className="container-fluid breadcrumb">
                 <div className="row ps-2 w-100">
                   <div className="d-flex align-items-center justify-content-between pe-0">
                     <div className="d-flex align-items-center">
