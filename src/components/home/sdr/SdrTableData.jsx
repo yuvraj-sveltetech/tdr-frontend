@@ -5,6 +5,8 @@ import { isSdr } from "../../../redux/slices/SdrSlice";
 import useApiHandle from "../../utils/useApiHandle";
 import { useDispatch } from "react-redux";
 import { Spinner } from "react-bootstrap";
+import { BsCheckCircle } from "react-icons/bs";
+import { RxCrossCircled } from "react-icons/rx";
 
 const SdrTableData = ({
   component,
@@ -44,7 +46,6 @@ const SdrTableData = ({
   };
 
   const editHeaders = async (e) => {
-    let url = "";
     setId(id);
     setIsLoaded(true);
     setSpinner(true);
@@ -92,6 +93,13 @@ const SdrTableData = ({
         >
           {spinner ? <Spinner animation="border" size="sm" /> : <FaEye />}
         </button>
+      </td>
+      <td>
+        {table.file_process ? (
+          <BsCheckCircle color="green" />
+        ) : (
+          <RxCrossCircled color="red" />
+        )}
       </td>
     </tr>
   );

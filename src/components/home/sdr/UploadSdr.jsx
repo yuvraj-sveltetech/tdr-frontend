@@ -20,7 +20,6 @@ const UploadSdr = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [operator, setOperator] = useState("bsnl");
   const isSdrLoad = useSelector((state) => state.sdr.isSdrLoad);
-  const inputRef = useRef();
   let component = localStorage.getItem("showComponent");
 
   useEffect(() => {
@@ -29,16 +28,13 @@ const UploadSdr = () => {
       setTableLoader(false);
       setTable(data?.data?.data);
       setSelectedFile([]);
-      inputRef.current.value = null;
     } else if (data?.data?.table_name) {
       toast.success(data?.data?.Message);
       setSelectedFile([]);
       getSdrFiles();
-      inputRef.current.value = null;
     } else {
       setTableLoader(false);
       setLoader(false);
-      inputRef.current.value = null;
     }
   }, [data]);
 
@@ -102,7 +98,6 @@ const UploadSdr = () => {
                               className="custom-file-input p-1 me-2"
                               onChange={changeHandler}
                               disabled={loader}
-                              ref={inputRef}
                               style={{
                                 backgroundColor: "#f1f3f3",
                                 cursor: "pointer",
@@ -181,12 +176,13 @@ const UploadSdr = () => {
                             <th>File Name</th>
                             <th>Select Table</th>
                             <th>Action</th>
+                            <th>Processed</th>
                           </tr>
                         </thead>
                         <tbody>
                           {tableLoader ? (
                             <tr>
-                              <td colSpan="4">
+                              <td colSpan="5">
                                 <div className="d-flex justify-content-center">
                                   <div
                                     className="spinner-border"
@@ -218,7 +214,7 @@ const UploadSdr = () => {
                             })
                           ) : (
                             <tr>
-                              <td colSpan="4">
+                              <td colSpan="5">
                                 <h3
                                   style={{ color: "gray" }}
                                   className="text-center"
@@ -239,6 +235,7 @@ const UploadSdr = () => {
                     isLoaded={isLoaded}
                     component={component}
                     operator={operator}
+                    getSdrFiles={getSdrFiles}
                   />
                 )}
               </div>
