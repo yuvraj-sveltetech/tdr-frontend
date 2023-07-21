@@ -13,6 +13,7 @@ const SdrHeaders = ({
   isReload,
   isLoaded,
   operator,
+  getSdrFiles,
 }) => {
   const { data, loading, apiCall } = useApiHandle();
   let tableId = localStorage.getItem("sdrTableId");
@@ -28,7 +29,10 @@ const SdrHeaders = ({
   useEffect(() => {
     if (data?.data) {
       setIsLoading(false);
-      // setSdrTopRows(data?.data?.data);
+      if (data?.data?.Message === "Data Process Successfully") {
+        getSdrFiles();
+        dispatch(isSdr(false));
+      }
     } else {
       setIsLoading(false);
     }
