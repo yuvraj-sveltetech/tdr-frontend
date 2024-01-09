@@ -20,7 +20,6 @@ const useApiHandle = () => {
       baseURL: baseUrl,
       headers: {
         "Content-Type": "application/json",
-        // "Content-Type": "multipart/form-data",
       },
     });
 
@@ -78,7 +77,7 @@ const useApiHandle = () => {
           return refreshAccessToken().then(() => {
             originalRequest.headers.Authorization = `Bearer ${accessToken}`;
             return axios(originalRequest);
-          });
+          }); 
         }
 
         return Promise.reject(error);
