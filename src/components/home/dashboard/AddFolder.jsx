@@ -27,6 +27,7 @@ const AddFolder = ({ category, setModal }) => {
       auth_token: localStorage.getItem("auth_token"),
       type: type,
     });
+
     dispatch(isProccesed({ isDisable: false, loading: res }));
     dispatch(clear_structure());
     dispatch(uncheck_all_parent());
@@ -47,6 +48,7 @@ const AddFolder = ({ category, setModal }) => {
       >
         <option value="compare">Compare</option>
         <option value="voip">V.O.I.P</option>
+        <option value="tor_vpn">Tor/VPN</option>
       </select>
 
       <button

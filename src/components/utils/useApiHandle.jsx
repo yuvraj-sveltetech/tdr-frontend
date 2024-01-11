@@ -27,7 +27,11 @@ const useApiHandle = () => {
     axiosInstance.interceptors.request.use(
       async function (config) {
         // Do something before request is sent
-        config.data = { ...config.data, ...payload };
+        // config.data = { ...config.data, ...payload };
+        config.data =
+          payload instanceof FormData
+            ? payload
+            : { ...config.data, ...payload };
         if (localStorage.getItem("auth_token")) {
           config.headers["Authorization"] = `Bearer ${localStorage.getItem(
             "auth_token"
@@ -50,7 +54,6 @@ const useApiHandle = () => {
         accessToken = response.data.access_token;
         localStorage.setItem("auth_token", response.data.access_token);
       } catch (err) {
-        console.error(err);
         localStorage.clear();
         navigate("/");
         throw err;
@@ -74,14 +77,15 @@ const useApiHandle = () => {
           return refreshAccessToken().then(() => {
             originalRequest.headers.Authorization = `Bearer ${accessToken}`;
             return axios(originalRequest);
-          });
+          }); 
         }
 
         return Promise.reject(error);
       }
     );
 
-    axiosInstance[method](url)
+    // axiosInstance[method](url)
+    axiosInstance[method](url, payload)
       .then((res) => {
         setData(res);
         setLoading(false);
@@ -90,6 +94,7 @@ const useApiHandle = () => {
       .catch((err) => {
         toast.error(err?.response?.data?.Error);
         setLoading(false);
+        setData([]);
       });
   };
 

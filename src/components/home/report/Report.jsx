@@ -5,8 +5,10 @@ import useApiHandle from "../../utils/useApiHandle";
 import * as URL from "../../utils/ConstantUrl";
 import { switchComponent } from "../../../redux/slices/BreadCrumbSlice";
 import { BsFillFileEarmarkTextFill } from "react-icons/bs";
+import { BiTime } from "react-icons/bi";
 import { FaEye } from "react-icons/fa";
 import { FcDownload } from "react-icons/fc";
+import { CiCalendarDate } from "react-icons/ci";
 import notFound from "../../../assets/images/data-not-found.png";
 
 const Report = () => {
@@ -59,7 +61,7 @@ const Report = () => {
               />
             ) : (
               <div className="report">
-                <h5 className="mb-3">Report List</h5>
+                <h6 className="mb-3">Report List</h6>
                 <hr />
                 {loading ? (
                   <div className="data-not-found">
@@ -81,12 +83,28 @@ const Report = () => {
                     {reportData?.map((item) => {
                       return (
                         <div className="item me-1" key={item.id}>
-                          <li>
-                            <BsFillFileEarmarkTextFill
-                              className="file_icon mb-1 me-2"
-                              size={20}
-                            />
-                            {item.result_name}
+                          <li className="w-75 d-flex justify-content-between">
+                            <div className="reportListName">
+                              <BsFillFileEarmarkTextFill
+                                className="file_icon mb-1 me-2"
+                                size={20}
+                              />
+                              {item.result_name}
+                            </div>
+
+                            <div className="date">
+                              <span className="d-flex align-items-center">
+                                <CiCalendarDate size={20} className="me-1" />
+                                {item.created_date}
+                              </span>
+                            </div>
+
+                            <div className="time">
+                              <span className="d-flex align-items-center">
+                                <BiTime className="me-1" />
+                                {item.created_time}
+                              </span>
+                            </div>
                           </li>
 
                           <div className="btns">
