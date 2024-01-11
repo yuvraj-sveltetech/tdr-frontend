@@ -25,7 +25,7 @@ const Sidebar = () => {
     //   to: "/upload-sdr",
     // },
   ]);
-
+  console.log(superuser, 'superX')
   useEffect(() => {
     if (superuser) {
       let isNavExists = links.current.every((links) => {

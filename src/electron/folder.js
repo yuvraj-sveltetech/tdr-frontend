@@ -5,11 +5,10 @@ const request = require("request");
 const fs = require("fs");
 const { download } = require("electron-dl");
 let dirpath = path.join(os.homedir(), "Desktop");
-const baseUrl = "http://192.168.15.13:8000/";
+const baseUrl = "http://192.168.15.120:8001/";
 
 module.exports = {
   create_folder: ipcMain.handle("create_folder", (e, arg1, arg2) => {
-    let destPath;
 
     if (dirpath === undefined) {
       notification(
