@@ -48,6 +48,7 @@ const AddFolder = ({ category, setModal }) => {
       >
         <option value="compare">Compare</option>
         <option value="voip">V.O.I.P</option>
+        <option value="tor_vpn">Tor/VPN</option>
       </select>
 
       <button

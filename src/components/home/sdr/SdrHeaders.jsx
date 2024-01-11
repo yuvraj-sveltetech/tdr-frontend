@@ -13,6 +13,7 @@ const SdrHeaders = ({
   isReload,
   isLoaded,
   operator,
+  getSdrFiles,
 }) => {
   const { data, loading, apiCall } = useApiHandle();
   let tableId = localStorage.getItem("sdrTableId");
@@ -28,7 +29,10 @@ const SdrHeaders = ({
   useEffect(() => {
     if (data?.data) {
       setIsLoading(false);
-      // setSdrTopRows(data?.data?.data);
+      if (data?.data?.Message === "Data Process Successfully") {
+        getSdrFiles();
+        dispatch(isSdr(false));
+      }
     } else {
       setIsLoading(false);
     }
@@ -147,7 +151,7 @@ const SdrHeaders = ({
         )}/?table_name=${localStorage.getItem(
           "sdrTableName"
         )}&operator=${operator}`,
-        ""
+        postData
       );
     } else {
       toast.warn("Make sure columns have unique headers.");
@@ -186,7 +190,7 @@ const SdrHeaders = ({
               className="mr-2"
             />
             <span className="visually-hidden">Loading...</span>
-           <span className="ps-2">Uploading...</span> 
+            <span className="ps-2">Uploading...</span>
           </Button>
         ) : (
           <button

@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import tower from "../../../assets/images/tower-icon.png";
 import { NavLink } from "react-router-dom";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { TbReportAnalytics } from "react-icons/tb";
 import { FiActivity } from "react-icons/fi";
+// import { HiOutlineUpload } from "react-icons/hi";
 
 const Sidebar = () => {
-  const navlinks = [
+  let superuser = localStorage.getItem("superuser");
+  const links = useRef([
     {
       name: "Dashboard",
       icons: <MdOutlineSpaceDashboard id="navicons" />,
@@ -17,17 +19,28 @@ const Sidebar = () => {
       icons: <TbReportAnalytics id="navicons" />,
       to: "/report",
     },
-    {
-      name: "User Log",
-      icons: <FiActivity id="navicons" size={19} />,
-      to: "/user-log",
-    },
-    {
-      name: "Upload SDR",
-      icons: <FiActivity id="navicons" size={19} />,
-      to: "/upload-sdr",
-    },
-  ];
+    // {
+    //   name: "Upload SDR",
+    //   icons: <HiOutlineUpload id="navicons" size={19} />,
+    //   to: "/upload-sdr",
+    // },
+  ]);
+  console.log(superuser, 'superX')
+  useEffect(() => {
+    if (superuser) {
+      let isNavExists = links.current.every((links) => {
+        return links.name !== "User Log";
+      });
+
+      if (isNavExists) {
+        links.current.push({
+          name: "User Log",
+          icons: <FiActivity id="navicons" size={19} />,
+          to: "/user-log",
+        });
+      }
+    }
+  }, [superuser]);
 
   return (
     <div className="sidebar col-md-2 ">
@@ -38,7 +51,7 @@ const Sidebar = () => {
       <hr />
       <nav>
         <ul>
-          {navlinks.map((nav, i) => {
+          {links.current.map((nav, i) => {
             return (
               <li key={`navlinks${i}`}>
                 <NavLink

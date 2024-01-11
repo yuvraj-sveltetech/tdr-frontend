@@ -19,8 +19,7 @@ const useApiHandle = () => {
     const axiosInstance = axios.create({
       baseURL: baseUrl,
       headers: {
-        // "Content-Type": "application/json",
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
       },
     });
 
@@ -78,7 +77,7 @@ const useApiHandle = () => {
           return refreshAccessToken().then(() => {
             originalRequest.headers.Authorization = `Bearer ${accessToken}`;
             return axios(originalRequest);
-          });
+          }); 
         }
 
         return Promise.reject(error);
