@@ -25,20 +25,19 @@ const Sidebar = () => {
     //   to: "/upload-sdr",
     // },
   ]);
-  console.log(superuser, 'superX')
   useEffect(() => {
     if (superuser) {
       let isNavExists = links.current.every((links) => {
         return links.name !== "User Log";
       });
 
-      if (isNavExists) {
-        links.current.push({
-          name: "User Log",
-          icons: <FiActivity id="navicons" size={19} />,
-          to: "/user-log",
-        });
-      }
+      // if (isNavExists) {
+      //   links.current.push({
+      //     name: "User Log",
+      //     icons: <FiActivity id="navicons" size={19} />,
+      //     to: "/user-log",
+      //   });
+      // }
     }
   }, [superuser]);
 

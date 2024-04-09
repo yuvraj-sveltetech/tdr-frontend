@@ -1,35 +1,23 @@
 import React from "react";
 import { BsFillFileEarmarkTextFill } from "react-icons/bs";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  selected_files,
-  add_files_into_redux,
-  remove_files_into_redux,
-} from "../../../redux/slices/SelectedFiles";
-import { is_parent_checked } from "../../../redux/slices/FolderSlice";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { folder } from "../../../redux/slices/FolderSlice";
 
 const CheckBox = ({ file, index }) => {
-  const files = useSelector((state) => state.selected_files.files);
   const dispatch = useDispatch();
+  const params = useParams();
 
-  // const selectedFileHandle = (e, file) => {
-  //   const { checked } = e.target;
-  //   let arr = [file.file_path];
-  //   let data = {
-  //     parent_folder_name: file.parent_folder_name,
-  //     operator: file.subfolder_name,
-  //     path: [file.file_path],
-  //   };
+  const selectedFileHandle = (e, file) => {
+    const { checked } = e.target;
 
-  //   if (checked) {
-  //     dispatch(selected_files({ array: arr, type: "particular" }));
-  //     dispatch(add_files_into_redux(data));
-  //   } else {
-  //     dispatch(is_parent_checked({ index, checked }));
-  //     dispatch(selected_files({ array: arr, type: "particular" }));
-  //     dispatch(remove_files_into_redux(data));
-  //   }
-  // };
+    dispatch(
+      folder({
+        take_action: "file_checkbox",
+        data: { ...file, ...params, checked },
+      })
+    );
+  };
 
   return (
     <label
@@ -49,8 +37,8 @@ const CheckBox = ({ file, index }) => {
         type="checkbox"
         id={file?.name}
         value={file?.name}
-        // onChange={(e) => selectedFileHandle(e, file)}
-        // checked={files?.includes(file?.file_path) ? true : false}
+        onChange={(e) => selectedFileHandle(e, file)}
+        checked={file?.isChecked}
       />
     </label>
   );

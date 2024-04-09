@@ -47,7 +47,7 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
                       className="folder rr d-flex flex-column justify-content-center my-2"
                       onClick={(e) => getSubfolder(folder?.id)}
                     >
-                      <input
+                      {/* <input
                         type="checkbox"
                         checked={folder?.isChecked}
                         // onChange={(e) =>
@@ -55,7 +55,7 @@ const CreateFolder = ({ category, setParentFolderIndex }) => {
                         // }
                         onClick={(e) => e.stopPropagation()}
                         className="align-self-end me-2"
-                      />
+                      /> */}
                       <li onClick={(e) => getSubfolder(folder?.id)}>
                         <MdFolder size="70" className="folderIcon" />
                       </li>

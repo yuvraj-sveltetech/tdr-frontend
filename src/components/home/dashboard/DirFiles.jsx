@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import "./CreateFolder.css";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import * as URL from "../../utils/ConstantUrl";
 import useApiHandle from "../../utils/useApiHandle";
-
 import { Navbar } from "../../utils/index";
 import { folder } from "../../../redux/slices/FolderSlice";
 
@@ -16,7 +15,6 @@ import FileUploadModal from "../../utils/FileUploadModal";
 const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   const { data, loading, apiCall, status_code } = useApiHandle();
   const folders = useSelector((state) => state.folder.created_folders);
-  const [show, setShow] = useState(false);
 
   const dispatch = useDispatch();
   const param = useParams();
@@ -33,8 +31,24 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   }, [status_code, data]);
 
   useEffect(() => {
-    apiCall("get", `${URL.UPLOAD_FILES}?sub_folder_id=${param?.subfolder}`, {});
+    !isFileExist() &&
+      apiCall(
+        "get",
+        `${URL.UPLOAD_FILES}?sub_folder_id=${param?.subfolder}`,
+        {}
+      );
   }, []);
+
+  const isFileExist = () => {
+    const isExist = folders?.some(
+      (fld) =>
+        fld?.id === param?.parent_folder &&
+        fld?.subFolder?.some(
+          (subfl) => subfl?.id === param?.subfolder && subfl?.file?.length > 0
+        )
+    );
+    return isExist;
+  };
 
   const renderFiles = () => {
     return folders?.map(
@@ -43,16 +57,14 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
         folder?.subFolder?.map(
           (subFolder) =>
             subFolder?.id === param?.subfolder &&
-            subFolder?.files?.map((file) => (
-              <div className="col-md-3" key={`all_files${file.id}`}>
-                <CheckBox file={file} index={index} />
+            subFolder?.file?.map((fl) => (
+              <div className="col-md-3" key={`all_files${fl.id}`}>
+                <CheckBox file={fl} index={index} />
               </div>
             ))
         )
     );
   };
-
-  console.log(param, "ramXX", folders);
 
   return (
     <div className="main">
@@ -64,7 +76,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
       <div className="all_files">
         <div className="d-flex justify-content-between align-items-center">
           <h6>FILES</h6>
-          <label className="select-all d-flex" htmlFor="selectAll">
+          {/* <label className="select-all d-flex" htmlFor="selectAll">
             <input
               className="me-1"
               type="checkbox"
@@ -76,7 +88,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
               // }}
             />
             <span>Select All</span>
-          </label>
+          </label> */}
         </div>
 
         <div className="container-fluid allFiles">

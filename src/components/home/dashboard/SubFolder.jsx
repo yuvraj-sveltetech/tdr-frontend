@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MdFolder } from "react-icons/md";
-import {
-  all_files,
-  add_subfolder_name,
-  folder,
-} from "../../../redux/slices/FolderSlice";
-import { setShowCount } from "../../../redux/slices/BreadCrumbSlice";
-import { toast } from "react-toastify";
+import { folder } from "../../../redux/slices/FolderSlice";
 import { useParams, useNavigate } from "react-router-dom";
 import { Navbar } from "../../utils/index";
 import Modal from "../../utils/Modal";
@@ -16,7 +10,6 @@ import useApiHandle from "../../utils/useApiHandle";
 
 const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   const { data, loading, apiCall, status_code } = useApiHandle();
-  const files = useSelector((state) => state.folder);
   const folders = useSelector((state) => state.folder.created_folders);
   const [subFolder, setSubfolder] = useState({});
 
@@ -33,7 +26,13 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
       navigate("/not-found");
       return;
     }
-    apiCall("get", `${URL.FOLDER_API}?project_id=${param?.parent_folder}`, {});
+
+    !isSubfolderExist() &&
+      apiCall(
+        "get",
+        `${URL.FOLDER_API}?project_id=${param?.parent_folder}`,
+        {}
+      );
   }, []);
 
   useEffect(() => {
@@ -46,7 +45,42 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     setSubfolder(
       folders?.filter((folder) => folder?.id === param?.parent_folder)?.[0]
     );
-  }, [folders]);
+  }, [folders, param?.parent_folder]);
+
+  const selectAllFiles = (e, folderD) => {
+    const { checked } = e.target;
+
+    dispatch(
+      folder({
+        take_action: "select_all_checkbox",
+        data: { ...param, subfolder_id: folderD?.id, checked },
+      })
+    );
+  };
+
+  const isSubfolderExist = () => {
+    const isExist = folders?.some(
+      (fld) => fld?.id === param?.parent_folder && fld?.subFolder?.length > 0
+    );
+    return isExist;
+  };
+
+  const isSubfolderChecked = (subfolder_id) => {
+    let isChecked;
+
+    for (let folder in folders) {
+      if (folders[folder]?.id === param?.parent_folder) {
+        for (let sub in folders[folder]?.subFolder) {
+          if (folders[folder]?.subFolder?.[sub]?.id === subfolder_id) {
+            isChecked = folders[folder]?.subFolder?.[sub]?.select_all;
+            break;
+          }
+        }
+      }
+    }
+
+    return isChecked;
+  };
 
   return (
     <>
@@ -64,11 +98,19 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                 return (
                   <div className="col-md-3" key={`SubFolder${folder?.id}`}>
                     <div
-                      className="folder d-flex justify-content-start align-items-center subfolder-box"
+                      className="folder d-flex justify-content-start align-items-center subfolder-box position-relative"
                       onClick={(e) =>
                         navigate(`/${subFolder?.id}/${folder?.id}`)
                       }
                     >
+                      <input
+                        type="checkbox"
+                        checked={isSubfolderChecked(folder?.id)}
+                        onChange={(e) => selectAllFiles(e, folder)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="align-self-end me-2 position-absolute end-0 cursot"
+                        style={{ top: "8px", cursor: "pointer" }}
+                      />
                       <li
                         onClick={(e) =>
                           navigate(`/${subFolder?.id}/${folder?.id}`)

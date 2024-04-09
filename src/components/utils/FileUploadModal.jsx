@@ -10,12 +10,11 @@ import { folder } from "../../redux/slices/FolderSlice";
 const FileUploader = () => {
   const { data, loading, apiCall, status_code } = useApiHandle();
   const [files, setFiles] = useState([]);
-  const [isDraggedOver, setIsDraggedOver] = useState(false);
+  // const [isDraggedOver, setIsDraggedOver] = useState(false);
   const param = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(status_code, "data@@", data);
     if (status_code === 200 && data?.data?.length > 0) {
       dispatch(
         folder({
@@ -105,8 +104,6 @@ const FileUploader = () => {
     const size = Number((bytes / Math.pow(1024, index)).toFixed(2));
     return `${size} ${units[index]}`;
   }
-
-  console.log(files, "files", loading);
 
   const sendFiles = () => {
     const formData = new FormData();

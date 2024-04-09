@@ -14,13 +14,8 @@ const Modal = () => {
   const params = useParams();
   const location = useLocation();
 
-  console.log(params, "paramsX", location);
-
   useEffect(() => {
-    console.log(data, "ddRX", status_code);
-
     if (status_code === 201) {
-      console.log(data, "ddRX");
       getParentFolders();
       return;
     }

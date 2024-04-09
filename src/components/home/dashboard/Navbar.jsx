@@ -1,8 +1,45 @@
 import React from "react";
 import { AddFolder } from "./AddFolder";
 import { HiHome } from "react-icons/hi";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ toggleFileUploadModal, category }) => {
+  const folders = useSelector((state) => state.folder.created_folders);
+
+  const navigate = useNavigate();
+  const params = useParams();
+
+  const parentFolderName = () => {
+    let name = "";
+
+    for (let folder in folders) {
+      if (folders[folder]?.id === params?.parent_folder) {
+        name = "/ " + folders[folder]?.folder_name;
+        break;
+      }
+    }
+
+    return name;
+  };
+
+  const subFolderName = () => {
+    let name = "";
+
+    for (let folder in folders) {
+      if (folders[folder]?.id === params?.parent_folder) {
+        for (let sb in folders[folder]?.subFolder) {
+          if (folders[folder]?.subFolder[sb]?.id === params?.subfolder) {
+            name = "/ " + folders[folder]?.subFolder[sb]?.sub_folder_name;
+            break;
+          }
+        }
+      }
+    }
+
+    return name;
+  };
+
   return (
     <>
       <div className="choose">
@@ -29,37 +66,17 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
             <div className="d-flex align-items-center">
               <HiHome
                 size={20}
-                style={{ cursor: "default" }}
-                // onClick={() => {
-                //   dispatch(setShowCount(0));
-                //   dispatch(add_parentfolder_name(""));
-                //   dispatch(add_subfolder_name(""));
-                // }}
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate("/dashboard")}
               />
-              {/* {files?.sub_folders.parent_folder ||
-                      files?.sub_folders.subfolder ? (
-                        <div className="d-flex">
-                          <div className="px-1">{"/"}</div>
-                          <p
-                            className="m-0"
-                            onClick={() => {
-                              dispatch(setShowCount(1));
-                              dispatch(add_subfolder_name(""));
-                            }}
-                          >
-                            {files?.sub_folders.parent_folder}
-                          </p>
-                          <div className="px-1">{"/"}</div>
-                          <p
-                            className="m-0"
-                            onClick={() => {
-                              dispatch(setShowCount(2));
-                            }}
-                          >
-                            {files?.sub_folders.subfolder}
-                          </p>
-                        </div>
-                      ) : null} */}
+              <span
+                className="ms-2"
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate(`/${params?.parent_folder}`)}
+              >
+                {parentFolderName()}
+              </span>
+              <span className="ms-2">{subFolderName()}</span>
             </div>
             <AddFolder
               toggleFileUploadModal={toggleFileUploadModal}

@@ -21,8 +21,8 @@ const Report = () => {
   const created_file_name = useRef(null);
 
   useEffect(() => {
-    if (data?.data) {
-      setReportData(data.data.data);
+    if (data?.data?.length > 0) {
+      setReportData([...data?.data]);
     }
   }, [data]);
 
@@ -35,7 +35,24 @@ const Report = () => {
   };
 
   const downloadFile = async (download_link) => {
-    await window.to_electron.DOWNLOAD_FILE("DOWNLOAD_FILE", download_link);
+    // console.log(download_link, "downloadLink", process.env.REACT_APP_API_KEY);
+    const url = process.env.REACT_APP_API_KEY + download_link?.substring(1);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = url?.substring(url?.lastIndexOf("/") + 1);
+    a.style.display = "none";
+
+    // Append the anchor to the body
+    document.body.appendChild(a);
+
+    // Simulate a click on the anchor element
+    a.click();
+
+    // Clean up
+    document.body.removeChild(a);
+
+    // await window.to_electron.DOWNLOAD_FILE("DOWNLOAD_FILE", download_link);
   };
 
   const switchTo = (item, component) => {
@@ -45,101 +62,107 @@ const Report = () => {
     dispatch(switchComponent(component));
   };
 
+  // console.log(reportData, "reportData");
+
   return (
     <>
-      <div className="dashboard container-fluid">
+      {/* <div className="dashboard container-fluid">
         <div className="row">
           <Sidebar />
           <div className="dashpage col-md-10">
             <Header />
-            {toComp === "/view-data" ? (
-              <ViewData
-                downloadFile={downloadFile}
-                downloadLink={download_link.current}
-                report_id={report_id.current}
-                created_file_name={created_file_name.current}
-              />
-            ) : (
-              <div className="report">
-                <h6 className="mb-3">Report List</h6>
-                <hr />
-                {loading ? (
-                  <div className="data-not-found">
-                    <div className="d-flex justify-content-center">
-                      <div className="spinner-border" role="status" />
-                    </div>
-                    <span className="sr-only d-flex justify-content-center">
-                      Please wait...
-                    </span>
-                  </div>
-                ) : reportData.length > 0 ? (
-                  <ul
-                    style={
-                      reportData.length > 1
-                        ? { overflowY: "scroll" }
-                        : { overflow: "hidden" }
-                    }
-                  >
-                    {reportData?.map((item) => {
-                      return (
-                        <div className="item me-1" key={item.id}>
-                          <li className="w-75 d-flex justify-content-between">
-                            <div className="reportListName">
-                              <BsFillFileEarmarkTextFill
-                                className="file_icon mb-1 me-2"
-                                size={20}
-                              />
-                              {item.result_name}
-                            </div>
+          
+          </div>
+        </div>
+      </div> */}
 
-                            <div className="date">
-                              <span className="d-flex align-items-center">
-                                <CiCalendarDate size={20} className="me-1" />
-                                {item.created_date}
-                              </span>
-                            </div>
-
-                            <div className="time">
-                              <span className="d-flex align-items-center">
-                                <BiTime className="me-1" />
-                                {item.created_time}
-                              </span>
-                            </div>
-                          </li>
-
-                          <div className="btns">
-                            <button
-                              className="btn btn-sm btn-light me-2"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title="View"
-                              onClick={() => switchTo(item, "/view-data")}
-                            >
-                              <FaEye />
-                            </button>
-                            <button
-                              className="btn btn-sm btn-light"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title="Download"
-                              onClick={() => downloadFile(item.file_location)}
-                            >
-                              <FcDownload />
-                            </button>
-                          </div>
+      <div className="">
+        {toComp === "/view-data" ? (
+          <ViewData
+            downloadFile={downloadFile}
+            downloadLink={download_link.current}
+            report_id={report_id.current}
+            created_file_name={created_file_name.current}
+          />
+        ) : (
+          <div className="report">
+            <h6 className="mb-3">Report List</h6>
+            <hr />
+            {loading ? (
+              <div className="data-not-found">
+                <div className="d-flex justify-content-center">
+                  <div className="spinner-border" role="status" />
+                </div>
+                <span className="sr-only d-flex justify-content-center">
+                  Please wait...
+                </span>
+              </div>
+            ) : reportData?.length > 0 ? (
+              <ul
+                style={
+                  reportData?.length > 1
+                    ? { overflowY: "scroll" }
+                    : { overflow: "hidden" }
+                }
+              >
+                {reportData?.map((item) => {
+                  return (
+                    <div className="item me-1" key={item.id}>
+                      <li className="w-75 d-flex justify-content-between">
+                        <div className="reportListName">
+                          <BsFillFileEarmarkTextFill
+                            className="file_icon mb-1 me-2"
+                            size={20}
+                          />
+                          {item.result_name}
                         </div>
-                      );
-                    })}
-                  </ul>
-                ) : (
-                  <div className="data-not-found">
-                    <img src={notFound} alt="not-found" width="200" />
-                  </div>
-                )}
+
+                        <div className="date">
+                          <span className="d-flex align-items-center">
+                            <CiCalendarDate size={20} className="me-1" />
+                            {item.created_date}
+                          </span>
+                        </div>
+
+                        <div className="time">
+                          <span className="d-flex align-items-center">
+                            <BiTime className="me-1" />
+                            {item.created_time}
+                          </span>
+                        </div>
+                      </li>
+
+                      <div className="btns">
+                        {/* <button
+                          className="btn btn-sm btn-light me-2"
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title="View"
+                          onClick={() => switchTo(item, "/view-data")}
+                        >
+                          <FaEye />
+                        </button> */}
+                        <button
+                          className="btn btn-sm btn-light"
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title="Download"
+                          onClick={() => downloadFile(item.file_location)}
+                        >
+                          <FcDownload />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </ul>
+            ) : (
+              <div className="data-not-found">
+                <img src={notFound} alt="not-found" width="200" />
               </div>
             )}
           </div>
-        </div>
+        )}
       </div>
     </>
   );

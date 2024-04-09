@@ -52,7 +52,64 @@ export const folderSlice = createSlice({
                             sub_folder?.id === data?.params?.subfolder
                               ? {
                                   ...sub_folder,
-                                  files: [...data?.api_data?.[0]?.file],
+                                  file: [...data?.api_data?.[0]?.file],
+                                }
+                              : { ...sub_folder }
+                          )
+                        : [],
+                  }
+                : { ...folder }
+            ),
+          };
+
+        case "file_checkbox":
+          return {
+            ...state,
+            created_folders: prevState?.created_folders?.map((folder) =>
+              folder?.id === data?.parent_folder
+                ? {
+                    ...folder,
+                    subFolder:
+                      folder?.subFolder?.length > 0
+                        ? folder?.subFolder?.map((sub_folder) =>
+                            sub_folder?.id === data?.subfolder
+                              ? {
+                                  ...sub_folder,
+                                  file: sub_folder?.file?.map((fl) =>
+                                    fl?.id === data?.id
+                                      ? {
+                                          ...fl,
+                                          isChecked: data?.checked,
+                                        }
+                                      : { ...fl }
+                                  ),
+                                }
+                              : { ...sub_folder }
+                          )
+                        : [],
+                  }
+                : { ...folder }
+            ),
+          };
+
+        case "select_all_checkbox":
+          return {
+            ...state,
+            created_folders: prevState?.created_folders?.map((folder) =>
+              folder?.id === data?.parent_folder
+                ? {
+                    ...folder,
+                    subFolder:
+                      folder?.subFolder?.length > 0
+                        ? folder?.subFolder?.map((sub_folder) =>
+                            sub_folder?.id === data?.subfolder_id
+                              ? {
+                                  ...sub_folder,
+                                  select_all: data?.checked,
+                                  file: sub_folder?.file?.map((fl) => ({
+                                    ...fl,
+                                    isChecked: data?.checked,
+                                  })),
                                 }
                               : { ...sub_folder }
                           )
