@@ -18,3 +18,4 @@ export { UserLog } from "../home/dashboard/UserLog";
 export { UploadSdr } from "../home/sdr/UploadSdr";
 export { SdrTableData } from "../home/sdr/SdrTableData";
 export { SdrHeaders } from "../home/sdr/SdrHeaders";
+export { Navbar } from "../home/dashboard/Navbar";

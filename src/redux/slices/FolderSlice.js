@@ -16,43 +16,92 @@ export const folderSlice = createSlice({
 
   reducers: {
     folder: (state, action) => {
-      const { new_data, take_action } = action.payload;
-      const folder_state = current(state).created_folders;
+      const { data, take_action } = action.payload;
+      const prevState = current(state);
 
-      const a = folder_state;
-      const b = new_data;
+      switch (take_action) {
+        case "create_folder":
+          return {
+            ...state,
+            created_folders: [...data],
+          };
 
-      const isChecked = (a, b) => a.isChecked !== b.isChecked;
-      const isNonChecked = (a, b) => a.isChecked === b.isChecked;
-      const createdFolder = (a, b) => a.folder_name === b.folder_name;
+        case "create_subfolder":
+          return {
+            ...state,
+            created_folders: prevState?.created_folders?.map((folder) =>
+              folder?.id === data?.[0]?.id
+                ? {
+                    ...folder,
+                    subFolder: [...data?.[0]?.sub_folder],
+                  }
+                : { ...folder }
+            ),
+          };
 
-      const filterOutData = (left, right, compareFunction) =>
-        left.filter((leftValue) =>
-          right.some((rightValue) => compareFunction(leftValue, rightValue))
-        );
+        case "add_files":
+          return {
+            ...state,
+            created_folders: prevState?.created_folders?.map((folder) =>
+              folder?.id === data?.params?.parent_folder
+                ? {
+                    ...folder,
+                    subFolder:
+                      folder?.subFolder?.length > 0
+                        ? folder?.subFolder?.map((sub_folder) =>
+                            sub_folder?.id === data?.params?.subfolder
+                              ? {
+                                  ...sub_folder,
+                                  files: [...data?.api_data?.[0]?.file],
+                                }
+                              : { ...sub_folder }
+                          )
+                        : [],
+                  }
+                : { ...folder }
+            ),
+          };
 
-      const filterOutData2 = (left, right, compareFunction) =>
-        left.filter(
-          (leftValue) =>
-            !right.some((rightValue) => compareFunction(leftValue, rightValue))
-        );
+        default:
+          return { ...state };
+      }
 
-      const is_checked_arr = filterOutData(a, b, isChecked);
-      const is_non_checked_arr = filterOutData(a, b, isNonChecked);
+      // const folder_state = current(state).created_folders;
 
-      const result = [...is_checked_arr, ...is_non_checked_arr];
+      // const a = folder_state;
+      // const b = new_data;
 
-      const created_new_folder =
-        take_action === "create_folder"
-          ? filterOutData2(b, result, createdFolder)
-          : [];
+      // const isChecked = (a, b) => a.isChecked !== b.isChecked;
+      // const isNonChecked = (a, b) => a.isChecked === b.isChecked;
+      // const createdFolder = (a, b) => a.folder_name === b.folder_name;
 
-      const final_result = [...created_new_folder, ...result];
+      // const filterOutData = (left, right, compareFunction) =>
+      //   left.filter((leftValue) =>
+      //     right.some((rightValue) => compareFunction(leftValue, rightValue))
+      //   );
 
-      return {
-        ...state,
-        created_folders: folder_state.length === 0 ? new_data : final_result,
-      };
+      // const filterOutData2 = (left, right, compareFunction) =>
+      //   left.filter(
+      //     (leftValue) =>
+      //       !right.some((rightValue) => compareFunction(leftValue, rightValue))
+      //   );
+
+      // const is_checked_arr = filterOutData(a, b, isChecked);
+      // const is_non_checked_arr = filterOutData(a, b, isNonChecked);
+
+      // const result = [...is_checked_arr, ...is_non_checked_arr];
+
+      // const created_new_folder =
+      //   take_action === "create_folder"
+      //     ? filterOutData2(b, result, createdFolder)
+      //     : [];
+
+      // const final_result = [...created_new_folder, ...result];
+
+      // return {
+      //   ...state,
+      //   // created_folders: folder_state.length === 0 ? new_data : final_result,
+      // };
     },
 
     sub_folder: (state, action) => {

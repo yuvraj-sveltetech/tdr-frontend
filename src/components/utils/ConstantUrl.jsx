@@ -12,3 +12,8 @@ export const GET_SDR_FILE_DATA = "airtel/getAllFileList/";
 export const UPLOAD_SDR_FILE = "airtel/createSdrData/";
 export const GET_SDR_TOP_ROWS = "airtel/getTopRowSdr/";
 export const PROCESS_SDR_FILE = "airtel/processSdrData/";
+export const FILE_UPLOAD = "tdr/uploadTdrFile/";
+export const FOLDER_API = "tdr/createProjectFolder/";
+export const CREATE_SUB_FOLDER = "tdr/createSubFolder/";
+export const UPLOAD_FILES = "tdr/uploadTdrFile/";
+

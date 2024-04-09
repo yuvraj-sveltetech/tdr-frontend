@@ -1,5 +1,5 @@
 import React from "react";
-import { MdCreateNewFolder } from "react-icons/md";
+import { FiUpload } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { clear_structure } from "../../../redux/slices/SelectedFiles";
 import { uncheck_all_parent } from "../../../redux/slices/FolderSlice";
@@ -8,8 +8,9 @@ import {
   isProccesed,
 } from "../../../redux/slices/BreadCrumbSlice";
 import { toast } from "react-toastify";
+import { modalType } from "../../../redux/slices/ModalSlice";
 
-const AddFolder = ({ category, setModal }) => {
+const AddFolder = ({ category, toggleFileUploadModal }) => {
   const redux_store = useSelector((state) => state.selected_files);
   const type = useSelector((state) => state.show_count.is_selected);
   const is_processed = useSelector((state) => state.show_count.isProccesed);
@@ -70,15 +71,26 @@ const AddFolder = ({ category, setModal }) => {
         )}
       </button>
 
-      <button
-        className="add-folder d-flex align-items-center justify-content-evenly btn-color"
+      <a
+        className="btn btn-primary d-flex align-items-center justify-content-between"
         data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
-        onClick={setModal}
+        href="#exampleModalToggle"
+        role="button"
+        onClick={() => dispatch(modalType("Create Folder"))}
       >
-        <MdCreateNewFolder className="me-1" size="23" />
+        <FiUpload size="18" />
         <h6 className="m-0">Create Folder</h6>
-      </button>
+      </a>
+
+      <a
+        className="btn btn-primary d-flex align-items-center justify-content-between"
+        data-bs-toggle="modal"
+        href="#exampleModalToggle2"
+        role="button"
+      >
+        <FiUpload size="18" />
+        <h6 className="m-0">Upload Files</h6>
+      </a>
     </div>
   );
 };

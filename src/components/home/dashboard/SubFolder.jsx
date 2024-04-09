@@ -1,60 +1,94 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MdFolder } from "react-icons/md";
 import {
   all_files,
   add_subfolder_name,
+  folder,
 } from "../../../redux/slices/FolderSlice";
 import { setShowCount } from "../../../redux/slices/BreadCrumbSlice";
 import { toast } from "react-toastify";
+import { useParams, useNavigate } from "react-router-dom";
+import { Navbar } from "../../utils/index";
+import Modal from "../../utils/Modal";
+import * as URL from "../../utils/ConstantUrl";
+import useApiHandle from "../../utils/useApiHandle";
 
-const SubFolder = () => {
-  const dispatch = useDispatch();
+const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
+  const { data, loading, apiCall, status_code } = useApiHandle();
   const files = useSelector((state) => state.folder);
+  const folders = useSelector((state) => state.folder.created_folders);
+  const [subFolder, setSubfolder] = useState({});
 
-  const getFiles = async (subfolder_name) => {
-    let data = {
-      parent_folder_name: files.sub_folders?.parent_folder,
-      subfolder_name: subfolder_name,
-    };
-    let res = await window.to_electron.get_files("get_files", data);
-    if (res) {
-      dispatch(all_files(res));
-      if (res.length > 0) {
-        dispatch(setShowCount(2));
-        dispatch(add_subfolder_name(subfolder_name));
-      } else {
-        toast.error("File not found!");
-      }
+  const dispatch = useDispatch();
+  const param = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const isFolderExist = folders?.some(
+      (folder) => folder?.id === param?.parent_folder
+    );
+
+    if (!isFolderExist) {
+      navigate("/not-found");
+      return;
     }
-  };
+    apiCall("get", `${URL.FOLDER_API}?project_id=${param?.parent_folder}`, {});
+  }, []);
+
+  useEffect(() => {
+    if (status_code === 200 && data?.data?.length > 0) {
+      dispatch(folder({ take_action: "create_subfolder", data: data?.data }));
+    }
+  }, [status_code, data]);
+
+  useEffect(() => {
+    setSubfolder(
+      folders?.filter((folder) => folder?.id === param?.parent_folder)?.[0]
+    );
+  }, [folders]);
 
   return (
-    <div className="sub_folder d-flex flex-column align-items-start">
-      {/* <h5>{files.sub_folders?.parent_folder}</h5> */}
-      <div className="all-folders container">
-        <h6>FOLDER</h6>
-        <div className="row list-unstyled">
-          {files.sub_folders?.folders?.name?.map((folder) => {
-            return (
-              <div className="col-md-3" key={`SubFolder${folder}`}>
-                <div
-                  className="folder d-flex justify-content-start align-items-center subfolder-box"
-                  onClick={(e) => getFiles(folder)}
-                >
-                  <li onClick={(e) => getFiles(folder)}>
-                    <MdFolder size="32" className="folderIcon" />
-                  </li>
-                  <p style={{ margin: "auto 0", padding: "0 0.4rem" }}>
-                    {folder}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+    <>
+      <div className="main">
+        <Navbar
+          toggleFileUploadModal={toggleFileUploadModal}
+          category={category}
+        />
+        <div className="sub_folder d-flex flex-column align-items-start">
+          {/* <h5>{files.sub_folders?.parent_folder}</h5> */}
+          <div className="all-folders container">
+            <h6>FOLDER</h6>
+            <div className="row list-unstyled">
+              {subFolder?.subFolder?.map((folder) => {
+                return (
+                  <div className="col-md-3" key={`SubFolder${folder?.id}`}>
+                    <div
+                      className="folder d-flex justify-content-start align-items-center subfolder-box"
+                      onClick={(e) =>
+                        navigate(`/${subFolder?.id}/${folder?.id}`)
+                      }
+                    >
+                      <li
+                        onClick={(e) =>
+                          navigate(`/${subFolder?.id}/${folder?.id}`)
+                        }
+                      >
+                        <MdFolder size="32" className="folderIcon" />
+                      </li>
+                      <p style={{ margin: "auto 0", padding: "0 0.4rem" }}>
+                        {folder?.sub_folder_name}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+      <Modal modalType={modalType} category={category} />
+    </>
   );
 };
 

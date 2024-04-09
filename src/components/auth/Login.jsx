@@ -16,15 +16,15 @@ const Login = () => {
   let auth = localStorage.getItem("auth_token");
 
   useEffect(() => {
-    if (auth) navigate("/dashboard");
+    auth && navigate("/dashboard");
   }, [auth, navigate]);
 
   useEffect(() => {
-    if (data?.data) {
-      localStorage.setItem("auth_token", data?.data?.access_token);
-      localStorage.setItem("refresh_token", data?.data?.refresh_token);
-      localStorage.setItem("user_email", data?.data?.email);
-      localStorage.setItem("superuser", data?.data?.superuser);
+    if (data?.hasOwnProperty("access_token")) {
+      localStorage.setItem("auth_token", data?.access_token);
+      localStorage.setItem("refresh_token", data?.refresh_token);
+      localStorage.setItem("user_email", data?.email);
+      localStorage.setItem("superuser", data?.superuser);
       navigate("/dashboard");
     }
   }, [data, navigate]);

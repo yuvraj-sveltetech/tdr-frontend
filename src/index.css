@@ -90,6 +90,7 @@ body {
 
 .dashboard {
   height: 100vh;
+  position: relative;
 }
 .dashboard .row {
   height: 100%;
@@ -275,7 +276,7 @@ nav ul li a {
   font-size: 1.1rem;
 }
 .add-folder {
-  width: 10rem;
+  width: 8rem;
   background: #fff;
   border-radius: 0.2rem;
   border: none;
@@ -418,4 +419,14 @@ nav ul li a {
 .data_table::-webkit-scrollbar-track {
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 5px;
+}
+
+.fileupload-modal {
+  position: absolute;
+  top: 6%;
+  left: 12%;
+  height: 90vh !important;
+  background-color: #fff;
+  padding: 2rem !important;
+  border-radius: 10px;
 }

@@ -5,7 +5,8 @@ import * as URL from "../utils/ConstantUrl";
 import { useNavigate } from "react-router-dom";
 
 const useApiHandle = () => {
-  const [data, setData] = useState([]);
+  const [apiData, setApiData] = useState({ data: {}, status_code: 0 });
+
   const [loading, setLoading] = useState(false);
   const baseUrl = process.env.REACT_APP_API_KEY;
   const navigate = useNavigate();
@@ -27,7 +28,6 @@ const useApiHandle = () => {
     axiosInstance.interceptors.request.use(
       async function (config) {
         // Do something before request is sent
-        // config.data = { ...config.data, ...payload };
         config.data =
           payload instanceof FormData
             ? payload
@@ -77,7 +77,7 @@ const useApiHandle = () => {
           return refreshAccessToken().then(() => {
             originalRequest.headers.Authorization = `Bearer ${accessToken}`;
             return axios(originalRequest);
-          }); 
+          });
         }
 
         return Promise.reject(error);
@@ -87,17 +87,22 @@ const useApiHandle = () => {
     // axiosInstance[method](url)
     axiosInstance[method](url, payload)
       .then((res) => {
-        setData(res);
+        setApiData({ data: res?.data, status_code: res?.status });
         setLoading(false);
-        toast.success(res?.data?.Message);
+        toast.success(res?.data?.message);
       })
       .catch((err) => {
         toast.error(err?.response?.data?.Error);
         setLoading(false);
-        setData([]);
+        setApiData({});
       });
   };
 
-  return { data, loading, apiCall };
+  return {
+    data: apiData?.data,
+    loading,
+    apiCall,
+    status_code: apiData?.status_code,
+  };
 };
 export default useApiHandle;

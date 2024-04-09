@@ -12,45 +12,45 @@ const CheckBox = ({ file, index }) => {
   const files = useSelector((state) => state.selected_files.files);
   const dispatch = useDispatch();
 
-  const selectedFileHandle = (e, file) => {
-    const { checked } = e.target;
-    let arr = [file.file_path];
-    let data = {
-      parent_folder_name: file.parent_folder_name,
-      operator: file.subfolder_name,
-      path: [file.file_path],
-    };
+  // const selectedFileHandle = (e, file) => {
+  //   const { checked } = e.target;
+  //   let arr = [file.file_path];
+  //   let data = {
+  //     parent_folder_name: file.parent_folder_name,
+  //     operator: file.subfolder_name,
+  //     path: [file.file_path],
+  //   };
 
-    if (checked) {
-      dispatch(selected_files({ array: arr, type: "particular" }));
-      dispatch(add_files_into_redux(data));
-    } else {
-      dispatch(is_parent_checked({ index, checked }));
-      dispatch(selected_files({ array: arr, type: "particular" }));
-      dispatch(remove_files_into_redux(data));
-    }
-  };
+  //   if (checked) {
+  //     dispatch(selected_files({ array: arr, type: "particular" }));
+  //     dispatch(add_files_into_redux(data));
+  //   } else {
+  //     dispatch(is_parent_checked({ index, checked }));
+  //     dispatch(selected_files({ array: arr, type: "particular" }));
+  //     dispatch(remove_files_into_redux(data));
+  //   }
+  // };
 
   return (
     <label
       className="subfolder-box box d-flex justify-content-between align-items-center mb-3"
-      htmlFor={file.file_name}
+      htmlFor={file?.name}
     >
       <BsFillFileEarmarkTextFill className="file_icon" size={20} />
       <p
         className="ellipsis"
         data-toggle="tooltip"
         data-placement="top"
-        title={file.file_name}
+        title={file?.name}
       >
-        {file.file_name}
+        {file?.name}
       </p>
       <input
         type="checkbox"
-        id={file.file_name}
-        value={file.file_name}
-        onChange={(e) => selectedFileHandle(e, file)}
-        checked={files?.includes(file?.file_path) ? true : false}
+        id={file?.name}
+        value={file?.name}
+        // onChange={(e) => selectedFileHandle(e, file)}
+        // checked={files?.includes(file?.file_path) ? true : false}
       />
     </label>
   );
