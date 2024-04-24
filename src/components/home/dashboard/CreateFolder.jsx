@@ -7,17 +7,19 @@ import * as URL from "../../utils/ConstantUrl";
 import useApiHandle from "../../utils/useApiHandle";
 import { folder } from "../../../redux/slices/FolderSlice";
 
-const CreateFolder = ({ category, setParentFolderIndex }) => {
+const CreateFolder = () => {
   const { data, loading, apiCall, status_code } = useApiHandle();
   const folders = useSelector((state) => state.folder);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    apiCall("get", URL.FOLDER_API, {});
-  }, []);
+    folders?.created_folders?.length === 0 &&
+      apiCall("get", URL.FOLDER_API, {});
+  }, [folders?.created_folders]);
 
   useEffect(() => {
+    console.log(data,'data')
     if (status_code === 200 && data?.data?.length > 0) {
       dispatch(folder({ take_action: "create_folder", data: data?.data }));
     }

@@ -4,6 +4,7 @@ export const modalSlice = createSlice({
   name: "Modal",
   initialState: {
     modal_type: "",
+    isFileProcessing: false,
   },
 
   reducers: {
@@ -13,8 +14,15 @@ export const modalSlice = createSlice({
         modal_type: action.payload,
       };
     },
+
+    fileProcess: (state, action) => {
+      return {
+        ...state,
+        isFileProcessing: action.payload,
+      };
+    },
   },
 });
 
-export const { modalType } = modalSlice.actions;
+export const { modalType, fileProcess } = modalSlice.actions;
 export default modalSlice.reducer;

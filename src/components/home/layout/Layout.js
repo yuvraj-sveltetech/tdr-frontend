@@ -12,14 +12,23 @@ function Layout({ children }) {
       {pathname.includes(location.pathname) ? (
         <main>{children}</main>
       ) : (
-        <div className="dashboard container-fluid">
-          <div className="row ">
-            <Sidebar />
-            <div className="dashpage col-md-10">
-              <Header />
-              <main>{children}</main>
+        <div className="position-realtive">
+          <div className="dashboard container-fluid">
+            <div className="row ">
+              <Sidebar />
+              <div className="dashpage col-md-10">
+                <Header />
+                <main>{children}</main>
+              </div>
             </div>
           </div>
+          {/* <div className="loader">
+            <div class="d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div> */}
         </div>
       )}
     </div>

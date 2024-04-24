@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 const useApiHandle = () => {
   const [apiData, setApiData] = useState({ data: {}, status_code: 0 });
-
   const [loading, setLoading] = useState(false);
   const baseUrl = process.env.REACT_APP_API_KEY;
   const navigate = useNavigate();
@@ -14,7 +13,7 @@ const useApiHandle = () => {
   let accessToken = localStorage.getItem("auth_token");
   let refreshToken = localStorage.getItem("refresh_token");
 
-  const apiCall = async (method, url, payload) => {
+  const apiCall = async (method, url, payload, signal) => {
     setLoading(true);
 
     const axiosInstance = axios.create({
@@ -22,6 +21,7 @@ const useApiHandle = () => {
       headers: {
         "Content-Type": "application/json",
       },
+      signal,
     });
 
     // Add a request interceptor
@@ -84,7 +84,6 @@ const useApiHandle = () => {
       }
     );
 
-    // axiosInstance[method](url)
     axiosInstance[method](url, payload)
       .then((res) => {
         setApiData({ data: res?.data, status_code: res?.status });

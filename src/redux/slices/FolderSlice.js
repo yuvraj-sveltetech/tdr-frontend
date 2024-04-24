@@ -119,6 +119,29 @@ export const folderSlice = createSlice({
             ),
           };
 
+        case "unselect_all":
+          return {
+            ...state,
+            created_folders: prevState?.created_folders?.map((folder) => {
+              return {
+                ...folder,
+                subFolder:
+                  folder?.subFolder?.length > 0
+                    ? folder?.subFolder?.map((sub) => {
+                        return {
+                          ...sub,
+                          select_all: false,
+                          file: sub?.file?.map((fl) => ({
+                            ...fl,
+                            isChecked: false,
+                          })),
+                        };
+                      })
+                    : [],
+              };
+            }),
+          };
+
         default:
           return { ...state };
       }

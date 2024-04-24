@@ -4,8 +4,9 @@ import { folder } from "../../redux/slices/FolderSlice";
 import * as URL from "../utils/ConstantUrl";
 import { useLocation, useParams } from "react-router-dom";
 import useApiHandle from "./useApiHandle";
+import { fileProcess } from "../../redux/slices/ModalSlice";
 
-const Modal = () => {
+const Modal = ({ controller }) => {
   const modalType = useSelector((state) => state.modal?.modal_type);
   const { data, loading, apiCall, status_code } = useApiHandle();
   const [buttonName, setButtonName] = useState("");
@@ -32,13 +33,14 @@ const Modal = () => {
   useEffect(() => {
     if (modalType === "Create Folder") {
       setButtonName("Create");
+      return;
     }
-    conditionalModalContent();
-  }, [modalType]);
 
-  // const changeCategory = (item) => {
-  //   setCategory(item);
-  // };
+    if (modalType === "Files is in process") {
+      setButtonName("Cancel");
+      return;
+    }
+  }, [modalType]);
 
   const getParentFolders = () => {
     if (params?.parent_folder) {
@@ -56,22 +58,30 @@ const Modal = () => {
     setFolderName(e.target.value);
   };
 
-  const create_folder = async () => {
-    if (params?.parent_folder?.length > 0) {
-      apiCall(
-        "post",
-        `${URL.CREATE_SUB_FOLDER}?project_id=${params?.parent_folder}`,
-        {
-          sub_folder_name: folderName,
-        }
-      );
+  const clickHandler = async () => {
+    if (modalType === "Create Folder") {
+      if (params?.parent_folder?.length > 0) {
+        apiCall(
+          "post",
+          `${URL.CREATE_SUB_FOLDER}?project_id=${params?.parent_folder}`,
+          {
+            sub_folder_name: folderName,
+          }
+        );
+        setFolderName("");
+        return;
+      }
+
+      apiCall("post", URL.FOLDER_API, { folder_name: folderName });
       setFolderName("");
       return;
     }
 
-    apiCall("post", URL.FOLDER_API, { folder_name: folderName });
-
-    setFolderName("");
+    if (controller) {
+      await controller?.abort();
+      dispatch(fileProcess(false));
+      dispatch(folder({ take_action: "unselect_all", data: null }));
+    }
   };
 
   const conditionalModalContent = () => {
@@ -86,7 +96,24 @@ const Modal = () => {
         />
       );
     }
+
+    if (modalType === "Files is in process") {
+      return (
+        <div className="">
+          <div className="d-flex flex-column align-items-center justify-content-center">
+            <div className="spinner-border" role="status"></div>
+            <span className="mt-1">Processing...</span>
+          </div>
+        </div>
+      );
+    }
   };
+
+  console.log(
+    modalType,
+    "modalType",
+    modalType === "Files is in process" ? "static" : true
+  );
 
   return (
     <div
@@ -95,6 +122,7 @@ const Modal = () => {
       aria-hidden="true"
       aria-labelledby="exampleModalToggleLabel"
       tabindex="-1"
+      data-bs-backdrop={modalType === "Files is in process" ? true : "static"}
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
@@ -102,28 +130,44 @@ const Modal = () => {
             <h5 className="modal-title" id="exampleModalLabel">
               {modalType}
             </h5>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+
+            {modalType !== "Files is in process" && (
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            )}
           </div>
           <div className="modal-body">{conditionalModalContent()}</div>
           <div className="modal-footer">
+            {!modalType === "Files is in process" && (
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            )}
+
             <button
               type="button"
-              className="btn btn-secondary"
+              className={`btn   ${
+                modalType === "Files is in process"
+                  ? "btn-danger"
+                  : "btn-primary"
+              }`}
               data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              data-bs-dismiss="modal"
-              disabled={folderName ? false : true}
-              onClick={create_folder}
+              disabled={
+                modalType !== "Files is in process"
+                  ? folderName
+                    ? false
+                    : true
+                  : false
+              }
+              onClick={clickHandler}
             >
               {buttonName}
             </button>

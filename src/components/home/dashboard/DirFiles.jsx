@@ -54,14 +54,21 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
     return folders?.map(
       (folder) =>
         folder?.id === param?.parent_folder &&
-        folder?.subFolder?.map(
-          (subFolder) =>
+        folder?.subFolder?.map((subFolder) =>
+          subFolder?.file?.length > 0 ? (
             subFolder?.id === param?.subfolder &&
             subFolder?.file?.map((fl) => (
               <div className="col-md-3" key={`all_files${fl.id}`}>
                 <CheckBox file={fl} index={index} />
               </div>
             ))
+          ) : (
+            <div className="center-div">
+              <h6 style={{ color: "red" }}>
+                Folder does not exist. Please create one
+              </h6>
+            </div>
+          )
         )
     );
   };
@@ -90,10 +97,10 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
             <span>Select All</span>
           </label> */}
         </div>
-
-        <div className="container-fluid allFiles">
+        {renderFiles()}
+        {/* <div className="container-fluid allFiles">
           <div className="row">{renderFiles()}</div>
-        </div>
+        </div> */}
       </div>
       <Modal modalType={modalType} category={category} />
 

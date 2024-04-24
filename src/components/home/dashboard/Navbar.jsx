@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { AddFolder } from "./AddFolder";
 import { HiHome } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Modal from "../../utils/Modal";
 
 const Navbar = ({ toggleFileUploadModal, category }) => {
   const folders = useSelector((state) => state.folder.created_folders);
+  const [controller, setController] = useState(new AbortController());
 
   const navigate = useNavigate();
   const params = useParams();
@@ -45,19 +47,10 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
       <div className="choose">
         <button
           className="btn btn-light"
-          // onClick={() => changeCategory("IPDR")}
           style={{ backgroundColor: "#e5e9f2", cursor: "text" }}
         >
           I.P.D.R
         </button>
-
-        {/* <img src={tower} alt="tower_icon" width="30" height="30" /> */}
-        {/* <button
-                  className="btn btn-dark"
-                  onClick={() => changeCategory("CDR")}
-                >
-                  C.D.R
-                </button> */}
       </div>
 
       <div className="container-fluid breadcrumb">
@@ -78,13 +71,12 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
               </span>
               <span className="ms-2">{subFolderName()}</span>
             </div>
-            <AddFolder
-              toggleFileUploadModal={toggleFileUploadModal}
-              category={category}
-            />
+            <AddFolder controller={controller} setController={setController} />
           </div>
         </div>
       </div>
+
+      <Modal controller={controller} />
     </>
   );
 };
