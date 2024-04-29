@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AddFolder } from "./AddFolder";
 import { HiHome } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,6 +11,9 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
 
   const navigate = useNavigate();
   const params = useParams();
+//   useEffect(() => {
+// setCon
+//   },[])
 
   const parentFolderName = () => {
     let name = "";
@@ -76,7 +79,7 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
         </div>
       </div>
 
-      <Modal controller={controller} />
+      <Modal controller={controller} setController={setController}  />
     </>
   );
 };

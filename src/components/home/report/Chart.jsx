@@ -15,9 +15,9 @@ const Chart = ({ report_id, itemsLength, singleNoData }) => {
   }, []);
 
   useEffect(() => {
-    if (singleNoData.length === 0) {
-      if (data?.data) {
-        setChartData(data?.data?.data);
+    if (singleNoData?.length === 0) {
+      if (data?.data?.length > 0) {
+        setChartData(data?.data);
       }
     } else {
       setChartData(singleNoData);
@@ -27,7 +27,7 @@ const Chart = ({ report_id, itemsLength, singleNoData }) => {
   // Create root and chart
 
   useLayoutEffect(() => {
-    if (chartData.length > 0) {
+    if (chartData?.length > 0) {
       // Create chart instance
       const chart = create(
         "chartdiv",
@@ -76,13 +76,20 @@ const Chart = ({ report_id, itemsLength, singleNoData }) => {
 
   return (
     <div className="chartdiv" style={{ width: "100%", height: "500px" }}>
-      {chartData.length === 0 && itemsLength === 0 && (
+      {loading ? (
         <div className="d-flex justify-content-center align-items-center h-100">
           <div className="d-flex flex-column justify-content-center align-items-center">
             <div className="spinner-border" role="status" />
-            <h6>Preparing Chart...</h6>
+            <h6 className="text-muted">Preparing Chart...</h6>
           </div>
         </div>
+      ) : (
+        chartData.length === 0 &&
+        itemsLength === 0 && (
+          <div className="d-flex justify-content-center align-items-center h-100">
+            <h6 className="text-muted">No data for chart preparation</h6>
+          </div>
+        )
       )}
     </div>
   );

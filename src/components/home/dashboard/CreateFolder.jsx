@@ -8,7 +8,7 @@ import useApiHandle from "../../utils/useApiHandle";
 import { folder } from "../../../redux/slices/FolderSlice";
 
 const CreateFolder = () => {
-  const { data, loading, apiCall, status_code } = useApiHandle();
+  const { data, apiCall, status_code } = useApiHandle();
   const folders = useSelector((state) => state.folder);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,11 +19,10 @@ const CreateFolder = () => {
   }, [folders?.created_folders]);
 
   useEffect(() => {
-    console.log(data,'data')
     if (status_code === 200 && data?.data?.length > 0) {
       dispatch(folder({ take_action: "create_folder", data: data?.data }));
     }
-  }, [status_code, data]);
+  }, [status_code, data, dispatch]);
 
   const getSubfolder = async (id) => {
     navigate(`/${id}`);
@@ -49,15 +48,6 @@ const CreateFolder = () => {
                       className="folder rr d-flex flex-column justify-content-center my-2"
                       onClick={(e) => getSubfolder(folder?.id)}
                     >
-                      {/* <input
-                        type="checkbox"
-                        checked={folder?.isChecked}
-                        // onChange={(e) =>
-                        //   getAllSubfolderFiles(e, folder?.folder_name, index)
-                        // }
-                        onClick={(e) => e.stopPropagation()}
-                        className="align-self-end me-2"
-                      /> */}
                       <li onClick={(e) => getSubfolder(folder?.id)}>
                         <MdFolder size="70" className="folderIcon" />
                       </li>

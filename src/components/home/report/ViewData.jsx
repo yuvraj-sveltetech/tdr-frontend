@@ -23,11 +23,11 @@ const ViewData = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (data?.data?.result_data) {
-      setItems([...items, ...data.data?.result_data]);
-      isAllDataFetched.current = data.data?.result_data.length;
-    } else if (data?.data?.data) {
-      setSingleNoData(data?.data?.data);
+    if (data?.data?.result?.[0]?.length > 0) {
+      setItems([...items, ...data.data?.result[0]]);
+      isAllDataFetched.current = data.data?.result[0].length;
+    } else if (data?.data?.length > 0) {
+      setSingleNoData(data?.data);
     }
   }, [data]);
 

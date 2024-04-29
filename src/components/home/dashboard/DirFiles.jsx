@@ -6,18 +6,25 @@ import * as URL from "../../utils/ConstantUrl";
 import useApiHandle from "../../utils/useApiHandle";
 import { Navbar } from "../../utils/index";
 import { folder } from "../../../redux/slices/FolderSlice";
-
 import CheckBox from "./CheckBox";
-
 import Modal from "../../utils/Modal";
 import FileUploadModal from "../../utils/FileUploadModal";
 
 const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
-  const { data, loading, apiCall, status_code } = useApiHandle();
+  const { data, apiCall, status_code } = useApiHandle();
   const folders = useSelector((state) => state.folder.created_folders);
 
   const dispatch = useDispatch();
   const param = useParams();
+
+  useEffect(() => {
+    !isFileExist() &&
+      apiCall(
+        "get",
+        `${URL.UPLOAD_FILES}?sub_folder_id=${param?.subfolder}`,
+        {}
+      );
+  }, []);
 
   useEffect(() => {
     if (status_code === 200 && data?.data?.length > 0) {
@@ -28,16 +35,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
         })
       );
     }
-  }, [status_code, data]);
-
-  useEffect(() => {
-    !isFileExist() &&
-      apiCall(
-        "get",
-        `${URL.UPLOAD_FILES}?sub_folder_id=${param?.subfolder}`,
-        {}
-      );
-  }, []);
+  }, [status_code, data, dispatch, param]);
 
   const isFileExist = () => {
     const isExist = folders?.some(
@@ -51,26 +49,30 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   };
 
   const renderFiles = () => {
-    return folders?.map(
+    const result = folders?.map(
       (folder) =>
         folder?.id === param?.parent_folder &&
-        folder?.subFolder?.map((subFolder) =>
-          subFolder?.file?.length > 0 ? (
+        folder?.subFolder?.map(
+          (subFolder) =>
             subFolder?.id === param?.subfolder &&
             subFolder?.file?.map((fl) => (
               <div className="col-md-3" key={`all_files${fl.id}`}>
                 <CheckBox file={fl} index={index} />
               </div>
             ))
-          ) : (
-            <div className="center-div">
-              <h6 style={{ color: "red" }}>
-                Folder does not exist. Please create one
-              </h6>
-            </div>
-          )
         )
     );
+
+    const hasFiles = result.some(
+      (folder) =>
+        folder && folder.some((subFolder) => subFolder && subFolder.length > 0)
+    );
+
+    if (!hasFiles) {
+      return false;
+    }
+
+    return result;
   };
 
   return (
@@ -83,27 +85,22 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
       <div className="all_files">
         <div className="d-flex justify-content-between align-items-center">
           <h6>FILES</h6>
-          {/* <label className="select-all d-flex" htmlFor="selectAll">
-            <input
-              className="me-1"
-              type="checkbox"
-              value="selectAll"
-              id="selectAll"
-              // checked={isChecked()}
-              // onChange={(e) => {
-              //   selectAllFilesHandle(e);
-              // }}
-            />
-            <span>Select All</span>
-          </label> */}
         </div>
-        {renderFiles()}
-        {/* <div className="container-fluid allFiles">
-          <div className="row">{renderFiles()}</div>
-        </div> */}
-      </div>
-      <Modal modalType={modalType} category={category} />
 
+        <div className="container">
+          <div className="row" style={{ overflow: "auto", height: "60vh" }}>
+            {renderFiles() || (
+              <div className="d-flex align-items-center justify-content-center">
+                <h6 style={{ color: "red" }}>
+                  Folder does not exist. Please create one.
+                </h6>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <Modal modalType={modalType} category={category} />
       <FileUploadModal />
     </div>
   );

@@ -35,9 +35,7 @@ const Report = () => {
   };
 
   const downloadFile = async (download_link) => {
-    // console.log(download_link, "downloadLink", process.env.REACT_APP_API_KEY);
     const url = process.env.REACT_APP_API_KEY + download_link?.substring(1);
-
     const a = document.createElement("a");
     a.href = url;
     a.download = url?.substring(url?.lastIndexOf("/") + 1);
@@ -57,12 +55,10 @@ const Report = () => {
 
   const switchTo = (item, component) => {
     report_id.current = item?.id;
-    created_file_name.current = item?.result_name;
-    download_link.current = item.file_location;
+    created_file_name.current = item?.folder_name;
+    download_link.current = item.csv_file;
     dispatch(switchComponent(component));
   };
-
-  // console.log(reportData, "reportData");
 
   return (
     <>
@@ -114,7 +110,7 @@ const Report = () => {
                             className="file_icon mb-1 me-2"
                             size={20}
                           />
-                          {item.result_name}
+                          {item.folder_name}
                         </div>
 
                         <div className="date">
@@ -133,7 +129,7 @@ const Report = () => {
                       </li>
 
                       <div className="btns">
-                        {/* <button
+                        <button
                           className="btn btn-sm btn-light me-2"
                           data-toggle="tooltip"
                           data-placement="top"
@@ -141,13 +137,13 @@ const Report = () => {
                           onClick={() => switchTo(item, "/view-data")}
                         >
                           <FaEye />
-                        </button> */}
+                        </button>
                         <button
                           className="btn btn-sm btn-light"
                           data-toggle="tooltip"
                           data-placement="top"
                           title="Download"
-                          onClick={() => downloadFile(item.file_location)}
+                          onClick={() => downloadFile(item.csv_file)}
                         >
                           <FcDownload />
                         </button>

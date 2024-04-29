@@ -8,43 +8,50 @@ import { useParams } from "react-router-dom";
 import { is_selected } from "../../../redux/slices/BreadCrumbSlice";
 import { fileProcess, modalType } from "../../../redux/slices/ModalSlice";
 import useApiHandle from "../../utils/useApiHandle";
+import { folder } from "../../../redux/slices/FolderSlice";
 
-const AddFolder = ({ controller, setController }) => {
-  const { data, loading, apiCall, status_code } = useApiHandle();
+const AddFolder = ({ controller }) => {
+  const { loading, apiCall, status_code } = useApiHandle();
   const folders = useSelector((state) => state?.folder?.created_folders);
   const is_processed = useSelector((state) => state.modal.isFileProcessing);
   const processType = useSelector((state) => state.show_count.is_selected);
-  // const [files, setFiles] = useState({});
+  const [modalInstance, setModalInstance] = useState(null);
 
   const dispatch = useDispatch();
   const params = useParams();
 
   useEffect(() => {
-    console.log(data, "XXDatssa", status_code);
-
-    if (status_code === 200) {
-      console.log(data, "XXData");
-    }
-  }, [status_code]);
+    let myModal = Modal.getOrCreateInstance(
+      document.getElementById("exampleModalToggle"),
+      {
+        keyboard: false,
+      }
+    );
+    setModalInstance(myModal);
+  }, []);
 
   useEffect(() => {
-    let myModal = new Modal(document.getElementById("exampleModalToggle"), {
-      keyboard: false,
-    });
-
-    console.log(is_processed, "is_processed");
-
-    if (is_processed) {
-      myModal.show();
-      dispatch(modalType("Files is in process"));
-    } else {
-      myModal.hide();
+    dispatch(fileProcess(loading));
+    if (status_code === 201) {
+      dispatch(folder({ take_action: "unselect_all", data: null }));
     }
-  }, [is_processed]);
+  }, [loading, status_code, modalInstance, dispatch]);
+
+  useEffect(() => {
+    if (typeof modalInstance === "object") {
+      if (is_processed) {
+        modalInstance?.show();
+        modalInstance._config.backdrop = "static";
+        dispatch(modalType("Files is in process"));
+      } else {
+        modalInstance?.hide();
+        dispatch(modalType(""));
+      }
+    }
+  }, [is_processed, modalInstance, dispatch]);
 
   const getFilesData = async () => {
     if (params?.parent_folder) {
-      // const controller = new AbortController();
       let files = {};
 
       for (const folder of Object.values(folders)) {
@@ -63,17 +70,14 @@ const AddFolder = ({ controller, setController }) => {
           }
         }
       }
-      console.log("ffc", files, controller);
-
-      Object.keys(files).length !== 0 &&
+      if (Object.keys(files).length !== 0) {
         apiCall(
           "post",
           `${URL.ANALYZE_FILES}?type=${processType}`,
           files,
           controller?.signal
         );
-
-      dispatch(fileProcess(true));
+      }
     }
   };
 
@@ -93,6 +97,7 @@ const AddFolder = ({ controller, setController }) => {
           <option value="compare">Compare</option>
           <option value="voip">V.O.I.P</option>
           <option value="tor_vpn">Tor/VPN</option>
+          <option value="matching_numbers">Match Numbers</option>
         </select>
 
         <button

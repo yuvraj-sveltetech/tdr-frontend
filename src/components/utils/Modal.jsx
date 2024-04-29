@@ -6,9 +6,9 @@ import { useLocation, useParams } from "react-router-dom";
 import useApiHandle from "./useApiHandle";
 import { fileProcess } from "../../redux/slices/ModalSlice";
 
-const Modal = ({ controller }) => {
+const Modal = ({ controller, setController }) => {
   const modalType = useSelector((state) => state.modal?.modal_type);
-  const { data, loading, apiCall, status_code } = useApiHandle();
+  const { data, apiCall, status_code } = useApiHandle();
   const [buttonName, setButtonName] = useState("");
   const [folderName, setFolderName] = useState("");
   const dispatch = useDispatch();
@@ -78,7 +78,8 @@ const Modal = ({ controller }) => {
     }
 
     if (controller) {
-      await controller?.abort();
+      controller?.abort();
+      setController(new AbortController());
       dispatch(fileProcess(false));
       dispatch(folder({ take_action: "unselect_all", data: null }));
     }
@@ -109,20 +110,13 @@ const Modal = ({ controller }) => {
     }
   };
 
-  console.log(
-    modalType,
-    "modalType",
-    modalType === "Files is in process" ? "static" : true
-  );
-
   return (
     <div
-      className="modal fade"
+      className="modal"
       id="exampleModalToggle"
       aria-hidden="true"
       aria-labelledby="exampleModalToggleLabel"
       tabindex="-1"
-      data-bs-backdrop={modalType === "Files is in process" ? true : "static"}
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
