@@ -110,7 +110,7 @@ const Report = () => {
                             className="file_icon mb-1 me-2"
                             size={20}
                           />
-                          {item.folder_name}
+                          {`${item.folder_name} (${item.result_type})`}
                         </div>
 
                         <div className="date">
