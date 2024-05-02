@@ -10,6 +10,7 @@ import { FaEye } from "react-icons/fa";
 import { FcDownload } from "react-icons/fc";
 import { CiCalendarDate } from "react-icons/ci";
 import notFound from "../../../assets/images/data-not-found.png";
+import { downloadFile } from "../../../utils/downloadFile";
 
 const Report = () => {
   const { data, loading, apiCall } = useApiHandle();
@@ -34,24 +35,24 @@ const Report = () => {
     apiCall("get", URL.GET_EXCEL_DATA, "");
   };
 
-  const downloadFile = async (download_link) => {
-    const url = process.env.REACT_APP_API_KEY + download_link?.substring(1);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = url?.substring(url?.lastIndexOf("/") + 1);
-    a.style.display = "none";
+  // const downloadFile = async (download_link) => {
+  //   const url = process.env.REACT_APP_API_KEY + download_link?.substring(1);
+  //   const a = document.createElement("a");
+  //   a.href = url;
+  //   a.download = url?.substring(url?.lastIndexOf("/") + 1);
+  //   a.style.display = "none";
 
-    // Append the anchor to the body
-    document.body.appendChild(a);
+  //   // Append the anchor to the body
+  //   document.body.appendChild(a);
 
-    // Simulate a click on the anchor element
-    a.click();
+  //   // Simulate a click on the anchor element
+  //   a.click();
 
-    // Clean up
-    document.body.removeChild(a);
+  //   // Clean up
+  //   document.body.removeChild(a);
 
-    // await window.to_electron.DOWNLOAD_FILE("DOWNLOAD_FILE", download_link);
-  };
+  //   // await window.to_electron.DOWNLOAD_FILE("DOWNLOAD_FILE", download_link);
+  // };
 
   const switchTo = (item, component) => {
     report_id.current = item?.id;
@@ -72,10 +73,9 @@ const Report = () => {
         </div>
       </div> */}
 
-      <div className="">
+      <div className="dashboard container-fluid">
         {toComp === "/view-data" ? (
           <ViewData
-            downloadFile={downloadFile}
             downloadLink={download_link.current}
             report_id={report_id.current}
             created_file_name={created_file_name.current}

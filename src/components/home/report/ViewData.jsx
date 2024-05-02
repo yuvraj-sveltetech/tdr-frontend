@@ -6,13 +6,9 @@ import { IoArrowBack } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { DataOnDom, Chart } from "../../utils/index";
 import { MdBubbleChart } from "react-icons/md";
+import { downloadFile } from "../../../utils/downloadFile";
 
-const ViewData = ({
-  downloadFile,
-  downloadLink,
-  report_id,
-  created_file_name,
-}) => {
+const ViewData = ({ downloadLink, report_id, created_file_name }) => {
   const { data, loading, apiCall } = useApiHandle();
   const [pageNo, setPageNo] = useState(1);
   const [items, setItems] = useState([]);

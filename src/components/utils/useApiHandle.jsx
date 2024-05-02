@@ -86,7 +86,10 @@ const useApiHandle = () => {
 
     axiosInstance[method](url, payload)
       .then((res) => {
-        setApiData({ data: res?.data, status_code: res?.status });
+        setApiData({
+          data: res?.data,
+          status_code: res?.status,
+        });
         setLoading(false);
         toast.success(res?.data?.message);
       })
@@ -96,7 +99,6 @@ const useApiHandle = () => {
         setApiData({});
       });
   };
-
   return {
     data: apiData?.data,
     loading,

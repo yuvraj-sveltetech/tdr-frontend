@@ -11,7 +11,7 @@ import Modal from "../../utils/Modal";
 import FileUploadModal from "../../utils/FileUploadModal";
 
 const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
-  const { data, apiCall, status_code } = useApiHandle();
+  const { data, apiCall, status_code, loading } = useApiHandle();
   const folders = useSelector((state) => state.folder.created_folders);
 
   const dispatch = useDispatch();
@@ -19,19 +19,25 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
 
   useEffect(() => {
     !isFileExist() &&
+      // apiCall(
+      //   "get",
+      //   `${URL.UPLOAD_FILES}?sub_folder_id=${param?.subfolder}`,
+      //   {}
+      // );
+
       apiCall(
         "get",
-        `${URL.UPLOAD_FILES}?sub_folder_id=${param?.subfolder}`,
+        `${URL.ALL_FILES}?project_id=${param?.parent_folder}&location_id=${param?.subfolder}`,
         {}
       );
   }, []);
 
   useEffect(() => {
-    if (status_code === 200 && data?.data?.length > 0) {
+    if (status_code === 200 && data?.length > 0) {
       dispatch(
         folder({
           take_action: "add_files",
-          data: { api_data: data?.data, params: param },
+          data: { api_data: data, params: param },
         })
       );
     }
@@ -40,9 +46,9 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   const isFileExist = () => {
     const isExist = folders?.some(
       (fld) =>
-        fld?.id === param?.parent_folder &&
+        fld?.id === +param?.parent_folder &&
         fld?.subFolder?.some(
-          (subfl) => subfl?.id === param?.subfolder && subfl?.file?.length > 0
+          (subfl) => subfl?.id === +param?.subfolder && subfl?.file?.length > 0
         )
     );
     return isExist;
@@ -51,10 +57,10 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   const renderFiles = () => {
     const result = folders?.map(
       (folder) =>
-        folder?.id === param?.parent_folder &&
+        folder?.id === +param?.parent_folder &&
         folder?.subFolder?.map(
           (subFolder) =>
-            subFolder?.id === param?.subfolder &&
+            subFolder?.id === +param?.subfolder &&
             subFolder?.file?.map((fl) => (
               <div className="col-md-3" key={`all_files${fl.id}`}>
                 <CheckBox file={fl} index={index} />
@@ -74,7 +80,6 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
 
     return result;
   };
-
   return (
     <div className="main">
       <Navbar
@@ -87,14 +92,22 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
           <h6>FILES</h6>
         </div>
 
-        <div className="container">
-          <div className="row" style={{ overflow: "auto", height: "60vh" }}>
-            {renderFiles() || (
-              <div className="d-flex align-items-center justify-content-center">
-                <h6 style={{ color: "red" }}>
-                  Folder does not exist. Please create one.
-                </h6>
+        <div className="container" style={{ overflow: "auto", height: "60vh" }}>
+          <div className="row">
+            {loading ? (
+              <div class="d-flex justify-content-center center-div">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
               </div>
+            ) : (
+              renderFiles() || (
+                <div className="d-flex align-items-center justify-content-center">
+                  <h6 style={{ color: "red" }}>
+                    Folder does not exist. Please create one.
+                  </h6>
+                </div>
+              )
             )}
           </div>
         </div>

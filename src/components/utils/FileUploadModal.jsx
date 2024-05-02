@@ -15,18 +15,20 @@ const FileUploader = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (status_code === 200 && data?.data?.length > 0) {
+    if (status_code === 200 && data?.length > 0) {
       dispatch(
         folder({
           take_action: "add_files",
-          data: { api_data: data?.data, params: param },
+          data: { api_data: data, params: param },
         })
       );
       // dispatch(folder({ take_action: "create_subfolder", data: data?.data }));
+
       return;
     }
 
-    if (status_code === 201 && data?.data?.length > 0) {
+    if (status_code === 201) {
+
       setFiles([]);
       getAllFiles();
       // dispatch(folder({ take_action: "create_subfolder", data: data?.data }));
@@ -35,9 +37,15 @@ const FileUploader = () => {
   }, [status_code, data]);
 
   const getAllFiles = () => {
+    // apiCall(
+    //   "get",
+    //   `${API_URL.UPLOAD_FILES}?sub_folder_id=${param?.subfolder}`,
+    //   {}
+    // );
+
     apiCall(
       "get",
-      `${API_URL.UPLOAD_FILES}?sub_folder_id=${param?.subfolder}`,
+      `${API_URL.ALL_FILES}?project_id=${param?.parent_folder}&location_id=${param?.subfolder}`,
       {}
     );
   };
@@ -112,9 +120,10 @@ const FileUploader = () => {
       formData.append("file", file);
     });
 
-    formData.append("folder_id", param?.subfolder);
+    formData.append("project_id", param?.parent_folder);
+    formData.append("location_id", param?.subfolder);
 
-    apiCall("post", `${API_URL.UPLOAD_FILES}`, formData);
+    apiCall("post", `${API_URL.ALL_FILES}`, formData);
   };
 
   return (

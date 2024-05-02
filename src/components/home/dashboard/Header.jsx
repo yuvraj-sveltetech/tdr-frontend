@@ -13,7 +13,10 @@ const Header = () => {
       <div className="header">
         <div className="profile row m-0">
           <div className="col-md-6"></div>
-          <div className="col-md-6">
+
+
+
+          {/* <div className="col-md-6">
             <div className="dropdown">
               <button
                 className="btn dropdown-toggle"
@@ -47,7 +50,9 @@ const Header = () => {
               </ul>
             </div>
             <FaUser color="#fff" size="1.3rem" />
-          </div>
+          </div> */}
+
+
         </div>
       </div>
 

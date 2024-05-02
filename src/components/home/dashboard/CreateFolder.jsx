@@ -14,13 +14,13 @@ const CreateFolder = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    folders?.created_folders?.length === 0 &&
-      apiCall("get", URL.FOLDER_API, {});
-  }, [folders?.created_folders]);
+    // folders?.created_folders?.length === 0 &&
+    apiCall("get", URL.FOLDER_API, {});
+  }, []);
 
   useEffect(() => {
-    if (status_code === 200 && data?.data?.length > 0) {
-      dispatch(folder({ take_action: "create_folder", data: data?.data }));
+    if (status_code === 200 && data?.length > 0) {
+      dispatch(folder({ take_action: "create_folder", data }));
     }
   }, [status_code, data, dispatch]);
 
@@ -41,7 +41,7 @@ const CreateFolder = () => {
         ) : (
           <div className="parent_folder">
             <div className="row list-unstyled">
-              {folders?.created_folders?.map((folder, index) => {
+              {folders?.created_folders?.map((folder) => {
                 return (
                   <div className="col-md-3" key={`CreatedFolder${folder?.id}`}>
                     <div
@@ -51,7 +51,7 @@ const CreateFolder = () => {
                       <li onClick={(e) => getSubfolder(folder?.id)}>
                         <MdFolder size="70" className="folderIcon" />
                       </li>
-                      <p>{folder?.folder_name}</p>
+                      <p>{folder?.project_name}</p>
                     </div>
                   </div>
                 );

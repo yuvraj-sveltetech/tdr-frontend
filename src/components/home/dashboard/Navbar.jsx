@@ -19,8 +19,8 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
     let name = "";
 
     for (let folder in folders) {
-      if (folders[folder]?.id === params?.parent_folder) {
-        name = "/ " + folders[folder]?.folder_name;
+      if (folders[folder]?.id === +params?.parent_folder) {
+        name = "/ " + folders[folder]?.project_name;
         break;
       }
     }
@@ -32,10 +32,10 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
     let name = "";
 
     for (let folder in folders) {
-      if (folders[folder]?.id === params?.parent_folder) {
+      if (folders[folder]?.id === +params?.parent_folder) {
         for (let sb in folders[folder]?.subFolder) {
-          if (folders[folder]?.subFolder[sb]?.id === params?.subfolder) {
-            name = "/ " + folders[folder]?.subFolder[sb]?.sub_folder_name;
+          if (folders[folder]?.subFolder[sb]?.id === +params?.subfolder) {
+            name = "/ " + folders[folder]?.subFolder[sb]?.location_name;
             break;
           }
         }
@@ -52,7 +52,7 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
           className="btn btn-light"
           style={{ backgroundColor: "#e5e9f2", cursor: "text" }}
         >
-          I.P.D.R
+          C.D.R
         </button>
       </div>
 

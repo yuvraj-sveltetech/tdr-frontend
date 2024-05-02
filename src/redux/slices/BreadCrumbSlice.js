@@ -5,7 +5,7 @@ export const breadCrumbSlice = createSlice({
   initialState: {
     show: 0,
     switch_component: "",
-    is_selected: "compare",
+    is_selected: "export-ist-numbers",
     isProccesed: { isDisable: false, loading: false },
   },
   reducers: {

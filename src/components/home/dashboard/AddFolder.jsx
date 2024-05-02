@@ -9,9 +9,10 @@ import { is_selected } from "../../../redux/slices/BreadCrumbSlice";
 import { fileProcess, modalType } from "../../../redux/slices/ModalSlice";
 import useApiHandle from "../../utils/useApiHandle";
 import { folder } from "../../../redux/slices/FolderSlice";
+import { downloadFile } from "../../../utils/downloadFile";
 
 const AddFolder = ({ controller }) => {
-  const { loading, apiCall, status_code } = useApiHandle();
+  const { data, loading, apiCall, status_code } = useApiHandle();
   const folders = useSelector((state) => state?.folder?.created_folders);
   const is_processed = useSelector((state) => state.modal.isFileProcessing);
   const processType = useSelector((state) => state.show_count.is_selected);
@@ -32,7 +33,8 @@ const AddFolder = ({ controller }) => {
 
   useEffect(() => {
     dispatch(fileProcess(loading));
-    if (status_code === 201) {
+    if (status_code === 200) {
+      downloadFile(data?.data);
       dispatch(folder({ take_action: "unselect_all", data: null }));
     }
   }, [loading, status_code, modalInstance, dispatch]);
@@ -51,33 +53,25 @@ const AddFolder = ({ controller }) => {
   }, [is_processed, modalInstance, dispatch]);
 
   const getFilesData = async () => {
-    if (params?.parent_folder) {
-      let files = {};
+    let selectedFileIDs = [];
 
-      for (const folder of Object.values(folders)) {
-        for (const subFolder of Object.values(folder?.subFolder || {})) {
-          const checkedFileIds =
-            subFolder.file
-              ?.filter((file) => file?.isChecked)
-              .map((file) => file.id) || [];
+    for (const folder of Object.values(folders)) {
+      const checkedFileIds =
+        folder?.subFolder
+          ?.filter((file) => file?.select_all)
+          ?.map((file) => file.id) || [];
+      if (checkedFileIds.length > 0) {
+        selectedFileIDs.push(checkedFileIds);
+      }
+    }
 
-          if (checkedFileIds.length > 0) {
-            if (!files[folder.folder_name]) {
-              files[folder.folder_name] = {};
-            }
-            files[folder.folder_name][subFolder.sub_folder_name] =
-              checkedFileIds;
-          }
-        }
-      }
-      if (Object.keys(files).length !== 0) {
-        apiCall(
-          "post",
-          `${URL.ANALYZE_FILES}?type=${processType}`,
-          files,
-          controller?.signal
-        );
-      }
+    if (params?.parent_folder?.length > 0) {
+      apiCall(
+        "get",
+        `api/${processType}/?ids=${selectedFileIDs}&pro_id=${params?.parent_folder}`,
+        {},
+        controller?.signal
+      );
     }
   };
 
@@ -89,35 +83,59 @@ const AddFolder = ({ controller }) => {
   return (
     <>
       <div className="folder navbar-right">
-        <select
-          className="form-select form-select-sm"
-          name="drop-down"
-          onChange={(e) => isSelected(e)}
-        >
-          <option value="compare">Compare</option>
+        {params?.parent_folder?.length > 0 && (
+          <>
+            <select
+              className="form-select form-select-sm"
+              name="drop-down"
+              onChange={(e) => isSelected(e)}
+            >
+              {/* <option value="compare">Compare</option>
           <option value="voip">V.O.I.P</option>
           <option value="tor_vpn">Tor/VPN</option>
-          <option value="matching_numbers">Match Numbers</option>
-        </select>
+          <option value="matching_numbers">Match Numbers</option> */}
 
-        <button
-          className="btn btn-primary mx-2"
-          id="send_data"
-          onClick={getFilesData}
-          disabled={is_processed.isDisable}
-        >
-          {is_processed.loading ? (
-            <div className="d-flex align-items-center">
-              <div
-                className="spinner-border spinner-border-sm me-1"
-                role="status"
-              />
-              Processing...
-            </div>
-          ) : (
-            <h6 className="m-0">Process</h6>
-          )}
-        </button>
+              <option value="export-ist-numbers">
+                All International Numbers
+              </option>
+              <option value="get-other-state-numbers">
+                Other State Numbers
+              </option>
+              <option value="get-call-type-counts">Call Type Counts</option>
+              <option value="search-numbers">
+                Target Numbers Exists/Not Exists on Locations
+              </option>
+              <option value="get-call-duration-numbers">
+                Calls more than 30 Minutes
+              </option>
+              <option value="get-common-imei-numbers">
+                Numbers Using different Mobile
+              </option>
+              <option value="get-common-number-on-imeis">
+                Mobile using different Numbers
+              </option>
+            </select>
+
+            <button
+              className="btn btn-primary mx-2"
+              id="send_data"
+              onClick={getFilesData}
+              disabled={is_processed.isDisable}
+            >
+              {is_processed.loading ? (
+                <div className="d-flex align-items-center">
+                  <div
+                    className="spinner-border spinner-border-sm me-1"
+                    role="status"
+                  />
+                  Processing...
+                </div>
+              ) : (
+                <h6 className="m-0">Process</h6>
+              )}
+            </button>
+          </>
+        )}
 
         {params?.parent_folder && params?.subfolder ? (
           <a

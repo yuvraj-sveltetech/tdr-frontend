@@ -17,15 +17,26 @@ const Modal = ({ controller, setController }) => {
 
   useEffect(() => {
     if (status_code === 201) {
-      getParentFolders();
+      if (location?.pathname === "/dashboard") {
+        getParentFolders();
+      } else {
+        getSubFolder();
+      }
       return;
     }
 
-    if (status_code === 200 && data?.data?.length > 0) {
+    if (status_code === 200 && data?.length > 0) {
       if (location?.pathname === "/dashboard") {
-        dispatch(folder({ take_action: "create_folder", data: data?.data }));
+        dispatch(folder({ take_action: "create_folder", data }));
       } else {
-        dispatch(folder({ take_action: "create_subfolder", data: data?.data }));
+        // dispatch(folder({ take_action: "create_subfolder", data }));
+
+        dispatch(
+          folder({
+            take_action: "create_subfolder",
+            data: { id: +params?.parent_folder, sub_folder: data },
+          })
+        );
       }
     }
   }, [status_code, data, location?.pathname]);
@@ -54,6 +65,14 @@ const Modal = ({ controller, setController }) => {
     apiCall("get", URL.FOLDER_API, {});
   };
 
+  const getSubFolder = () => {
+    apiCall(
+      "get",
+      `${URL.CREATE_SUB_FOLDER}?project_id=${params?.parent_folder}`,
+      {}
+    );
+  };
+
   const handleChange = (e) => {
     setFolderName(e.target.value);
   };
@@ -61,18 +80,15 @@ const Modal = ({ controller, setController }) => {
   const clickHandler = async () => {
     if (modalType === "Create Folder") {
       if (params?.parent_folder?.length > 0) {
-        apiCall(
-          "post",
-          `${URL.CREATE_SUB_FOLDER}?project_id=${params?.parent_folder}`,
-          {
-            sub_folder_name: folderName,
-          }
-        );
+        apiCall("post", `${URL.CREATE_SUB_FOLDER}`, {
+          location_name: folderName,
+          project_id: params?.parent_folder,
+        });
         setFolderName("");
         return;
       }
 
-      apiCall("post", URL.FOLDER_API, { folder_name: folderName });
+      apiCall("post", URL.FOLDER_API, { project_name: folderName });
       setFolderName("");
       return;
     }
