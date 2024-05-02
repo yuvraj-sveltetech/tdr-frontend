@@ -6,7 +6,7 @@ import {
   Routes,
   BrowserRouter as Router,
   Navigate,
-  useNavigate,
+  // useNavigate,
 } from "react-router-dom";
 import {
   Login,
@@ -24,15 +24,15 @@ import Cookies from "js-cookie";
 
 const AppRouter = () => {
   const isAuth = Cookies.get("ss_tkn");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!isAuth) {
-      navigate("/");
-    } else {
-      navigate("/dashboard");
-    }
-  }, [isAuth]);
+  // useEffect(() => {
+  //   if (!isAuth) {
+  //     navigate("/");
+  //   } else {
+  //     navigate("/dashboard");
+  //   }
+  // }, [isAuth]);
 
   return (
     <Router>
