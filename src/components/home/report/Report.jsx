@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Sidebar, Header, ViewData } from "../../utils/index";
+import { ViewData } from "../../utils/index";
 import { useDispatch, useSelector } from "react-redux";
 import useApiHandle from "../../utils/useApiHandle";
 import * as URL from "../../utils/ConstantUrl";
@@ -22,8 +22,8 @@ const Report = () => {
   const created_file_name = useRef(null);
 
   useEffect(() => {
-    if (data?.data?.length > 0) {
-      setReportData([...data?.data]);
+    if (data?.length > 0) {
+      setReportData([...data]);
     }
   }, [data]);
 
@@ -35,25 +35,6 @@ const Report = () => {
     apiCall("get", URL.GET_EXCEL_DATA, "");
   };
 
-  // const downloadFile = async (download_link) => {
-  //   const url = process.env.REACT_APP_API_KEY + download_link?.substring(1);
-  //   const a = document.createElement("a");
-  //   a.href = url;
-  //   a.download = url?.substring(url?.lastIndexOf("/") + 1);
-  //   a.style.display = "none";
-
-  //   // Append the anchor to the body
-  //   document.body.appendChild(a);
-
-  //   // Simulate a click on the anchor element
-  //   a.click();
-
-  //   // Clean up
-  //   document.body.removeChild(a);
-
-  //   // await window.to_electron.DOWNLOAD_FILE("DOWNLOAD_FILE", download_link);
-  // };
-
   const switchTo = (item, component) => {
     report_id.current = item?.id;
     created_file_name.current = item?.folder_name;
@@ -63,16 +44,6 @@ const Report = () => {
 
   return (
     <>
-      {/* <div className="dashboard container-fluid">
-        <div className="row">
-          <Sidebar />
-          <div className="dashpage col-md-10">
-            <Header />
-          
-          </div>
-        </div>
-      </div> */}
-
       <div className="dashboard container-fluid">
         {toComp === "/view-data" ? (
           <ViewData
@@ -110,7 +81,7 @@ const Report = () => {
                             className="file_icon mb-1 me-2"
                             size={20}
                           />
-                          {`${item.folder_name} (${item.result_type})`}
+                          {`${item.project_name} (${item.result_type})`}
                         </div>
 
                         <div className="date">
@@ -129,7 +100,7 @@ const Report = () => {
                       </li>
 
                       <div className="btns">
-                        <button
+                        {/* <button
                           className="btn btn-sm btn-light me-2"
                           data-toggle="tooltip"
                           data-placement="top"
@@ -137,13 +108,13 @@ const Report = () => {
                           onClick={() => switchTo(item, "/view-data")}
                         >
                           <FaEye />
-                        </button>
+                        </button> */}
                         <button
                           className="btn btn-sm btn-light"
                           data-toggle="tooltip"
                           data-placement="top"
                           title="Download"
-                          onClick={() => downloadFile(item.csv_file)}
+                          onClick={() => downloadFile(item.file_path)}
                         >
                           <FcDownload />
                         </button>

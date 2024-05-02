@@ -162,6 +162,7 @@ export const folderSlice = createSlice({
             created_folders: prevState?.created_folders?.map((folder) => {
               return {
                 ...folder,
+                select_all: false,
                 subFolder:
                   folder?.subFolder?.length > 0
                     ? folder?.subFolder?.map((sub) => {
