@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import background_img from "../../assets/images/background_img.jpg";
 import logo from "../../assets/images/logo.png";
 import client_logo from "../../assets/images/client_logo.png";
@@ -17,8 +17,12 @@ const Login = () => {
   // let auth = localStorage.getItem("auth_token");
   let auth = Cookies.get("ss_tkn");
 
-  useEffect(() => {
-    if (!auth) window.close();
+  useLayoutEffect(() => {
+    if (!auth) {
+      window.close();
+    } else {
+      navigate("/dashboard");
+    }
   }, [auth]);
 
   // useEffect(() => {
