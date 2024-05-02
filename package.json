@@ -40,13 +40,13 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "set PORT=3005 && react-scripts start",
+    "start": "set PORT=6969 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test", 
     "eject": "react-scripts eject",
     "electron-dev": "electron .",
     "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm:electron\"",
-    "electron": "wait-on tcp:3005 && electron-forge start",
+    "electron": "wait-on tcp:6969 && electron-forge start",
     "package": "react-scripts build && electron-forge package",
     "make": "react-scripts build && electron-forge make"
   },
