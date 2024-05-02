@@ -26,8 +26,8 @@ const AppRouter = () => {
       <ToastContainer />
       <Layout>
         <Routes>
-          {/* <Route path="/" index element={<Login />} /> */}
-          {/* <Route element={<PrivateRoute />}> */}
+          <Route path="/" index element={<Login />} />
+          <Route element={<PrivateRoute />}>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/:parent_folder" element={<SubFolder />} />
@@ -35,7 +35,7 @@ const AppRouter = () => {
           <Route path="/report" element={<Report />} />
           <Route path="/user-log" element={<UserLog />} />
           <Route path="/upload-sdr" element={<UploadSdr />} />
-          {/* </Route> */}
+          </Route>
           <Route path="/not-found" element={<PageNotFound />} />
           <Route path="*" element={<Navigate to="/not-found" replace />} />
         </Routes>

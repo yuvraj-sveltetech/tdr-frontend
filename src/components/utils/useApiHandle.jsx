@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import * as URL from "../utils/ConstantUrl";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const useApiHandle = () => {
   const [apiData, setApiData] = useState({ data: {}, status_code: 0 });
@@ -10,7 +11,8 @@ const useApiHandle = () => {
   const baseUrl = process.env.REACT_APP_API_KEY;
   const navigate = useNavigate();
 
-  let accessToken = localStorage.getItem("auth_token");
+  // let accessToken = localStorage.getItem("auth_token");
+  let accessToken = Cookies.get("ss_tkn");
   let refreshToken = localStorage.getItem("refresh_token");
 
   const apiCall = async (method, url, payload, signal) => {
