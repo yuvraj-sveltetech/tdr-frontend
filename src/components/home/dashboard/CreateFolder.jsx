@@ -14,9 +14,9 @@ const CreateFolder = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    folders?.created_folders?.length === 0 &&
+    // folders?.created_folders?.length === 0 &&
       apiCall("get", URL.FOLDER_API, {});
-  }, [folders?.created_folders]);
+  }, []);
 
   useEffect(() => {
     if (status_code === 200 && data?.data?.length > 0) {
