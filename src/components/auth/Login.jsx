@@ -13,7 +13,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   // let auth = localStorage.getItem("auth_token");
   let auth = Cookies.get("ss_tkn");
 
