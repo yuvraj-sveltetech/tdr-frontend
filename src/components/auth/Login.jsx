@@ -19,9 +19,12 @@ const Login = () => {
   useLayoutEffect(() => {
     let auth = Cookies.get("ss_tkn");
     if (!auth) {
+      console.log(auth, "auht");
       window.close();
     } else {
       localStorage.setItem("auth_token", auth);
+      console.log(auth, "auhtXX");
+
       navigate("/dashboard");
     }
   }, []);
