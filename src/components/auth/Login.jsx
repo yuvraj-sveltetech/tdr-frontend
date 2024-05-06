@@ -15,16 +15,16 @@ const Login = () => {
   });
   const navigate = useNavigate();
   // let auth = localStorage.getItem("auth_token");
-  let auth = Cookies.get("ss_tkn");
 
   useLayoutEffect(() => {
+    let auth = Cookies.get("ss_tkn");
     if (!auth) {
       window.close();
     } else {
       localStorage.setItem("auth_token", auth);
       navigate("/dashboard");
     }
-  }, [auth]);
+  }, []);
 
   // useEffect(() => {
   //   auth && navigate("/dashboard");
