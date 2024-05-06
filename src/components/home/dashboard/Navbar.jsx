@@ -11,9 +11,9 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
 
   const navigate = useNavigate();
   const params = useParams();
-//   useEffect(() => {
-// setCon
-//   },[])
+  //   useEffect(() => {
+  // setCon
+  //   },[])
 
   const parentFolderName = () => {
     let name = "";
@@ -74,12 +74,12 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
               </span>
               <span className="ms-2">{subFolderName()}</span>
             </div>
-            <AddFolder controller={controller} setController={setController} />
+            <AddFolder controller={controller} />
           </div>
         </div>
       </div>
 
-      <Modal controller={controller} setController={setController}  />
+      <Modal controller={controller} setController={setController} />
     </>
   );
 };

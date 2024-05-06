@@ -19,12 +19,6 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
 
   useEffect(() => {
     !isFileExist() &&
-      // apiCall(
-      //   "get",
-      //   `${URL.UPLOAD_FILES}?sub_folder_id=${param?.subfolder}`,
-      //   {}
-      // );
-
       apiCall(
         "get",
         `${URL.ALL_FILES}?project_id=${param?.parent_folder}&location_id=${param?.subfolder}`,
@@ -80,6 +74,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
 
     return result;
   };
+
   return (
     <div className="main">
       <Navbar
