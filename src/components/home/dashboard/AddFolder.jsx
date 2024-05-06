@@ -36,6 +36,8 @@ const AddFolder = ({ controller }) => {
     if (status_code === 200) {
       downloadFile(data?.data);
       dispatch(folder({ take_action: "unselect_all", data: null }));
+    } else {
+      dispatch(folder({ take_action: "unselect_all", data: null }));
     }
   }, [loading, status_code, modalInstance, dispatch]);
 

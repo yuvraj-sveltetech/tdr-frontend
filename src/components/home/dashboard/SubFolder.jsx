@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MdFolder } from "react-icons/md";
+import { MdFolder, MdOutlineFileDownload } from "react-icons/md";
 import { folder } from "../../../redux/slices/FolderSlice";
 import { useParams, useNavigate } from "react-router-dom";
 import { Navbar } from "../../utils/index";
 import Modal from "../../utils/Modal";
 import * as URL from "../../utils/ConstantUrl";
 import useApiHandle from "../../utils/useApiHandle";
+import { downloadFile } from "../../../utils/downloadFile";
+import { toast } from "react-toastify";
 
 const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   const { data, loading, apiCall, status_code } = useApiHandle();
   const folders = useSelector((state) => state.folder.created_folders);
   const [subFolder, setSubfolder] = useState([]);
+  const toastId = useRef(null);
 
   const dispatch = useDispatch();
   const param = useParams();
@@ -28,12 +31,6 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     }
 
     !isSubfolderExist() &&
-      // apiCall(
-      //   "get",
-      //   `${URL.FOLDER_API}?project_id=${param?.parent_folder}`,
-      //   {}
-      // );
-
       apiCall(
         "get",
         `${URL.CREATE_SUB_FOLDER}?project_id=${param?.parent_folder}`,
@@ -42,15 +39,21 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   }, []);
 
   useEffect(() => {
-    if (status_code === 200 && data?.length > 0) {
-      dispatch(
-        folder({
-          take_action: "create_subfolder",
-          data: { id: +param?.parent_folder, sub_folder: data },
-        })
-      );
+    if (status_code === 200) {
+      if (data?.length > 0) {
+        dispatch(
+          folder({
+            take_action: "create_subfolder",
+            data: { id: +param?.parent_folder, sub_folder: data },
+          })
+        );
+        return;
+      }
+
+      toast.dismiss(toastId.current);
+      downloadFile(data?.data);
     }
-  }, [status_code, data]);
+  }, [status_code, data, loading]);
 
   useEffect(() => {
     setSubfolder(
@@ -125,6 +128,16 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     }
   }
 
+  const exportCSV = (e, id) => {
+    e.stopPropagation();
+    toastId.current = toast.loading("Downloading File...");
+    apiCall(
+      "get",
+      `${URL.EXPORT_CSV}?location_id=${id}&project_id=${param?.parent_folder}`,
+      {}
+    );
+  };
+
   return (
     <>
       <div className="main">
@@ -165,7 +178,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
               </div>
             </div>
 
-            {loading ? (
+            {loading && subFolder?.length === 0 ? (
               <div class="d-flex justify-content-center center-div">
                 <div class="spinner-border" role="status">
                   <span class="visually-hidden">Loading...</span>
@@ -185,6 +198,17 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                           navigate(`/${subFolder?.id}/${folder?.id}`)
                         }
                       >
+                        <span
+                          className="align-self-end me-2 position-absolute cursot"
+                          style={{ bottom: "5px", right: "-5px" }}
+                        >
+                          <MdOutlineFileDownload
+                            size={20}
+                            color="gray"
+                            onClick={(e) => exportCSV(e, folder?.id)}
+                          />
+                        </span>
+
                         <input
                           type="checkbox"
                           checked={isSubfolderChecked(folder?.id)}
@@ -221,7 +245,8 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
           </div>
         </div>
       </div>
-      <Modal modalType={modalType} category={category} />
+
+      {/* <Modal modalType={modalType} category={category}  /> */}
     </>
   );
 };
