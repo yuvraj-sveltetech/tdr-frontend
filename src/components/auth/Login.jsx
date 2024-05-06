@@ -21,6 +21,7 @@ const Login = () => {
     if (!auth) {
       window.close();
     } else {
+      localStorage.setItem("auth_token", auth);
       navigate("/dashboard");
     }
   }, [auth]);

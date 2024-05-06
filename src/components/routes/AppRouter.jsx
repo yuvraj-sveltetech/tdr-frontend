@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import {
@@ -6,7 +6,6 @@ import {
   Routes,
   BrowserRouter as Router,
   Navigate,
-  // useNavigate,
 } from "react-router-dom";
 import {
   Login,
@@ -20,20 +19,8 @@ import {
 } from "../utils/index";
 import PrivateRoute from "../utils/PrivateRoute";
 import Layout from "../home/layout/Layout";
-import Cookies from "js-cookie";
 
 const AppRouter = () => {
-  const isAuth = Cookies.get("ss_tkn");
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (!isAuth) {
-  //     navigate("/");
-  //   } else {
-  //     navigate("/dashboard");
-  //   }
-  // }, [isAuth]);
-
   return (
     <Router>
       <ToastContainer />

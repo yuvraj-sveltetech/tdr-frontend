@@ -11,8 +11,8 @@ const useApiHandle = () => {
   const baseUrl = process.env.REACT_APP_API_KEY;
   const navigate = useNavigate();
 
-  // let accessToken = localStorage.getItem("auth_token");
-  let accessToken = Cookies.get("ss_tkn");
+  let accessToken = localStorage.getItem("auth_token");
+  // let accessToken = Cookies.get("ss_tkn");
   let refreshToken = localStorage.getItem("refresh_token");
 
   const apiCall = async (method, url, payload, signal) => {
