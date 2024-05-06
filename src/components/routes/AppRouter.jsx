@@ -26,10 +26,12 @@ const AppRouter = () => {
       <ToastContainer />
       <Layout>
         <Routes>
-          <Route path="/" index element={<Login />} />
+          {/* <Route path="/" index element={<Login />} /> */}
+          <Route path="/" element={<Dashboard />} />
+
           <Route element={<PrivateRoute />}>
             {/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
-            <Route path="/dashboard" element={<Dashboard />} />
+            {/* <Route path="/dashboard" element={<Dashboard />} /> */}
             <Route path="/:parent_folder" element={<SubFolder />} />
             <Route path="/:parent_folder/:subfolder" element={<DirFiles />} />
             <Route path="/report" element={<Report />} />

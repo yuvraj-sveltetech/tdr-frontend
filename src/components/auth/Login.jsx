@@ -16,19 +16,6 @@ const Login = () => {
   const navigate = useNavigate();
   // let auth = localStorage.getItem("auth_token");
 
-  useLayoutEffect(() => {
-    let auth = Cookies.get("ss_tkn");
-    if (!auth) {
-      console.log(auth, "auht");
-      window.close();
-    } else {
-      localStorage.setItem("auth_token", auth);
-      console.log(auth, "auhtXX");
-
-      navigate("/dashboard");
-    }
-  }, []);
-
   // useEffect(() => {
   //   auth && navigate("/dashboard");
   // }, [auth, navigate]);
