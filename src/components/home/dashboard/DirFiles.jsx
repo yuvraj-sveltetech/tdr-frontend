@@ -26,54 +26,54 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   //     );
   // }, []);
 
-  useEffect(() => {
-    if (status_code === 200 && data?.length > 0) {
-      dispatch(
-        folder({
-          take_action: "add_files",
-          data: { api_data: data, params: param },
-        })
-      );
-    }
-  }, [status_code, data, dispatch, param]);
+  // useEffect(() => {
+  //   if (status_code === 200 && data?.length > 0) {
+  //     dispatch(
+  //       folder({
+  //         take_action: "add_files",
+  //         data: { api_data: data, params: param },
+  //       })
+  //     );
+  //   }
+  // }, [status_code, data, dispatch, param]);
 
-  const isFileExist = () => {
-    const isExist = folders?.some(
-      (fld) =>
-        fld?.id === +param?.parent_folder &&
-        fld?.subFolder?.some(
-          (subfl) => subfl?.id === +param?.subfolder && subfl?.file?.length > 0
-        )
-    );
-    return isExist;
-  };
+  // const isFileExist = () => {
+  //   const isExist = folders?.some(
+  //     (fld) =>
+  //       fld?.id === +param?.parent_folder &&
+  //       fld?.subFolder?.some(
+  //         (subfl) => subfl?.id === +param?.subfolder && subfl?.file?.length > 0
+  //       )
+  //   );
+  //   return isExist;
+  // };
 
-  const renderFiles = () => {
-    const result = folders?.map(
-      (folder) =>
-        folder?.id === +param?.parent_folder &&
-        folder?.subFolder?.map(
-          (subFolder) =>
-            subFolder?.id === +param?.subfolder &&
-            subFolder?.file?.map((fl) => (
-              <div className="col-md-3" key={`all_files${fl.id}`}>
-                <CheckBox file={fl} index={index} />
-              </div>
-            ))
-        )
-    );
+  // const renderFiles = () => {
+  //   const result = folders?.map(
+  //     (folder) =>
+  //       folder?.id === +param?.parent_folder &&
+  //       folder?.subFolder?.map(
+  //         (subFolder) =>
+  //           subFolder?.id === +param?.subfolder &&
+  //           subFolder?.file?.map((fl) => (
+  //             <div className="col-md-3" key={`all_files${fl.id}`}>
+  //               <CheckBox file={fl} index={index} />
+  //             </div>
+  //           ))
+  //       )
+  //   );
 
-    const hasFiles = result.some(
-      (folder) =>
-        folder && folder.some((subFolder) => subFolder && subFolder.length > 0)
-    );
+  //   const hasFiles = result.some(
+  //     (folder) =>
+  //       folder && folder.some((subFolder) => subFolder && subFolder.length > 0)
+  //   );
 
-    if (!hasFiles) {
-      return false;
-    }
+  //   if (!hasFiles) {
+  //     return false;
+  //   }
 
-    return result;
-  };
+  //   return result;
+  // };
 
   return (
     <div className="main">
@@ -88,7 +88,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
         </div>
 
         <div className="container" style={{ overflow: "auto", height: "60vh" }}>
-          <div className="row">
+          {/* <div className="row">
             {loading ? (
               <div class="d-flex justify-content-center center-div">
                 <div class="spinner-border" role="status">
@@ -104,7 +104,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
                 </div>
               )
             )}
-          </div>
+          </div> */}
         </div>
       </div>
 
