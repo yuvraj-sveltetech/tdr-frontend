@@ -22,7 +22,7 @@ const useApiHandle = () => {
       baseURL: baseUrl,
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Token " + accessToken,
+        Authorization: accessToken,
       },
       signal,
     });
