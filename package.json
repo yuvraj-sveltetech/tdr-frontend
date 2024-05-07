@@ -2,8 +2,7 @@
   "name": "tdr",
   "version": "0.1.0",
   "private": true,
-  "main": "public/main.js",
-  "homepage": "./",
+  "homepage": ".",
   "author": "sveltetech",
   "description": "tdr applicaiton",
   "dependencies": {

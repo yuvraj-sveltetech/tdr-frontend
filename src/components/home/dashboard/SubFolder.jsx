@@ -181,9 +181,9 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
             </div>
 
             {loading && subFolder?.subFolder?.length === 0 ? (
-              <div class="d-flex justify-content-center center-div">
-                <div class="spinner-border" role="status">
-                  <span class="visually-hidden">Loading...</span>
+              <div className="d-flex justify-content-center center-div">
+                <div className="spinner-border" role="status">
+                  <span className="visually-hidden">Loading...</span>
                 </div>
               </div>
             ) : subFolder?.subFolder?.length > 0 ? (

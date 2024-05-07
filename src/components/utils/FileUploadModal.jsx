@@ -28,7 +28,6 @@ const FileUploader = () => {
     }
 
     if (status_code === 201) {
-
       setFiles([]);
       getAllFiles();
       // dispatch(folder({ take_action: "create_subfolder", data: data?.data }));
@@ -132,7 +131,7 @@ const FileUploader = () => {
       id="exampleModalToggle2"
       aria-hidden="true"
       aria-labelledby="exampleModalToggleLabel2"
-      tabindex="-1"
+      tabIndex="-1"
       data-bs-backdrop={loading ? "static" : true}
     >
       <div className="modal-dialog modal-dialog-centered modal-lg">
@@ -162,8 +161,8 @@ const FileUploader = () => {
                   justifyContent: "center",
                 }}
               >
-                <div class="d-flex flex-column align-items-center justify-content-center">
-                  <div class="spinner-border" role="status"></div>
+                <div className="d-flex flex-column align-items-center justify-content-center">
+                  <div className="spinner-border" role="status"></div>
                   <span>Uploading...</span>
                 </div>
               </div>

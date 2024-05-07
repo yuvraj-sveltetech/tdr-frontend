@@ -90,9 +90,9 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
         <div className="container" style={{ overflow: "auto", height: "60vh" }}>
           <div className="row">
             {loading ? (
-              <div class="d-flex justify-content-center center-div">
-                <div class="spinner-border" role="status">
-                  <span class="visually-hidden">Loading...</span>
+              <div className="d-flex justify-content-center center-div">
+                <div className="spinner-border" role="status">
+                  <span className="visually-hidden">Loading...</span>
                 </div>
               </div>
             ) : (
