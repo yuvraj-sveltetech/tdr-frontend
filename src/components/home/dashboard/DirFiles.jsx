@@ -87,25 +87,10 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
           <h6>FILES</h6>
         </div>
 
-        <div className="container" style={{ overflow: "auto", height: "60vh" }}>
-          <div className="row">
-            {loading ? (
-              <div class="d-flex justify-content-center center-div">
-                <div class="spinner-border" role="status">
-                  <span class="visually-hidden">Loading...</span>
-                </div>
-              </div>
-            ) : (
-              renderFiles() || (
-                <div className="d-flex align-items-center justify-content-center">
-                  <h6 style={{ color: "red" }}>
-                    Files does not exist. Please create one.
-                  </h6>
-                </div>
-              )
-            )}
-          </div>
-        </div>
+        <div
+          className="container"
+          style={{ overflow: "auto", height: "60vh" }}
+        ></div>
       </div>
 
       <Modal modalType={modalType} category={category} />
