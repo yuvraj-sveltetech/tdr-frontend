@@ -50,8 +50,10 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
         return;
       }
 
-      toast.dismiss(toastId.current);
-      downloadFile(data?.data);
+      if (!Array.isArray(data)) {
+        toast.dismiss(toastId.current);
+        downloadFile(data?.data);
+      }
     }
   }, [status_code, data, loading]);
 
@@ -178,7 +180,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
               </div>
             </div>
 
-            {loading && subFolder?.length === 0 ? (
+            {loading && subFolder?.subFolder?.length === 0 ? (
               <div class="d-flex justify-content-center center-div">
                 <div class="spinner-border" role="status">
                   <span class="visually-hidden">Loading...</span>
@@ -233,8 +235,9 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                 })}
               </div>
             ) : (
-              !loading &&
-              !subFolder.hasOwnProperty("subFolder") && (
+              !loading && (
+                // !subFolder.hasOwnProperty("subFolder") &&
+
                 <div className="center-div">
                   <h6 style={{ color: "red" }}>
                     Folder does not exist. Please create one

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Modal from "bootstrap/js/dist/modal";
 import { FiUpload } from "react-icons/fi";
+import { useLocation } from "react-router-dom";
 import { AiOutlineFolderAdd } from "react-icons/ai";
-import * as URL from "../../utils/ConstantUrl";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { is_selected } from "../../../redux/slices/BreadCrumbSlice";
@@ -10,6 +10,7 @@ import { fileProcess, modalType } from "../../../redux/slices/ModalSlice";
 import useApiHandle from "../../utils/useApiHandle";
 import { folder } from "../../../redux/slices/FolderSlice";
 import { downloadFile } from "../../../utils/downloadFile";
+import { toast } from "react-toastify";
 
 const AddFolder = ({ controller }) => {
   const { data, loading, apiCall, status_code } = useApiHandle();
@@ -20,6 +21,7 @@ const AddFolder = ({ controller }) => {
 
   const dispatch = useDispatch();
   const params = useParams();
+  const location = useLocation();
 
   useEffect(() => {
     let myModal = Modal.getOrCreateInstance(
@@ -39,7 +41,7 @@ const AddFolder = ({ controller }) => {
     } else {
       dispatch(folder({ take_action: "unselect_all", data: null }));
     }
-  }, [loading, status_code, modalInstance, dispatch]);
+  }, [loading, status_code, modalInstance, dispatch, data]);
 
   useEffect(() => {
     if (typeof modalInstance === "object") {
@@ -67,7 +69,11 @@ const AddFolder = ({ controller }) => {
       }
     }
 
-    if (params?.parent_folder?.length > 0) {
+    if (selectedFileIDs?.length === 0) {
+      toast.warning("please select atleast 1 location");
+    }
+
+    if (selectedFileIDs?.length > 0 && params?.parent_folder?.length > 0) {
       apiCall(
         "get",
         `api/${processType}/?ids=${selectedFileIDs}&pro_id=${params?.parent_folder}`,
@@ -160,7 +166,9 @@ const AddFolder = ({ controller }) => {
             onClick={() => dispatch(modalType("Create Folder"))}
           >
             <AiOutlineFolderAdd size="20" />
-            <h6 className="m-0 ms-1">Create Folder</h6>
+            <h6 className="m-0 ms-1">
+              {location.pathname === "/" ? "Create Case" : "Create Location"}
+            </h6>
           </a>
         )}
       </div>

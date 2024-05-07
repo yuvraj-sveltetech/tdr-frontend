@@ -16,7 +16,7 @@ const PageNotFound = () => {
         <br />
         <p>
           ...either way, you should probably <br />
-          <Link to="/dashboard">go back to the homepage</Link>
+          <Link to="/">go back to the homepage</Link>
         </p>
       </div>
     </div>

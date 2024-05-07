@@ -17,7 +17,7 @@ const Modal = ({ controller, setController }) => {
 
   useEffect(() => {
     if (status_code === 201) {
-      if (location?.pathname === "/dashboard") {
+      if (location?.pathname === "/") {
         getParentFolders();
       } else {
         getSubFolder();
@@ -26,7 +26,7 @@ const Modal = ({ controller, setController }) => {
     }
 
     if (status_code === 200 && data?.length > 0) {
-      if (location?.pathname === "/dashboard") {
+      if (location?.pathname === "/") {
         dispatch(folder({ take_action: "create_folder", data }));
       } else {
         // dispatch(folder({ take_action: "create_subfolder", data }));
