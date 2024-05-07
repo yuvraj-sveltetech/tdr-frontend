@@ -22,7 +22,7 @@ import Layout from "../home/layout/Layout";
 
 const AppRouter = () => {
   return (
-    <Router>
+    <Router basename="/">
       <ToastContainer />
       <Layout>
         <Routes>

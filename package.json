@@ -2,7 +2,7 @@
   "name": "tdr",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
+  "homepage": "/",
   "author": "sveltetech",
   "description": "tdr applicaiton",
   "dependencies": {
