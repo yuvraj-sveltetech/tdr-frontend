@@ -37,6 +37,7 @@ const AppRouter = () => {
             <Route path="/report" element={<Report />} />
             <Route path="/user-log" element={<UserLog />} />
             <Route path="/upload-sdr" element={<UploadSdr />} />
+            <Route path="/test/:a/:b" element={<h1>Test</h1>} />
           </Route>
           <Route path="/not-found" element={<PageNotFound />} />
           <Route path="*" element={<Navigate to="/not-found" replace />} />
