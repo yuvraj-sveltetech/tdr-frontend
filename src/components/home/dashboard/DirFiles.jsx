@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./CreateFolder.css";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import * as URL from "../../utils/ConstantUrl";
 import useApiHandle from "../../utils/useApiHandle";
@@ -15,16 +15,16 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   const folders = useSelector((state) => state.folder.created_folders);
 
   const dispatch = useDispatch();
-  const param = useParams();
+  // const param = useParams();
 
-  useEffect(() => {
-    !isFileExist() &&
-      apiCall(
-        "get",
-        `${URL.ALL_FILES}?project_id=${param?.parent_folder}&location_id=${param?.subfolder}`,
-        {}
-      );
-  }, []);
+  // useEffect(() => {
+  //   !isFileExist() &&
+  //     apiCall(
+  //       "get",
+  //       `${URL.ALL_FILES}?project_id=${param?.parent_folder}&location_id=${param?.subfolder}`,
+  //       {}
+  //     );
+  // }, []);
 
   useEffect(() => {
     if (status_code === 200 && data?.length > 0) {
@@ -87,10 +87,25 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
           <h6>FILES</h6>
         </div>
 
-        <div
-          className="container"
-          style={{ overflow: "auto", height: "60vh" }}
-        ></div>
+        <div className="container" style={{ overflow: "auto", height: "60vh" }}>
+          <div className="row">
+            {loading ? (
+              <div class="d-flex justify-content-center center-div">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            ) : (
+              renderFiles() || (
+                <div className="d-flex align-items-center justify-content-center">
+                  <h6 style={{ color: "red" }}>
+                    Files does not exist. Please create one.
+                  </h6>
+                </div>
+              )
+            )}
+          </div>
+        </div>
       </div>
 
       <Modal modalType={modalType} category={category} />
