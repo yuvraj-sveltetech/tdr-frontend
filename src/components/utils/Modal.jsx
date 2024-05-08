@@ -82,6 +82,12 @@ const Modal = ({ controller, setController }) => {
       setController(new AbortController());
       dispatch(fileProcess(false));
       dispatch(folder({ take_action: "unselect_all", data: null }));
+      dispatch(
+        folder({
+          take_action: "select_all_subfolder",
+          data: { checked: false, parent_folder: params?.parent_folder },
+        })
+      );
     }
   };
 

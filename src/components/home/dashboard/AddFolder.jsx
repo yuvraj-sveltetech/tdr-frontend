@@ -9,6 +9,7 @@ import { is_selected } from "../../../redux/slices/BreadCrumbSlice";
 import { fileProcess, modalType } from "../../../redux/slices/ModalSlice";
 import useApiHandle from "../../utils/useApiHandle";
 import { folder } from "../../../redux/slices/FolderSlice";
+import { toast } from "react-toastify";
 
 const AddFolder = ({ controller }) => {
   const { loading, apiCall, status_code } = useApiHandle();
@@ -77,6 +78,8 @@ const AddFolder = ({ controller }) => {
           files,
           controller?.signal
         );
+      } else {
+        toast.warning("please select atleast 1 location");
       }
     }
   };

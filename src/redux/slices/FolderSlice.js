@@ -92,6 +92,30 @@ export const folderSlice = createSlice({
             ),
           };
 
+        case "select_all_subfolder":
+          return {
+            ...state,
+            created_folders: prevState?.created_folders?.map((folder) =>
+              folder?.id === data?.parent_folder
+                ? {
+                    ...folder,
+                    select_all: data?.checked,
+                    subFolder:
+                      folder?.subFolder?.length > 0
+                        ? folder?.subFolder?.map((sub_folder) => ({
+                            ...sub_folder,
+                            select_all: data?.checked,
+                            file: sub_folder?.file?.map((fl) => ({
+                              ...fl,
+                              isChecked: data?.checked,
+                            })),
+                          }))
+                        : [],
+                  }
+                : { ...folder }
+            ),
+          };
+
         case "select_all_checkbox":
           return {
             ...state,

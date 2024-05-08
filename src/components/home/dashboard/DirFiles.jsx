@@ -11,7 +11,7 @@ import Modal from "../../utils/Modal";
 import FileUploadModal from "../../utils/FileUploadModal";
 
 const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
-  const { data, apiCall, status_code } = useApiHandle();
+  const { data, apiCall, status_code, loading } = useApiHandle();
   const folders = useSelector((state) => state.folder.created_folders);
 
   const dispatch = useDispatch();
@@ -87,14 +87,22 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
           <h6>FILES</h6>
         </div>
 
-        <div className="container">
-          <div className="row" style={{ overflow: "auto", height: "60vh" }}>
-            {renderFiles() || (
-              <div className="d-flex align-items-center justify-content-center">
-                <h6 style={{ color: "red" }}>
-                  Folder does not exist. Please create one.
-                </h6>
+        <div className="container" style={{ overflow: "auto", height: "60vh" }}>
+          <div className="row">
+            {loading ? (
+              <div className="d-flex justify-content-center center-div">
+                <div className="spinner-border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
               </div>
+            ) : (
+              renderFiles() || (
+                <div className="d-flex align-items-center justify-content-center">
+                  <h6 style={{ color: "red" }}>
+                    Files does not exist. Please create one.
+                  </h6>
+                </div>
+              )
             )}
           </div>
         </div>
