@@ -1,5 +1,6 @@
 import { MdOutlineDelete } from "react-icons/md";
 import React, { useState, useCallback, useEffect } from "react";
+import Modal from "bootstrap/js/dist/modal";
 import fileImg from "../../assets/images/file.png";
 import * as API_URL from "../utils/ConstantUrl";
 import useApiHandle from "../utils/useApiHandle";
@@ -10,7 +11,6 @@ import { folder } from "../../redux/slices/FolderSlice";
 const FileUploader = () => {
   const { data, loading, apiCall, status_code } = useApiHandle();
   const [files, setFiles] = useState([]);
-  // const [isDraggedOver, setIsDraggedOver] = useState(false);
   const param = useParams();
   const dispatch = useDispatch();
 
@@ -22,7 +22,21 @@ const FileUploader = () => {
           data: { api_data: data, params: param },
         })
       );
-      // dispatch(folder({ take_action: "create_subfolder", data: data?.data }));
+
+      let myModal = Modal.getOrCreateInstance(
+        document.getElementById("exampleModalToggle2"),
+        {
+          keyboard: false,
+        }
+      );
+
+      myModal.hide();
+
+      let modal = document?.querySelector(".modal-backdrop");
+      console.log(modal, "myModal");
+      if (modal) {
+        modal.parentNode.removeChild(modal);
+      }
 
       return;
     }
@@ -30,66 +44,17 @@ const FileUploader = () => {
     if (status_code === 201) {
       setFiles([]);
       getAllFiles();
-      // dispatch(folder({ take_action: "create_subfolder", data: data?.data }));
       return;
     }
   }, [status_code, data]);
 
   const getAllFiles = () => {
-    // apiCall(
-    //   "get",
-    //   `${API_URL.UPLOAD_FILES}?sub_folder_id=${param?.subfolder}`,
-    //   {}
-    // );
-
     apiCall(
       "get",
       `${API_URL.ALL_FILES}?project_id=${param?.parent_folder}&location_id=${param?.subfolder}`,
       {}
     );
   };
-
-  // const handleDrop = useCallback((event) => {
-  //   event.preventDefault();
-  //   setIsDraggedOver(false);
-
-  //   const newFiles = event.dataTransfer.files;
-  //   const updatedFiles = {};
-
-  //   for (const file of newFiles) {
-  //     const objectURL = URL.createObjectURL(file);
-  //     updatedFiles[objectURL] = { file, objectURL };
-  //   }
-
-  //   setFiles((prevFiles) => ({
-  //     ...prevFiles,
-  //     ...updatedFiles,
-  //   }));
-  // }, []);
-
-  // const handleDragOver = useCallback(
-  //   (event) => {
-  //     event.preventDefault();
-  //     if (!isDraggedOver) {
-  //       setIsDraggedOver(true);
-  //     }
-  //   },
-  //   [isDraggedOver]
-  // );
-
-  // const handleDragLeave = useCallback(() => {
-  //   setIsDraggedOver(false);
-  // }, []);
-
-  // const handleSubmit = useCallback(() => {
-  //   alert("Submit functionality needs to be implemented.");
-  //   // Implement submit functionality here
-  // }, []);
-
-  // const handleCancel = useCallback(() => {
-  //   Object.keys(files).forEach((fileURL) => URL.revokeObjectURL(fileURL));
-  //   setFiles({});
-  // }, [files]);
 
   const handleFileSelect = useCallback((event) => {
     const newFiles = event.target.files;
