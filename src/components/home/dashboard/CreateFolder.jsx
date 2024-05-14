@@ -14,8 +14,7 @@ const CreateFolder = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // folders?.created_folders?.length === 0 &&
-      apiCall("get", URL.FOLDER_API, {});
+    apiCall("get", URL.FOLDER_API, {});
   }, []);
 
   useEffect(() => {
@@ -41,7 +40,7 @@ const CreateFolder = () => {
         ) : (
           <div className="parent_folder">
             <div className="row list-unstyled">
-              {folders?.created_folders?.map((folder, index) => {
+              {folders?.created_folders?.map((folder) => {
                 return (
                   <div className="col-md-3" key={`CreatedFolder${folder?.id}`}>
                     <div

@@ -16,6 +16,7 @@ const FileUploader = () => {
 
   useEffect(() => {
     if (status_code === 200 && data?.data?.length > 0) {
+      dispatch(folder({ take_action: "unselect_all", data: null }));
       dispatch(
         folder({
           take_action: "add_files",
@@ -33,7 +34,6 @@ const FileUploader = () => {
       myModal.hide();
 
       let modal = document?.querySelector(".modal-backdrop");
-      console.log(modal, "myModal");
       if (modal) {
         modal.parentNode.removeChild(modal);
       }

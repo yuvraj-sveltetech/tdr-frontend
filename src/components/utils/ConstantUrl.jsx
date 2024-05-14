@@ -17,3 +17,4 @@ export const FOLDER_API = "tdr/createProjectFolder/";
 export const CREATE_SUB_FOLDER = "tdr/createSubFolder/";
 export const UPLOAD_FILES = "tdr/uploadTdrFile/";
 export const ANALYZE_FILES = "tdr/processTdr/";
+export const DELETE = "tdr/deleteData/";
