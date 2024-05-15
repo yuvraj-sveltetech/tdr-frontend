@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 function Layout({ children }) {
   const location = useLocation();
 
-  const pathname = ["/not-found", "/"];
+  const pathname = ["/not-found"];
 
   return (
     <div>
