@@ -2,10 +2,16 @@ import React from "react";
 import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { CreateUserModal } from "../../utils/index";
+import { useDispatch } from "react-redux";
+import { folder } from "../../../redux/slices/FolderSlice";
 
 const Header = () => {
+  const dispatch = useDispatch();
+
   const logout = () => {
     localStorage.setItem("auth_token", "");
+    dispatch(folder("remove_created_files"));
+    window.close()
   };
 
   return (

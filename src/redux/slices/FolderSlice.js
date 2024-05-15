@@ -214,6 +214,12 @@ export const folderSlice = createSlice({
             }),
           };
 
+        case "remove_created_files":
+          return {
+            ...state,
+            created_folders: [],
+          };
+
         default:
           return { ...state };
       }
