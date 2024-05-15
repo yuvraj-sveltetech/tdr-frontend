@@ -22,7 +22,7 @@ const Modal = ({ controller, setController }) => {
     }
 
     if (status_code === 200 && data?.data?.length > 0) {
-      if (location?.pathname === "/dashboard") {
+      if (location?.pathname === "/") {
         dispatch(folder({ take_action: "create_folder", data: data?.data }));
       } else {
         dispatch(folder({ take_action: "create_subfolder", data: data?.data }));

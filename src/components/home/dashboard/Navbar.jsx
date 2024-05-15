@@ -63,7 +63,7 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
               <HiHome
                 size={20}
                 style={{ cursor: "pointer" }}
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate("/")}
               />
               <span
                 className="ms-2"
