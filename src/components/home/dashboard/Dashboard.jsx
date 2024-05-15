@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { CreateFolder } from "../../utils/index";
+import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-import Modal from "../../utils/Modal";
-import FileUploadModal from "../../utils/FileUploadModal";
 import { Navbar } from "../../utils/index";
 
 const Dashboard = () => {
   const showCount = useSelector((state) => state.show_count.show);
   const [show, setShow] = useState(false);
+
+  useLayoutEffect(() => {
+    let auth = Cookies.get("ss_tkn");
+    if (!auth) {
+      window.close();
+    } else {
+      localStorage.setItem("auth_token", auth);
+    }
+  }, []);
 
   const toggleFileUploadModal = () => setShow(!show);
 
@@ -17,9 +25,6 @@ const Dashboard = () => {
         <Navbar toggleFileUploadModal={toggleFileUploadModal} />
         {showCount === 0 && <CreateFolder />}
       </div>
-
-      {/* <Modal controller={controller} setController={setController} /> */}
-      {/* <FileUploadModal /> */}
     </>
   );
 };
