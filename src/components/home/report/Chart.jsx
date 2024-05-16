@@ -6,9 +6,10 @@ import * as am4plugins_forceDirected from "@amcharts/amcharts4/plugins/forceDire
 import { create } from "@amcharts/amcharts4/core";
 import { ForceDirectedSeries } from "@amcharts/amcharts4/plugins/forceDirected";
 
-const Chart = ({ report_id, itemsLength, singleNoData }) => {
+const Chart = ({ itemsLength, singleNoData }) => {
   const { data, loading, apiCall } = useApiHandle();
   const [chartData, setChartData] = useState([]);
+  const reportID = sessionStorage.getItem("reportID");
 
   useEffect(() => {
     getChartData();
@@ -71,7 +72,7 @@ const Chart = ({ report_id, itemsLength, singleNoData }) => {
   }, [chartData]);
 
   const getChartData = async () => {
-    apiCall("get", VOIP_GRAPH + `${report_id}/`, "");
+    apiCall("get", VOIP_GRAPH + `${reportID}/`, "");
   };
 
   return (

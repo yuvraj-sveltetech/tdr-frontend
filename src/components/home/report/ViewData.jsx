@@ -21,6 +21,7 @@ const ViewData = ({
   const divRef = useRef(null);
   const isAllDataFetched = useRef(null);
   const dispatch = useDispatch();
+  const reportID = sessionStorage.getItem("reportID");
 
   useEffect(() => {
     if (data?.data?.result?.[0]?.length > 0) {
@@ -36,7 +37,7 @@ const ViewData = ({
     const fetchData = async () => {
       apiCall(
         "get",
-        URL.GET_EXCEL_PAGINATION + `${report_id}/?page_no=${pageNo}`,
+        URL.GET_EXCEL_PAGINATION + `${reportID}/?page_no=${pageNo}`,
         ""
       );
     };
@@ -68,7 +69,9 @@ const ViewData = ({
       if (isAllDataFetched.current !== 0) setPageNo((prevPage) => prevPage + 1);
     }
   };
+
   const switchTo = () => {
+    sessionStorage.setItem("reportID", null);
     dispatch(switchComponent("/report"));
   };
 

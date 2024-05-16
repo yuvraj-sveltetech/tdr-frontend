@@ -17,6 +17,7 @@ const Report = () => {
   const toComp = useSelector((state) => state.show_count.switch_component);
   const download_link = useRef(null);
   const dispatch = useDispatch();
+
   const report_id = useRef(null);
   const created_file_name = useRef(null);
 
@@ -54,6 +55,7 @@ const Report = () => {
   };
 
   const switchTo = (item, component) => {
+    sessionStorage.setItem("reportID", item?.id);
     report_id.current = item?.id;
     created_file_name.current = item?.folder_name;
     download_link.current = item.csv_file;
