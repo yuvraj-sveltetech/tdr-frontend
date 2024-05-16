@@ -35,13 +35,14 @@ const AddFolder = ({ controller }) => {
 
   useEffect(() => {
     dispatch(fileProcess(loading));
+
     if (status_code === 200) {
       downloadFile(data?.data);
       dispatch(folder({ take_action: "unselect_all", data: null }));
-    } else {
+    } else if (status_code === 400) {
       dispatch(folder({ take_action: "unselect_all", data: null }));
     }
-  }, [loading, status_code, modalInstance, dispatch, data]);
+  }, [loading, status_code, modalInstance, data]);
 
   useEffect(() => {
     if (typeof modalInstance === "object") {
