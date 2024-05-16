@@ -117,10 +117,10 @@ const AddFolder = ({ controller }) => {
                 Calls more than 30 Minutes
               </option>
               <option value="get-common-imei-numbers">
-                Numbers Using different Mobile
+                Common IMEI Analysis
               </option>
               <option value="get-common-number-on-imeis">
-                Mobile using different Numbers
+                Multiple IMEI Analysis
               </option>
             </select>
 

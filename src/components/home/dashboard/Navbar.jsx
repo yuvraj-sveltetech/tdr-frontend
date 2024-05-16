@@ -11,9 +11,6 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
 
   const navigate = useNavigate();
   const params = useParams();
-  //   useEffect(() => {
-  // setCon
-  //   },[])
 
   const parentFolderName = () => {
     let name = "";
