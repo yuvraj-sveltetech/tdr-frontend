@@ -16,6 +16,18 @@ const CheckBox = ({ file }) => {
         data: { ...file, ...params, checked },
       })
     );
+
+    if (!checked) {
+      dispatch(
+        folder({
+          take_action: "select_only_subfolder",
+          data: {
+            checked,
+            ...params,
+          },
+        })
+      );
+    }
   };
 
   return (
@@ -34,7 +46,7 @@ const CheckBox = ({ file }) => {
       </p>
       <input
         type="checkbox"
-        disabled
+        // disabled
         id={file?.file_name}
         value={file?.file_name}
         onChange={(e) => selectedFileHandle(e, file)}

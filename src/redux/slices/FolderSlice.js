@@ -119,6 +119,56 @@ export const folderSlice = createSlice({
             ),
           };
 
+        case "select_only_subfolder":
+          return {
+            ...state,
+            created_folders: prevState?.created_folders?.map((folder) =>
+              folder?.id === +data?.parent_folder
+                ? {
+                    ...folder,
+                    subFolder:
+                      folder?.subFolder?.length > 0
+                        ? folder?.subFolder?.map((sub_folder) =>
+                            sub_folder?.id === +data?.subfolder
+                              ? {
+                                  ...sub_folder,
+                                  select_all: data?.checked,
+                                }
+                              : { ...sub_folder }
+                          )
+                        : [],
+                  }
+                : { ...folder }
+            ),
+          };
+
+        case "select_all_files":
+          return {
+            ...state,
+            created_folders: prevState?.created_folders?.map((folder) =>
+              folder?.id === +data?.parent_folder
+                ? {
+                    ...folder,
+                    subFolder:
+                      folder?.subFolder?.length > 0
+                        ? folder?.subFolder?.map((sub_folder) =>
+                            sub_folder?.id === +data?.subfolder
+                              ? {
+                                  ...sub_folder,
+                                  select_all: data?.checked,
+                                  file: sub_folder?.file?.map((fl) => ({
+                                    ...fl,
+                                    isChecked: data?.checked,
+                                  })),
+                                }
+                              : { ...sub_folder }
+                          )
+                        : [],
+                  }
+                : { ...folder }
+            ),
+          };
+
         case "select_all_subfolder":
           return {
             ...state,

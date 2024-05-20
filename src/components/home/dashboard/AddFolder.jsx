@@ -61,12 +61,15 @@ const AddFolder = ({ controller }) => {
     let selectedFileIDs = [];
 
     for (const folder of Object.values(folders)) {
-      const checkedFileIds =
-        folder?.subFolder
-          ?.filter((file) => file?.select_all)
-          ?.map((file) => file.id) || [];
-      if (checkedFileIds.length > 0) {
-        selectedFileIDs.push(checkedFileIds);
+      for (const subFolder of Object.values(folder?.subFolder || {})) {
+        const checkedFileIds =
+          subFolder.file
+            ?.filter((file) => file?.isChecked)
+            .map((file) => file.id) || [];
+
+        if (checkedFileIds.length > 0) {
+          selectedFileIDs = [...selectedFileIDs, ...checkedFileIds];
+        }
       }
     }
 

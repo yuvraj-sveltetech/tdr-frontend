@@ -33,7 +33,6 @@ const FileUploader = () => {
       myModal.hide();
 
       let modal = document?.querySelector(".modal-backdrop");
-      console.log(modal, "myModal");
       if (modal) {
         modal.parentNode.removeChild(modal);
       }

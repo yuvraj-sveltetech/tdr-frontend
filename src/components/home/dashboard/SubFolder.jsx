@@ -4,7 +4,6 @@ import { MdFolder, MdOutlineFileDownload } from "react-icons/md";
 import { folder } from "../../../redux/slices/FolderSlice";
 import { useParams, useNavigate } from "react-router-dom";
 import { Navbar } from "../../utils/index";
-import Modal from "../../utils/Modal";
 import * as URL from "../../utils/ConstantUrl";
 import useApiHandle from "../../utils/useApiHandle";
 import { downloadFile } from "../../../utils/downloadFile";
@@ -118,17 +117,46 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     );
   };
 
+
   function isSelectAllChecked() {
     if (folders?.length > 0) {
-      for (const folder of Object.values(folders)) {
-        if (+param?.parent_folder === folder?.id) {
-          return folder?.select_all;
+      for (let folder in folders) {
+        if (
+          folders.hasOwnProperty(folder) &&
+          folders[folder]?.id === +param?.parent_folder
+        ) {
+          if (
+            !folders[folder].hasOwnProperty("subFolder") ||
+            folders[folder]?.subFolder?.length === 0
+          ) {
+            return false;
+          }
+
+          for (let sub in folders[folder]?.subFolder) {
+            if (folders[folder]?.subFolder.hasOwnProperty(sub)) {
+              if (!folders[folder]?.subFolder?.[sub]?.select_all) {
+                return false;
+              }
+            }
+          }
         }
       }
-    } else {
-      return false;
+
+      return true;
     }
   }
+
+  // function isSelectAllChecked() {
+  //   if (folders?.length > 0) {
+  //     for (const folder of Object.values(folders)) {
+  //       if (+param?.parent_folder === folder?.id) {
+  //         return folder?.select_all;
+  //       }
+  //     }
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   const exportCSV = (e, id) => {
     e.stopPropagation();
@@ -180,7 +208,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
               </div>
             </div>
 
-            {loading && subFolder?.subFolder?.length === 0 ? (
+            {loading && typeof subFolder?.subFolder === "undefined" ? (
               <div className="d-flex justify-content-center center-div">
                 <div className="spinner-border" role="status">
                   <span className="visually-hidden">Loading...</span>
