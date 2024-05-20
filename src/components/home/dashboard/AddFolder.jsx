@@ -62,14 +62,19 @@ const AddFolder = ({ controller }) => {
 
     for (const folder of Object.values(folders)) {
       for (const subFolder of Object.values(folder?.subFolder || {})) {
-        const checkedFileIds =
-          subFolder.file
-            ?.filter((file) => file?.isChecked)
-            .map((file) => file.id) || [];
 
-        if (checkedFileIds.length > 0) {
-          selectedFileIDs = [...selectedFileIDs, ...checkedFileIds];
+        if (subFolder?.select_all) {
+          selectedFileIDs.push(subFolder.id);
         }
+
+        // const checkedFileIds =
+        //   subFolder.file
+        //     ?.filter((file) => file?.isChecked)
+        //     .map((file) => file.id) || [];
+
+        // if (checkedFileIds.length > 0) {
+        //   selectedFileIDs = [...selectedFileIDs, ...checkedFileIds];
+        // }
       }
     }
 
