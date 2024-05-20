@@ -46,7 +46,7 @@ const CheckBox = ({ file }) => {
       </p>
       <input
         type="checkbox"
-        // disabled
+        disabled
         id={file?.file_name}
         value={file?.file_name}
         onChange={(e) => selectedFileHandle(e, file)}
