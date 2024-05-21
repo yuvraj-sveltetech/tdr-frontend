@@ -8,6 +8,7 @@ import * as URL from "../../utils/ConstantUrl";
 import useApiHandle from "../../utils/useApiHandle";
 import { downloadFile } from "../../../utils/downloadFile";
 import { toast } from "react-toastify";
+import { RxCross2 } from "react-icons/rx";
 
 const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   const { data, loading, apiCall, status_code } = useApiHandle();
@@ -29,17 +30,17 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
       return;
     }
 
-    !isSubfolderExist() &&
-      apiCall(
-        "get",
-        `${URL.CREATE_SUB_FOLDER}?project_id=${param?.parent_folder}`,
-        {}
-      );
+    !isSubfolderExist() && getData();
   }, []);
 
   useEffect(() => {
     if (status_code === 200) {
-      if (data?.length > 0) {
+      if (data?.message === "Deleted successfully") {
+        getData();
+        return;
+      }
+
+      if (Array.isArray(data)) {
         dispatch(
           folder({
             take_action: "create_subfolder",
@@ -61,6 +62,14 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
       ...folders?.filter((folder) => folder?.id === +param?.parent_folder)
     );
   }, [folders, param?.parent_folder]);
+
+  const getData = async () => {
+    apiCall(
+      "get",
+      `${URL.CREATE_SUB_FOLDER}?project_id=${param?.parent_folder}`,
+      {}
+    );
+  };
 
   const selectAllFiles = (e, folderD) => {
     const { checked } = e.target;
@@ -117,7 +126,6 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     );
   };
 
-
   function isSelectAllChecked() {
     if (folders?.length > 0) {
       for (let folder in folders) {
@@ -168,6 +176,11 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     );
   };
 
+  const deleteFile = (e, id) => {
+    e.stopPropagation();
+    apiCall("delete", `${URL.CREATE_SUB_FOLDER}?location_id=${id}`, {});
+  };
+
   return (
     <>
       <div className="main">
@@ -208,7 +221,9 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
               </div>
             </div>
 
-            {loading && typeof subFolder?.subFolder === "undefined" ? (
+            {loading &&
+            (typeof subFolder?.subFolder === "undefined" ||
+              subFolder?.subFolder.length > 0) ? (
               <div className="d-flex justify-content-center center-div">
                 <div className="spinner-border" role="status">
                   <span className="visually-hidden">Loading...</span>
@@ -223,7 +238,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                       key={`SubFolder${folder?.id}`}
                     >
                       <div
-                        className="folder d-flex justify-content-start align-items-center subfolder-box position-relative"
+                        className="position-relative file folder d-flex justify-content-start align-items-center subfolder-box position-relative"
                         onClick={(e) =>
                           navigate(`/${subFolder?.id}/${folder?.id}`)
                         }
@@ -238,6 +253,14 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                             onClick={(e) => exportCSV(e, folder?.id)}
                           />
                         </span>
+
+                        <div
+                          className="dot"
+                          style={{ left: "-9px", top: "-7px" }}
+                          onClick={(e) => deleteFile(e, folder.id)}
+                        >
+                          <RxCross2 size={13} />
+                        </div>
 
                         <input
                           type="checkbox"

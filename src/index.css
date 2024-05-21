@@ -279,6 +279,26 @@ nav ul li a {
   color: #333;
   font-size: 1.1rem;
 }
+
+.dot {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background-color: #bedbff;
+  position: absolute;
+  left: 3px;
+  top: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.file:hover .dot {
+  opacity: 1;
+}
+
 .navbar-right {
   width: 42%;
   justify-content: end;

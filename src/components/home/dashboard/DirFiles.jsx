@@ -58,7 +58,10 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
           (subFolder) =>
             subFolder?.id === +param?.subfolder &&
             subFolder?.file?.map((fl) => (
-              <div className="col-md-3" key={`all_files${fl.id}`}>
+              <div
+                className="col-md-3 position-relative file"
+                key={`all_files${fl.id}`}
+              >
                 <CheckBox file={fl} index={index} />
               </div>
             ))
@@ -173,7 +176,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
         </div>
 
         <div className="container" style={{ overflow: "auto", height: "60vh" }}>
-          <div className="row">
+          <div className="row py-2">
             {loading ? (
               <div className="d-flex justify-content-center center-div">
                 <div className="spinner-border" role="status">

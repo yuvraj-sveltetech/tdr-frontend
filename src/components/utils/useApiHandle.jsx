@@ -97,7 +97,7 @@ const useApiHandle = () => {
         toast.success(res?.data?.message);
       })
       .catch((err) => {
-        toast.error(err?.response?.data?.error);
+        toast.error(err?.response?.data?.message);
         setLoading(false);
         setApiData({});
       });
