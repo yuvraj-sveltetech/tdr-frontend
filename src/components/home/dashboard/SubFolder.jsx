@@ -8,7 +8,7 @@ import Modal from "../../utils/Modal";
 import * as URL from "../../utils/ConstantUrl";
 import useApiHandle from "../../utils/useApiHandle";
 import { RxCross2 } from "react-icons/rx";
-import DeleteModal from "../../utils/DeleteModal";
+import CrudModal from "../../utils/CrudModal";
 
 const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   const { data, loading, apiCall, status_code } = useApiHandle();
@@ -173,7 +173,6 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     }
   };
 
-
   return (
     <>
       <div className="main">
@@ -306,11 +305,12 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
         </div>
       </div>
       <Modal modalType={modalType} category={category} />
-      <DeleteModal
+      <CrudModal
         ids={fileIds}
         setFileIds={setFileIds}
         txt="all folders"
         type="sub_folder"
+        operation="delete"
       />
     </>
   );

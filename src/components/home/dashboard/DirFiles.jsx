@@ -10,7 +10,7 @@ import CheckBox from "./CheckBox";
 import Modal from "../../utils/Modal";
 import FileUploadModal from "../../utils/FileUploadModal";
 import { MdDeleteOutline } from "react-icons/md";
-import DeleteModal from "../../utils/DeleteModal";
+import CrudModal from "../../utils/CrudModal";
 
 const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   const { data, apiCall, status_code, loading } = useApiHandle();
@@ -157,7 +157,6 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
     }
   };
 
-
   return (
     <div className="main">
       <Navbar
@@ -230,7 +229,13 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
 
       <Modal modalType={modalType} category={category} />
       <FileUploadModal />
-      <DeleteModal ids={fileIds} setFileIds={setFileIds} txt="all files" type="file_id" />
+      <CrudModal
+        ids={fileIds}
+        setFileIds={setFileIds}
+        txt="all files"
+        type="file_id"
+        operation="delete"
+      />
     </div>
   );
 };

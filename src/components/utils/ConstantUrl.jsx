@@ -18,3 +18,4 @@ export const CREATE_SUB_FOLDER = "tdr/createSubFolder/";
 export const UPLOAD_FILES = "tdr/uploadTdrFile/";
 export const ANALYZE_FILES = "tdr/processTdr/";
 export const DELETE = "tdr/deleteData/";
+export const EDIT = "tdr/editFolder/";

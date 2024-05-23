@@ -1,26 +1,33 @@
-import { MdOutlineDelete } from "react-icons/md";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "bootstrap/js/dist/modal";
-import fileImg from "../../assets/images/file.png";
-import * as URL from "../utils/ConstantUrl";
-import useApiHandle from "../utils/useApiHandle";
+import * as URL from "./ConstantUrl";
+import useApiHandle from "./useApiHandle";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { folder } from "../../redux/slices/FolderSlice";
 
-const DeleteModal = ({ ids, type, txt, setFileIds }) => {
+const CrudModal = ({ ids, type, txt, setFileIds, operation }) => {
   const { data, apiCall, status_code, loading } = useApiHandle();
   const [modalInstance, setModalInstance] = useState(null);
+  const [text, setText] = useState("");
 
   const param = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (status_code === 200 && data?.data?.length > 0) {
-      dispatch(folder({ take_action: "create_subfolder", data: data?.data }));
+      if (operation === "delete") {
+        dispatch(folder({ take_action: "create_subfolder", data: data?.data }));
+      } else {
+        dispatch(folder({ take_action: "create_folder", data: data?.data }));
+      }
     }
 
-    if (data?.message === "Deleted successfully") {
+    if (
+      data?.message === "Deleted successfully" ||
+      data?.message === "Updated successfully"
+    ) {
+      setText("");
       setFileIds([]);
       dispatch(
         folder({
@@ -36,6 +43,7 @@ const DeleteModal = ({ ids, type, txt, setFileIds }) => {
       if (modal) {
         modal.parentNode.removeChild(modal);
       }
+
       getData();
     }
   }, [status_code, data]);
@@ -50,12 +58,41 @@ const DeleteModal = ({ ids, type, txt, setFileIds }) => {
     setModalInstance(myModal);
   }, []);
 
-  const deleteApi = async () => {
-    apiCall("delete", `${URL.DELETE}?type=${type}&file_id=${ids}`, {});
+  const callApi = async () => {
+    if (operation === "delete") {
+      apiCall("delete", `${URL.DELETE}?type=${type}&file_id=${ids}`, {});
+    } else {
+      apiCall("patch", `${URL.EDIT}?folder_id=${ids}`, { folder_name: text });
+    }
   };
 
   const getData = async () => {
-    apiCall("get", `${URL.FOLDER_API}?project_id=${param?.parent_folder}`, {});
+    if (operation === "delete") {
+      apiCall(
+        "get",
+        `${URL.FOLDER_API}?project_id=${param?.parent_folder}`,
+        {}
+      );
+    } else {
+      apiCall("get", URL.FOLDER_API, {});
+    }
+  };
+
+  const renderBody = () => {
+    if (operation === "delete") {
+      return `Are you sure want to delete ${txt}?`;
+    } else {
+      return (
+        <input
+          type="text"
+          name="name"
+          className="w-100"
+          placeholder="Folder Name"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+      );
+    }
   };
 
   return (
@@ -71,7 +108,7 @@ const DeleteModal = ({ ids, type, txt, setFileIds }) => {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="deleteModalLabel">
-              Delete Files
+              {operation === "delete" ? "Delete Files" : "Rename Folder"}
             </h5>
             <button
               type="button"
@@ -80,18 +117,16 @@ const DeleteModal = ({ ids, type, txt, setFileIds }) => {
               aria-label="Close"
             ></button>
           </div>
-          <div className="modal-body">
-            {`Are you sure want to delete ${txt}?`}
-          </div>
+          <div className="modal-body">{renderBody()}</div>
 
           <div className="modal-footer">
             <footer className="d-flex justify-content-end">
               <button
                 id="submit"
                 className="btn btn-danger rounded-sm me-2"
-                onClick={deleteApi}
+                onClick={callApi}
               >
-                Yes
+                {operation === "delete" ? "Yes" : "Edit"}
               </button>
               <button
                 id="submit"
@@ -108,4 +143,4 @@ const DeleteModal = ({ ids, type, txt, setFileIds }) => {
   );
 };
 
-export default DeleteModal;
+export default CrudModal;
