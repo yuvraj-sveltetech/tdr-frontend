@@ -157,6 +157,20 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
     }
   };
 
+  const fileCount = () => {
+    const folder = folders?.filter(
+      (folder) => folder?.id === param?.parent_folder
+    )?.[0]?.subFolder;
+
+    return folder.reduce((acc, subfolder) => {
+      if (subfolder?.id === param?.subfolder) {
+        return subfolder?.file?.length;
+      } else {
+        return 0;
+      }
+    }, 0);
+  };
+
   return (
     <div className="main">
       <Navbar
@@ -166,7 +180,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
 
       <div className="all_files">
         <div className="d-flex align-items-center justify-content-between">
-          <h6>FILES</h6>
+          <h6>FILES {`(${fileCount()})`}</h6>
 
           <div className="d-flex align-items-center">
             {fileIds?.length > 1 && (
