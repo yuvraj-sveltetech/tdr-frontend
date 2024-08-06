@@ -18,6 +18,7 @@ const Dashboard = () => {
     let auth = Cookies.get("ss_tkn");
     if (!auth) {
       window.close();
+      localStorage.removeItem("folder");
     } else {
       localStorage.setItem("auth_token", auth);
     }
