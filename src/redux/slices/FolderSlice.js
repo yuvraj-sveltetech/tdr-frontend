@@ -230,6 +230,9 @@ export const folderSlice = createSlice({
             }),
           };
 
+        case "CLEAR_FOLDER":
+          return { ...state, created_folders: data };
+
         default:
           return { ...state };
       }
