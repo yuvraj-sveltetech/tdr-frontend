@@ -116,7 +116,7 @@ const AddFolder = ({ controller }) => {
                 All International Numbers
               </option>
               <option value="get-other-state-numbers">
-                Other State Numbers
+                Other State Numbers (Currently not Available)
               </option>
               <option value="get-call-type-counts">Call Type Counts</option>
               <option value="search-numbers">
