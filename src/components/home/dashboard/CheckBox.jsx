@@ -13,15 +13,16 @@ const CheckBox = ({ file }) => {
   const params = useParams();
 
   useEffect(() => {
-    if (status_code === 200 && data?.length > 0) {
+    if (status_code === 200 && data?.length !== undefined) {
       dispatch(
         folder({
           take_action: "add_files",
           data: { api_data: data, params },
         })
       );
+      return;
     }
-
+  
     if (data?.message === "Deleted successfully") {
       getData();
     }
