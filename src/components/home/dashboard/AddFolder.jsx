@@ -36,7 +36,7 @@ const AddFolder = ({ controller }) => {
   useEffect(() => {
     dispatch(fileProcess(loading));
 
-    if (status_code === 200) {
+    if (status_code === 200 && is_processed) {
       downloadFile(data?.data);
       dispatch(folder({ take_action: "unselect_all", data: null }));
     } else if (status_code === 400) {
