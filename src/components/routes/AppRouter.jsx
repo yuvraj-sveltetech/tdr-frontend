@@ -19,6 +19,7 @@ import {
 } from "../utils/index";
 import PrivateRoute from "../utils/PrivateRoute";
 import Layout from "../home/layout/Layout";
+import Search from "../home/search/Search";
 
 const AppRouter = () => {
   return (
@@ -35,6 +36,7 @@ const AppRouter = () => {
             <Route path="/:parent_folder" element={<SubFolder />} />
             <Route path="/:parent_folder/:subfolder" element={<DirFiles />} />
             <Route path="/report" element={<Report />} />
+            <Route path="/search" element={<Search />} />
             <Route path="/user-log" element={<UserLog />} />
             <Route path="/upload-sdr" element={<UploadSdr />} />
           </Route>

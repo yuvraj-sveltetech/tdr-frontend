@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import tower from "../../../assets/images/tower-icon.png";
 import { NavLink } from "react-router-dom";
-import { MdOutlineSpaceDashboard } from "react-icons/md";
+import { MdOutlineSpaceDashboard, MdSearch } from "react-icons/md";
 import { TbReportAnalytics } from "react-icons/tb";
 import { FiActivity } from "react-icons/fi";
 // import { HiOutlineUpload } from "react-icons/hi";
@@ -18,6 +18,11 @@ const Sidebar = () => {
       name: "Report",
       icons: <TbReportAnalytics id="navicons" />,
       to: "/report",
+    },
+    {
+      name: "Search",
+      icons: <MdSearch id="navicons" />,
+      to: "/search",
     },
     // {
     //   name: "Upload SDR",

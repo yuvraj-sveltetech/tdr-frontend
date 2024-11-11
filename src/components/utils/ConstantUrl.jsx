@@ -22,4 +22,4 @@ export const CREATE_SUB_FOLDER = "api/create-location/";
 export const ALL_FILES = "api/upload/";
 export const ANALYZE_FILES = "tdr/processTdr/";
 export const EXPORT_CSV = "api/export-csv/";
-
+export const SEARCH_NUMBER = "api/search-a-party/";
