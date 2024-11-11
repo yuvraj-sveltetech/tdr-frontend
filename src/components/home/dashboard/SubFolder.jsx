@@ -196,7 +196,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
           >
             <hr style={{ padding: "0", margin: "0", color: "#B6B6B6" }} />
             <div className="d-flex align-items-center justify-content-between">
-              <h6>FOLDER</h6>
+              <h6>lOCATIONS</h6>
               <div className="d-flex align-items-center">
                 <label
                   htmlFor="select_All"

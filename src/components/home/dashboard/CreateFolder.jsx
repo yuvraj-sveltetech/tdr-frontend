@@ -31,7 +31,7 @@ const CreateFolder = () => {
   return (
     <div className="create-folder">
       <div className="container-fluid">
-        <h6>FOLDER</h6>
+        <h6>CASES</h6>
         {folders?.created_folders?.length === 0 ? (
           <div className="center-div">
             <h6 style={{ color: "red" }}>
