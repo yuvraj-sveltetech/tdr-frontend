@@ -97,7 +97,7 @@ body {
 }
 .sidebar,
 .header {
-  background-color: #2d3c53;
+  background-color: rgb(15 23 42);
 }
 .sidebar h1 {
   text-align: center;
