@@ -17,7 +17,7 @@ const Login = () => {
   // let auth = localStorage.getItem("auth_token");
 
   // useEffect(() => {
-  //   auth && navigate("/dashboard");
+  //   auth && navigate("/");
   // }, [auth, navigate]);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const Login = () => {
       localStorage.setItem("refresh_token", data?.refresh_token);
       localStorage.setItem("user_email", data?.email);
       localStorage.setItem("superuser", data?.superuser);
-      navigate("/dashboard");
+      navigate("/");
     }
   }, [data, navigate]);
 

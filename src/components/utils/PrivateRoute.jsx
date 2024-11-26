@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 const PrivateRoute = () => {
   let auth = localStorage.getItem("auth_token");
   const dispatch = useDispatch();
-  // return auth ? <Outlet /> : <Navigate to="/dashboard" />;
+  // return auth ? <Outlet /> : <Navigate to="/" />;
   if (auth) {
     return <Outlet />;
   } else {
