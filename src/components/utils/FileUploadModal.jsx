@@ -30,7 +30,7 @@ const FileUploader = () => {
         }
       );
 
-      myModal.hide();
+      // myModal.hide();
 
       let modal = document?.querySelector(".modal-backdrop");
       if (modal) {
@@ -88,6 +88,8 @@ const FileUploader = () => {
 
     apiCall("post", `${API_URL.ALL_FILES}`, formData);
   };
+
+  console.log(loading, "loading");
 
   return (
     <div
