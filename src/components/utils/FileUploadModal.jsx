@@ -23,19 +23,19 @@ const FileUploader = () => {
         })
       );
 
-      let myModal = Modal.getOrCreateInstance(
-        document.getElementById("exampleModalToggle2"),
-        {
-          keyboard: false,
-        }
-      );
+      // let myModal = Modal.getOrCreateInstance(
+      //   document.getElementById("exampleModalToggle2"),
+      //   {
+      //     keyboard: false,
+      //   }
+      // );
 
       // myModal.hide();
 
-      let modal = document?.querySelector(".modal-backdrop");
-      if (modal) {
-        modal.parentNode.removeChild(modal);
-      }
+      // let modal = document?.querySelector(".modal-backdrop");
+      // if (modal) {
+      //   modal.parentNode.removeChild(modal);
+      // }
 
       return;
     }
