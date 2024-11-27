@@ -121,7 +121,7 @@ const Report = () => {
                       </li>
 
                       <div className="btns">
-                        <button
+                        {/* <button
                           className="btn btn-sm btn-light me-2"
                           data-toggle="tooltip"
                           data-placement="top"
@@ -129,7 +129,7 @@ const Report = () => {
                           onClick={() => switchTo(item, "/view-data")}
                         >
                           <FaEye />
-                        </button>
+                        </button> */}
                         <button
                           className="btn btn-sm btn-light"
                           data-toggle="tooltip"
