@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import tower from "../../../assets/images/tower-icon.png";
-import { NavLink } from "react-router-dom";
+import logo from "../../../assets/images/logo.svg";
+import { Link, NavLink } from "react-router-dom";
 import { MdOutlineSpaceDashboard, MdSearch } from "react-icons/md";
 import { TbReportAnalytics } from "react-icons/tb";
 import { FiActivity } from "react-icons/fi";
@@ -49,8 +50,11 @@ const Sidebar = () => {
   return (
     <div className="sidebar col-md-2 ">
       <div className="logo">
-        <h1>T.D.R</h1>
-        <img src={tower} alt="tower_icon" width="25" height="25" />
+        {/* <h1>T.D.R</h1>
+        <img src={tower} alt="tower_icon" width="25" height="25" /> */}
+        <Link to={process.env.REACT_APP_REDIRECT_URL}>
+          <img src={logo} alt="tower_icon" width="75" height="55" />
+        </Link>
       </div>
       <hr />
       <nav>
