@@ -49,7 +49,7 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
           className="btn btn-light"
           style={{ backgroundColor: "#e5e9f2", cursor: "text" }}
         >
-          C.D.R
+          TDR - CDR
         </button>
       </div>
 
