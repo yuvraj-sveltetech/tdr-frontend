@@ -11,9 +11,10 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
 
   const navigate = useNavigate();
   const params = useParams();
-//   useEffect(() => {
-// setCon
-//   },[])
+
+  //   useEffect(() => {
+  // setCon
+  //   },[])
 
   const parentFolderName = () => {
     let name = "";
@@ -52,7 +53,7 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
           className="btn btn-light"
           style={{ backgroundColor: "#e5e9f2", cursor: "text" }}
         >
-          I.P.D.R
+          TDR - IPDR
         </button>
       </div>
 
@@ -79,7 +80,7 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
         </div>
       </div>
 
-      <Modal controller={controller} setController={setController}  />
+      <Modal controller={controller} setController={setController} />
     </>
   );
 };

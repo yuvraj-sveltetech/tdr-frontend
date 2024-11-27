@@ -168,7 +168,7 @@ const FileUploader = () => {
             <div>
               <div className="py-3">
                 <span style={{ fontSize: "1.2rem", paddingBottom: "5rem" }}>
-                  To Upload
+                  To Upload - <span>{files?.length}</span>
                 </span>
                 <div className="pt-3">
                   <div
