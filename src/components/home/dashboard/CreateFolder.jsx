@@ -13,17 +13,16 @@ const CreateFolder = () => {
   const { data, apiCall, status_code } = useApiHandle();
   const folders = useSelector((state) => state.folder);
   const [fileIds, setFileIds] = useState([]);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     apiCall("get", URL.FOLDER_API, {});
   }, []);
-
   useEffect(() => {
     if (status_code === 200 && data?.data?.length > 0) {
-      dispatch(folder({ take_action: "create_folder", data: data?.data }));
+      let mData=data?.data?.map((items)=>({...items,id:String(items.id)}))
+      dispatch(folder({ take_action: "create_folder", data: mData }));
     }
   }, [status_code, data, dispatch]);
 

@@ -232,7 +232,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
               renderFiles() || (
                 <div className="d-flex align-items-center justify-content-center">
                   <h6 style={{ color: "red" }}>
-                    Files does not exist. Please create one.
+                    Files does not exist. Please Upload.
                   </h6>
                 </div>
               )

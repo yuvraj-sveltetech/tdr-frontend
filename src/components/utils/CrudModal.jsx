@@ -17,9 +17,11 @@ const CrudModal = ({ ids, type, txt, setFileIds, operation }) => {
   useEffect(() => {
     if (status_code === 200 && data?.data?.length > 0) {
       if (operation === "delete") {
-        dispatch(folder({ take_action: "create_subfolder", data: data?.data }));
+        let mData=data?.data?.map((items)=>({...items,id:String(items.id)}))
+        dispatch(folder({ take_action: "create_subfolder", data: mData }));
       } else {
-        dispatch(folder({ take_action: "create_folder", data: data?.data }));
+        let mData=data?.data?.map((items)=>({...items,id:String(items.id)}))
+        dispatch(folder({ take_action: "create_folder", data: mData }));
       }
     }
 

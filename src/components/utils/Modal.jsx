@@ -23,9 +23,11 @@ const Modal = ({ controller, setController }) => {
 
     if (status_code === 200 && data?.data?.length > 0) {
       if (location?.pathname === "/") {
-        dispatch(folder({ take_action: "create_folder", data: data?.data }));
+        let mData=data?.data?.map((items)=>({...items,id:String(items.id)}))
+        dispatch(folder({ take_action: "create_folder", data: mData }));
       } else {
-        dispatch(folder({ take_action: "create_subfolder", data: data?.data }));
+        let mData=data?.data?.map((items)=>({...items,id:String(items.id)}))
+        dispatch(folder({ take_action: "create_subfolder", data: mData}));
       }
     }
   }, [status_code, data, location?.pathname]);
@@ -72,7 +74,7 @@ const Modal = ({ controller, setController }) => {
         return;
       }
 
-      apiCall("post", URL.FOLDER_API, { folder_name: folderName });
+      apiCall("post", "info/projectCreated/", { name: folderName },"",true);
       setFolderName("");
       return;
     }

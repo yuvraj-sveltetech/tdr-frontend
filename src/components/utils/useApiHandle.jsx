@@ -13,11 +13,10 @@ const useApiHandle = () => {
   let accessToken = localStorage.getItem("auth_token");
   let refreshToken = localStorage.getItem("refresh_token");
 
-  const apiCall = async (method, url, payload, signal) => {
+  const apiCall = async (method, url, payload, signal,iscreate) => {
     setLoading(true);
-
     const axiosInstance = axios.create({
-      baseURL: baseUrl,
+      baseURL: iscreate?process.env.REACT_APP_API_KEY_CREATE_FOLDER:baseUrl,
       headers: {
         "Content-Type": "application/json",
         Authorization: accessToken,

@@ -35,10 +35,14 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
 
   useEffect(() => {
     if (status_code === 200 && data?.data?.length > 0) {
-      dispatch(folder({ take_action: "create_subfolder", data: data?.data }));
-    }
+      let mdata = data.data.map((items) => ({
+        ...items,
+        id: String(items.id),
+      }));
 
-    if (data?.message === "Deleted successfully") {
+      dispatch(folder({ take_action: "create_subfolder", data: mdata }));
+    }
+    if (data?.message == "Deleted successfully") {
       getData();
     }
   }, [status_code, data]);
@@ -47,7 +51,6 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     setSubfolder(
       folders?.filter((folder) => folder?.id === param?.parent_folder)?.[0]
     );
-
     getCheckedFiles();
   }, [folders, param?.parent_folder]);
 
