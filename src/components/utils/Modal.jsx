@@ -88,7 +88,7 @@ const Modal = ({ controller, setController }) => {
         return;
       }
 
-      apiCall("post", URL.FOLDER_API, { project_name: folderName });
+      apiCall("post", "info/projectCreated/", { name: folderName },"",true);
       setFolderName("");
       return;
     }
