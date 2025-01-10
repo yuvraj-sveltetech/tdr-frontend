@@ -7,7 +7,6 @@ const SearchTable = ({ data }) => {
 
   const extractFileName = (url) => {
     if (url?.length > 0) {
-      console.log(url);
       const arr = url?.split("/");
       return arr[arr.length - 1];
     }

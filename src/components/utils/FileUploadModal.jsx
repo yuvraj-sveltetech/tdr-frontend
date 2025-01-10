@@ -89,8 +89,6 @@ const FileUploader = () => {
     apiCall("post", `${API_URL.ALL_FILES}`, formData);
   };
 
-  console.log(loading, "loading");
-
   return (
     <div
       className="modal fade"

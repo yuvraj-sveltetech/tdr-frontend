@@ -9,11 +9,15 @@ import useApiHandle from "../../utils/useApiHandle";
 import { downloadFile } from "../../../utils/downloadFile";
 import { toast } from "react-toastify";
 import { RxCross2 } from "react-icons/rx";
+import { CiViewTable } from "react-icons/ci";
+import ViewFile from "./modal/ViewFile";
 
 const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   const { data, loading, apiCall, status_code } = useApiHandle();
   const folders = useSelector((state) => state.folder.created_folders);
   const [subFolder, setSubfolder] = useState([]);
+  const [locationID, setLocationID] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const toastId = useRef(null);
 
   const dispatch = useDispatch();
@@ -50,12 +54,11 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
         return;
       }
 
-      if (!Array.isArray(data)) {
-        toast.dismiss(toastId.current);
-        downloadFile(data?.data);
+      if (!Array.isArray(data) && data?.data) {
+        handleFileDownload(data?.data);
       }
     }
-  }, [status_code, data, loading]);
+  }, [status_code, data]);
 
   useEffect(() => {
     setSubfolder(
@@ -63,12 +66,25 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     );
   }, [folders, param?.parent_folder]);
 
+  useEffect(() => {
+    if (locationID) {
+      setIsModalOpen(!isModalOpen);
+    }
+  }, [locationID]);
+
   const getData = async () => {
     apiCall(
       "get",
       `${URL.CREATE_SUB_FOLDER}?project_id=${param?.parent_folder}`,
       {}
     );
+  };
+
+  const handleFileDownload = (fileData) => {
+    if (toastId.current) {
+      toast.dismiss(toastId.current);
+    }
+    downloadFile(fileData);
   };
 
   const selectAllFiles = (e, folderD) => {
@@ -154,24 +170,18 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     }
   }
 
-  // function isSelectAllChecked() {
-  //   if (folders?.length > 0) {
-  //     for (const folder of Object.values(folders)) {
-  //       if (+param?.parent_folder === folder?.id) {
-  //         return folder?.select_all;
-  //       }
-  //     }
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
   const exportCSV = (e, id) => {
     e.stopPropagation();
+
+    // Prevent duplicate toast notifications
+    if (toastId.current) {
+      toast.dismiss(toastId.current);
+    }
+
     toastId.current = toast.loading("Downloading File...");
     apiCall(
       "get",
-      `${URL.EXPORT_CSV}?location_id=${id}&project_id=${param?.parent_folder}`,
+      `${URL.EXPORT_CSV}?location_id=${id}&project_id=${param?.parent_folder}&download=true`,
       {}
     );
   };
@@ -179,6 +189,11 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   const deleteFile = (e, id) => {
     e.stopPropagation();
     apiCall("delete", `${URL.CREATE_SUB_FOLDER}?location_id=${id}`, {});
+  };
+
+  const handleClick = (e, id) => {
+    e.stopPropagation();
+    setLocationID(id);
   };
 
   return (
@@ -189,14 +204,13 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
           category={category}
         />
         <div className="sub_folder d-flex flex-column align-items-start">
-          {/* <h5>{files.sub_folders?.parent_folder}</h5> */}
           <div
             className="all-folders container"
             style={{ overflow: "auto", height: "60vh" }}
           >
             <hr style={{ padding: "0", margin: "0", color: "#B6B6B6" }} />
             <div className="d-flex align-items-center justify-content-between">
-              <h6>lOCATIONS</h6>
+              <h6>LOCATIONS</h6>
               <div className="d-flex align-items-center">
                 <label
                   htmlFor="select_All"
@@ -245,6 +259,14 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                       >
                         <span
                           className="align-self-end me-2 position-absolute cursot"
+                          style={{ bottom: "5px", right: "20px" }}
+                          onClick={(e) => handleClick(e, folder?.id)}
+                        >
+                          <CiViewTable />
+                        </span>
+
+                        <span
+                          className="align-self-end me-2 position-absolute cursot"
                           style={{ bottom: "5px", right: "-5px" }}
                         >
                           <MdOutlineFileDownload
@@ -287,8 +309,6 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
               </div>
             ) : (
               !loading && (
-                // !subFolder.hasOwnProperty("subFolder") &&
-
                 <div className="center-div">
                   <h6 style={{ color: "red" }}>
                     Folder does not exist. Please create one
@@ -300,7 +320,9 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
         </div>
       </div>
 
-      {/* <Modal modalType={modalType} category={category}  /> */}
+      {isModalOpen && (
+        <ViewFile locationID={locationID} setIsModalOpen={setIsModalOpen} />
+      )}
     </>
   );
 };

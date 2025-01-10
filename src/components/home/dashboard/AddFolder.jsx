@@ -155,7 +155,7 @@ const AddFolder = ({ controller }) => {
 
         {params?.parent_folder && params?.subfolder ? (
           <a
-            className={`btn btn-primary d-flex align-items-center justify-content-between   ${
+            className={`btn btn-primary d-flex align-items-center justify-content-between ${
               params?.parent_folder && params?.subfolder ? "ms-0" : "ms-2"
             }`}
             data-bs-toggle="modal"
