@@ -66,12 +66,6 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     );
   }, [folders, param?.parent_folder]);
 
-  useEffect(() => {
-    if (locationID) {
-      setIsModalOpen(!isModalOpen);
-    }
-  }, [locationID]);
-
   const getData = async () => {
     apiCall(
       "get",
@@ -194,6 +188,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   const handleClick = (e, id) => {
     e.stopPropagation();
     setLocationID(id);
+    setIsModalOpen(true);
   };
 
   return (
