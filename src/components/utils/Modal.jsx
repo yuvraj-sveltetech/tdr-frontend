@@ -34,7 +34,7 @@ const Modal = ({ controller, setController }) => {
         dispatch(
           folder({
             take_action: "create_subfolder",
-            data: { id: +params?.parent_folder, sub_folder: data },
+            data: { id: params?.parent_folder, sub_folder: data },
           })
         );
       }

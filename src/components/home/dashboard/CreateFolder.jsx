@@ -46,12 +46,12 @@ const CreateFolder = () => {
                   <div className="col-md-3" key={`CreatedFolder${folder?.id}`}>
                     <div
                       className="folder rr d-flex flex-column justify-content-center my-2"
-                      onClick={(e) => getSubfolder(folder?.id)}
+                      onClick={(e) => getSubfolder(folder?.folder_name)}
                     >
-                      <li onClick={(e) => getSubfolder(folder?.id)}>
+                      <li onClick={(e) => getSubfolder(folder?.folder_name)}>
                         <MdFolder size="70" className="folderIcon" />
                       </li>
-                      <p>{folder?.project_name}</p>
+                      <p>{folder?.folder_name}</p>
                     </div>
                   </div>
                 );

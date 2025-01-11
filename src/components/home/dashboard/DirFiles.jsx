@@ -42,7 +42,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   const isFileExist = () => {
     const isExist = folders?.some(
       (fld) =>
-        fld?.id === +param?.parent_folder &&
+        fld?.folder_name === param?.parent_folder &&
         fld?.subFolder?.some(
           (subfl) => subfl?.id === +param?.subfolder && subfl?.file?.length > 0
         )
@@ -53,7 +53,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   const renderFiles = () => {
     const result = folders?.map(
       (folder) =>
-        folder?.id === +param?.parent_folder &&
+        folder?.folder_name === param?.parent_folder &&
         folder?.subFolder?.map(
           (subFolder) =>
             subFolder?.id === +param?.subfolder &&
@@ -85,7 +85,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
       for (let folder in folders) {
         if (
           folders.hasOwnProperty(folder) &&
-          folders[folder]?.id === +param?.parent_folder
+          folders[folder]?.folder_name === param?.parent_folder
         ) {
           for (let sub in folders[folder]?.subFolder) {
             if (

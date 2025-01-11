@@ -30,7 +30,8 @@ export const folderSlice = createSlice({
           return {
             ...state,
             created_folders: prevState?.created_folders?.map((folder) =>
-              folder?.id === data?.id
+              // folder?.id === data?.id
+              folder?.folder_name == data?.id
                 ? {
                     ...folder,
                     subFolder: [...data?.sub_folder],
