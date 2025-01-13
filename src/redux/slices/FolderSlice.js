@@ -44,7 +44,7 @@ export const folderSlice = createSlice({
           return {
             ...state,
             created_folders: prevState?.created_folders?.map((folder) =>
-              folder?.id === +data?.params?.parent_folder
+              folder?.folder_name === data?.params?.parent_folder
                 ? {
                     ...folder,
                     subFolder:
@@ -67,7 +67,7 @@ export const folderSlice = createSlice({
           return {
             ...state,
             created_folders: prevState?.created_folders?.map((folder) =>
-              folder?.id === +data?.parent_folder
+              folder?.folder_name === data?.parent_folder
                 ? {
                     ...folder,
                     subFolder:
@@ -97,7 +97,7 @@ export const folderSlice = createSlice({
           return {
             ...state,
             created_folders: prevState?.created_folders?.map((folder) =>
-              folder?.id === +data?.parent_folder
+              folder?.folder_name === data?.parent_folder
                 ? {
                     ...folder,
                     subFolder:
@@ -124,7 +124,7 @@ export const folderSlice = createSlice({
           return {
             ...state,
             created_folders: prevState?.created_folders?.map((folder) =>
-              folder?.id === +data?.parent_folder
+              folder?.folder_name === data?.parent_folder
                 ? {
                     ...folder,
                     subFolder:
@@ -147,7 +147,7 @@ export const folderSlice = createSlice({
           return {
             ...state,
             created_folders: prevState?.created_folders?.map((folder) =>
-              folder?.id === +data?.parent_folder
+              folder?.folder_name === data?.parent_folder
                 ? {
                     ...folder,
                     subFolder:
@@ -174,7 +174,7 @@ export const folderSlice = createSlice({
           return {
             ...state,
             created_folders: prevState?.created_folders?.map((folder) =>
-              folder?.id === +data?.parent_folder
+              folder?.folder_name === data?.parent_folder
                 ? {
                     ...folder,
                     select_all: data?.checked,
@@ -198,7 +198,7 @@ export const folderSlice = createSlice({
           return {
             ...state,
             created_folders: prevState?.created_folders?.map((folder) =>
-              folder?.id === +data?.parent_folder
+              folder?.folder_name === data?.parent_folder
                 ? {
                     ...folder,
                     select_all: data?.checked,
