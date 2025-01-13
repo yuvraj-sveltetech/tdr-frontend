@@ -1,18 +1,25 @@
 export const downloadFile = async (download_link) => {
-  const url = process.env.REACT_APP_API_KEY + download_link;
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = url?.substring(url?.lastIndexOf("/") + 1);
-  a.style.display = "none";
+  try {
+    // Construct the download URL
+    const url = process.env.REACT_APP_API_KEY + download_link;
 
-  // Append the anchor to the body
-  document.body.appendChild(a);
+    // Validate the file's availability (optional)
+    const response = await fetch(url, { method: "HEAD" });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch file: ${response.statusText}`);
+    }
 
-  // Simulate a click on the anchor element
-  a.click();
+    // Create a hidden anchor element
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = url.substring(url.lastIndexOf("/") + 1); // Extract filename
+    a.style.display = "none";
 
-  // Clean up
-  document.body.removeChild(a);
-
-  // await window.to_electron.DOWNLOAD_FILE("DOWNLOAD_FILE", download_link);
+    // Append, click, and remove the anchor element
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (error) {
+    console.error("File download failed:", error);
+  }
 };
