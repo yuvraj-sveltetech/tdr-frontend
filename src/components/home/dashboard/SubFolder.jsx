@@ -26,16 +26,17 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
 
   useEffect(() => {
     const isFolderExist = folders?.some(
-      (folder) => folder?.id === +param?.parent_folder
+      (folder) => folder?.folder_name === param?.parent_folder
     );
 
-    if (!isFolderExist) {
-      navigate("/not-found");
-      return;
-    }
+    // if (!isFolderExist) {
+    //   navigate("/not-found");
+    //   return;
+    // }
 
     !isSubfolderExist() && getData();
   }, []);
+
 
   useEffect(() => {
     if (status_code === 200) {
@@ -48,7 +49,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
         dispatch(
           folder({
             take_action: "create_subfolder",
-            data: { id: +param?.parent_folder, sub_folder: data },
+            data: { id: param?.parent_folder, sub_folder: data },
           })
         );
         return;
@@ -57,12 +58,16 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
       if (!Array.isArray(data) && data?.data) {
         handleFileDownload(data?.data);
       }
+    } else {
+      toast.dismiss(toastId.current);
     }
   }, [status_code, data]);
 
   useEffect(() => {
     setSubfolder(
-      ...folders?.filter((folder) => folder?.id === +param?.parent_folder)
+      ...folders?.filter(
+        (folder) => folder?.folder_name === param?.parent_folder
+      )
     );
   }, [folders, param?.parent_folder]);
 
@@ -103,7 +108,8 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
 
   const isSubfolderExist = () => {
     const isExist = folders?.some(
-      (fld) => fld?.id === +param?.parent_folder && fld?.subFolder?.length > 0
+      (fld) =>
+        fld?.folder_name === param?.parent_folder && fld?.subFolder?.length > 0
     );
     return isExist;
   };
@@ -112,7 +118,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     let isChecked;
 
     for (let folder in folders) {
-      if (folders[folder]?.id === +param?.parent_folder) {
+      if (folders[folder]?.folder_name === param?.parent_folder) {
         for (let sub in folders[folder]?.subFolder) {
           if (folders[folder]?.subFolder?.[sub]?.id === +subfolder_id) {
             isChecked = folders[folder]?.subFolder?.[sub]?.select_all;
@@ -141,7 +147,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
       for (let folder in folders) {
         if (
           folders.hasOwnProperty(folder) &&
-          folders[folder]?.id === +param?.parent_folder
+          folders[folder]?.folder_name === param?.parent_folder
         ) {
           if (
             !folders[folder].hasOwnProperty("subFolder") ||
@@ -249,7 +255,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                       <div
                         className="position-relative file folder d-flex justify-content-start align-items-center subfolder-box position-relative"
                         onClick={(e) =>
-                          navigate(`/${subFolder?.id}/${folder?.id}`)
+                          navigate(`/${subFolder?.folder_name}/${folder?.id}`)
                         }
                       >
                         <span
@@ -289,7 +295,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                         />
                         <li
                           onClick={(e) =>
-                            navigate(`/${subFolder?.id}/${folder?.id}`)
+                            navigate(`/${subFolder?.folder_name}/${folder?.id}`)
                           }
                         >
                           <MdFolder size="32" className="folderIcon" />
