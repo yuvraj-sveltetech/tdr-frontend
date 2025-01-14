@@ -1,98 +1,138 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import useApiHandle from "../../../utils/useApiHandle";
-import * as URL from "../../../utils/ConstantUrl";
-import { useInView } from "react-intersection-observer";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { Box } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { v4 as uuidv4 } from "uuid";
+import { downloadFile } from "../../../../utils/downloadFile";
 
-const ViewFile = ({ locationID, setIsModalOpen }) => {
-  const { data, loading, apiCall, status_code } = useApiHandle();
-  const [fileData, setFileData] = useState([]);
-  const [page, setPage] = useState(1);
-  const [isFetching, setIsFetching] = useState(false); // Track ongoing requests
-  const [ref, inView] = useInView({
-    threshold: 0.5,
-  });
+const ViewFile = ({
+  ids = null,
+  locationID = null,
+  pro_id = null,
+  setIsModalOpen,
+  apiURL,
+}) => {
   const param = useParams();
+  const [rows, setRows] = useState([]);
+  const [columns, setColumns] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10,
+  });
+  const [filterModel, setFilterModel] = useState({});
+  const [totalRowCount, setTotalRowCount] = useState(0);
+  const [downloadURL, setDownloadURL] = useState("");
 
-  useEffect(() => {
-    if (inView && locationID && !isFetching) {
-      viewFile();
+  const requestLock = useRef(false); // Lock to manage API calls
+  const prevStatesRef = useRef({ paginationModel: {}, filterModel: {} });
+  const auth = Cookies.get("ss_tkn");
+
+  const memoizedFilterModel = useMemo(
+    () => filterModel,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(filterModel)]
+  );
+
+  const fetchData = async (page = 0, pageSize = 5, filterModel = {}) => {
+    if (requestLock.current) return; // Prevent if a request is already in progress
+    requestLock.current = true; // Set lock
+
+    setLoading(true);
+    try {
+      let params = {
+        page: page + 1,
+        page_size: pageSize,
+        filter: JSON.stringify(filterModel?.items || []),
+        // download: false,
+      };
+
+      // Only add these if it is not null or undefined
+      if (locationID) {
+        params.location_id = locationID;
+      }
+
+      if (ids?.length) {
+        const uniqueIds = [...new Set(ids)]; // Ensure unique IDs
+        params.ids = uniqueIds.join(",");
+      }
+
+      if (pro_id) {
+        params.pro_id = pro_id;
+      } else {
+        params.project_id = param?.parent_folder;
+      }
+
+      if (!auth) {
+        console.error("Authorization token not found in cookies");
+        return;
+      }
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_KEY}${apiURL}`,
+        {
+          headers: { Authorization: `Bearer ${auth}` },
+          params,
+        }
+      );
+
+      const {
+        results = [],
+        total_records,
+        current_page,
+        page_size,
+        file_path = "",
+      } = response.data;
+
+      setRows(results);
+      setTotalRowCount(total_records || 0);
+      setPaginationModel({ page: current_page - 1, pageSize: page_size });
+      setDownloadURL(file_path);
+
+      if (!columns.length && results.length) {
+        const dynamicColumns = Object.keys(results[0]).map((key) => ({
+          field: key,
+          headerName: key.charAt(0).toUpperCase() + key.slice(1),
+          width: 150,
+        }));
+        setColumns(dynamicColumns);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+      requestLock.current = false; // Release lock
     }
-  }, [inView, locationID]);
-
-  useEffect(() => {
-    if (status_code === 200) {
-      setFileData((prevData) => [...prevData, ...data?.results]); // Append new data
-      setPage((prev) => prev + 1); // Increment page number
-      setIsFetching(false); // Mark fetching as complete
-    }
-  }, [status_code, data]);
-
-  const viewFile = () => {
-    setIsFetching(true); // Prevent duplicate calls
-    apiCall(
-      "get",
-      `${URL.EXPORT_CSV}?location_id=${locationID}&project_id=${param?.parent_folder}&page=${page}&download=false`,
-      {}
-    );
   };
 
-  const reset = () => {
-    setIsModalOpen(false);
-    setFileData([]);
-    setPage(1);
-  };
+  useEffect(() => {
+    const { paginationModel: prevPagination, filterModel: prevFilter } =
+      prevStatesRef.current;
+    const paginationChanged =
+      prevPagination.page !== paginationModel.page ||
+      prevPagination.pageSize !== paginationModel.pageSize;
+    const filterChanged =
+      JSON.stringify(prevFilter) !== JSON.stringify(memoizedFilterModel);
 
-  const renderTableContent = () => {
-    const headers = Object.keys(fileData?.[0] ?? {});
+    if (paginationChanged || filterChanged) {
+      fetchData(
+        paginationModel.page,
+        paginationModel.pageSize,
+        memoizedFilterModel
+      );
+    }
 
-    return (
-      <div
-        className="table-responsive"
-        style={{ height: "60vh", overflowX: "auto" }}
-      >
-        {!loading && fileData?.length === 0 && (
-          <div className="text-center">No data available.</div>
-        )}
+    prevStatesRef.current = {
+      paginationModel,
+      filterModel: memoizedFilterModel,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paginationModel, memoizedFilterModel]);
 
-        <table className="table table-striped table-bordered">
-          <thead
-            style={{
-              position: "sticky",
-              top: 0,
-              backgroundColor: "#f5f5f5",
-            }}
-          >
-            <tr>
-              {headers.map((header) => (
-                <th key={header}>
-                  {header?.replace(/_/g, " ")?.toUpperCase()}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {fileData?.length > 0 &&
-              fileData?.map((row, index) => (
-                <tr key={index}>
-                  {headers.map((header) => (
-                    <td key={header}>{String(row[header])}</td>
-                  ))}
-                </tr>
-              ))}
-          </tbody>
-        </table>
-
-        {/* Loader at the bottom for pagination */}
-        <div ref={ref} style={{ textAlign: "center", padding: "10px" }}>
-          {loading && (
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          )}
-        </div>
-      </div>
-    );
+  const downloadExcel = () => {
+    downloadFile(downloadURL);
   };
 
   return (
@@ -111,12 +151,45 @@ const ViewFile = ({ locationID, setIsModalOpen }) => {
             <button
               type="button"
               className="btn-close"
-              onClick={reset}
+              onClick={() => setIsModalOpen(false)}
             ></button>
           </div>
-          <div className="modal-body">{renderTableContent()}</div>
+          <div className="modal-body">
+            <Box sx={{ height: 500, width: "100%" }}>
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                rowCount={totalRowCount}
+                loading={loading}
+                pagination
+                paginationMode="server"
+                paginationModel={paginationModel}
+                onPaginationModelChange={setPaginationModel}
+                filterMode="server"
+                onFilterModelChange={(model) => setFilterModel(model)}
+                components={{ Toolbar: GridToolbar }}
+                getRowId={(row) => {
+                  if (!row?.uniqueId) {
+                    row.uniqueId = uuidv4();
+                  }
+                  return row.uniqueId;
+                }}
+              />
+            </Box>
+          </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={reset}>
+            <button
+              className="btn btn-success"
+              disabled={downloadURL?.length === 0}
+              onClick={downloadExcel}
+            >
+              Download Excel
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setIsModalOpen(false)}
+            >
               Close
             </button>
           </div>

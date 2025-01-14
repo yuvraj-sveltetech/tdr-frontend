@@ -11,17 +11,21 @@ import useApiHandle from "../../utils/useApiHandle";
 import { folder } from "../../../redux/slices/FolderSlice";
 import { downloadFile } from "../../../utils/downloadFile";
 import { toast } from "react-toastify";
+import ViewFile from "./modal/ViewFile";
 
 const AddFolder = ({ controller }) => {
   const { data, loading, apiCall, status_code } = useApiHandle();
   const folders = useSelector((state) => state?.folder?.created_folders);
   const is_processed = useSelector((state) => state.modal.isFileProcessing);
   const processType = useSelector((state) => state.show_count.is_selected);
+  const [selectedFileIDs, setSelectedFileIDs] = useState([]);
   const [modalInstance, setModalInstance] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const dispatch = useDispatch();
   const params = useParams();
   const location = useLocation();
+  // let selectedFileIDs = [];
 
   useEffect(() => {
     let myModal = Modal.getOrCreateInstance(
@@ -37,7 +41,8 @@ const AddFolder = ({ controller }) => {
     dispatch(fileProcess(loading));
 
     if (status_code === 200 && is_processed) {
-      downloadFile(data?.data);
+      // downloadFile(data?.data);
+      // setIsModalOpen(true);
       dispatch(folder({ take_action: "unselect_all", data: null }));
     } else if (status_code === 400) {
       dispatch(folder({ take_action: "unselect_all", data: null }));
@@ -57,13 +62,29 @@ const AddFolder = ({ controller }) => {
     }
   }, [is_processed, modalInstance, dispatch]);
 
-  const getFilesData = async () => {
-    let selectedFileIDs = [];
+  useEffect(() => {
+    if (selectedFileIDs?.length === 0 && params?.parent_folder?.length > 0) {
+      toast.warning("please select atleast 1 location");
+    }
 
+    if (selectedFileIDs?.length > 0 && params?.parent_folder?.length > 0) {
+      // apiCall(
+      //   "get",
+      //   `api/${processType}/?ids=${selectedFileIDs}&pro_id=${params?.parent_folder}`,
+      //   {},
+      //   controller?.signal
+      // );
+      console.log('first')
+      setIsModalOpen(true);
+    }
+  }, [selectedFileIDs?.length, params]);
+
+  const getFilesData = async () => {
     for (const folder of Object.values(folders)) {
       for (const subFolder of Object.values(folder?.subFolder || {})) {
         if (subFolder?.select_all) {
-          selectedFileIDs.push(subFolder.id);
+          // selectedFileIDs.push(subFolder.id);
+          setSelectedFileIDs((prev) => [...prev, subFolder?.id]);
         }
 
         // const checkedFileIds =
@@ -77,24 +98,27 @@ const AddFolder = ({ controller }) => {
       }
     }
 
-    if (selectedFileIDs?.length === 0) {
-      toast.warning("please select atleast 1 location");
-    }
+    // setIsModalOpen(true);
 
-    if (selectedFileIDs?.length > 0 && params?.parent_folder?.length > 0) {
-      apiCall(
-        "get",
-        `api/${processType}/?ids=${selectedFileIDs}&pro_id=${params?.parent_folder}`,
-        {},
-        controller?.signal
-      );
-    }
+    // if (selectedFileIDs?.length === 0) {
+    //   toast.warning("please select atleast 1 location");
+    // }
+
+    // if (selectedFileIDs?.length > 0 && params?.parent_folder?.length > 0) {
+    //   apiCall(
+    //     "get",
+    //     `api/${processType}/?ids=${selectedFileIDs}&pro_id=${params?.parent_folder}`,
+    //     {},
+    //     controller?.signal
+    //   );
+    // }
   };
 
   const isSelected = (e) => {
     const { value } = e.target;
     dispatch(is_selected(value));
   };
+  console.log(selectedFileIDs, "idsXX");
 
   return (
     <>
@@ -180,6 +204,15 @@ const AddFolder = ({ controller }) => {
           </a>
         )}
       </div>
+
+      {isModalOpen && (
+        <ViewFile
+          ids={selectedFileIDs}
+          pro_id={params?.parent_folder}
+          apiURL={`api/${processType}/`}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
     </>
   );
 };

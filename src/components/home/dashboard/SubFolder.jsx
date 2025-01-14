@@ -322,7 +322,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
       </div>
 
       {isModalOpen && (
-        <ViewFile locationID={locationID} setIsModalOpen={setIsModalOpen} />
+        <ViewFile apiURL={URL.EXPORT_CSV} locationID={locationID} setIsModalOpen={setIsModalOpen} />
       )}
     </>
   );
