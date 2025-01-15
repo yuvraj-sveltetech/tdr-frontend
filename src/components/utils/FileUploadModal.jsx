@@ -1,6 +1,5 @@
 import { MdOutlineDelete } from "react-icons/md";
 import React, { useState, useCallback, useEffect } from "react";
-import Modal from "bootstrap/js/dist/modal";
 import fileImg from "../../assets/images/file.png";
 import * as API_URL from "../utils/ConstantUrl";
 import useApiHandle from "../utils/useApiHandle";
@@ -22,20 +21,6 @@ const FileUploader = () => {
           data: { api_data: data, params: param },
         })
       );
-
-      // let myModal = Modal.getOrCreateInstance(
-      //   document.getElementById("exampleModalToggle2"),
-      //   {
-      //     keyboard: false,
-      //   }
-      // );
-
-      // myModal.hide();
-
-      // let modal = document?.querySelector(".modal-backdrop");
-      // if (modal) {
-      //   modal.parentNode.removeChild(modal);
-      // }
 
       return;
     }
@@ -138,18 +123,17 @@ const FileUploader = () => {
                 height: "23vh",
                 border: "1px solid",
                 borderStyle: "dashed",
+                cursor: "pointer",
               }}
               htmlFor="file-upload"
             >
               <div className="d-flex flex-column align-items-center justify-content-center">
-                <span className="fw-normal">
-                  Drag and drop your files anywhere or
-                </span>
                 <label
-                  className="mt-3 border-0 px-2 py-1"
+                  className="border-0 px-2 py-1"
                   htmlFor="file-upload"
                   style={{
                     backgroundColor: "#E5E7EB80",
+                    cursor: "pointer",
                   }}
                 >
                   Upload a File
@@ -167,8 +151,8 @@ const FileUploader = () => {
 
             <div>
               <div className="py-3">
-                <span style={{ fontSize: "1.2rem", paddingBottom: "5rem" }}>
-                  To Upload - <span>{files?.length}</span>
+                <span style={{ fontSize: "1rem", paddingBottom: "5rem" }}>
+                  To Upload : <span className="fw-bold">{files?.length}</span>
                 </span>
                 <div className="pt-3">
                   <div

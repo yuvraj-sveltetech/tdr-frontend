@@ -13,6 +13,7 @@ const ViewFile = ({
   pro_id = null,
   setIsModalOpen,
   apiURL,
+  setSelectedFileIDs = null,
 }) => {
   const param = useParams();
   const [rows, setRows] = useState([]);
@@ -104,6 +105,7 @@ const ViewFile = ({
     } finally {
       setLoading(false);
       requestLock.current = false; // Release lock
+      setSelectedFileIDs && setSelectedFileIDs([]);
     }
   };
 

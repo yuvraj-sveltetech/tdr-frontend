@@ -22,7 +22,7 @@ const CheckBox = ({ file }) => {
       );
       return;
     }
-  
+
     if (data?.message === "Deleted successfully") {
       getData();
     }
@@ -81,14 +81,15 @@ const CheckBox = ({ file }) => {
         >
           {file?.file_name}
         </p>
-        <input
+
+        {/* <input
           type="checkbox"
           disabled
           id={file?.file_name}
           value={file?.file_name}
           onChange={(e) => selectedFileHandle(e, file)}
           checked={file?.isChecked}
-        />
+        /> */}
       </label>
     </>
   );

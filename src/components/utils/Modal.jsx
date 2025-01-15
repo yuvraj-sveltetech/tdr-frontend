@@ -5,6 +5,7 @@ import * as URL from "../utils/ConstantUrl";
 import { useLocation, useParams } from "react-router-dom";
 import useApiHandle from "./useApiHandle";
 import { fileProcess } from "../../redux/slices/ModalSlice";
+import { toast } from "react-toastify";
 
 const Modal = ({ controller, setController }) => {
   const modalType = useSelector((state) => state.modal?.modal_type);
@@ -28,9 +29,8 @@ const Modal = ({ controller, setController }) => {
     if (status_code === 200 && data?.length > 0) {
       if (location?.pathname === "/") {
         dispatch(folder({ take_action: "create_folder", data }));
+        toast.success("Case Created!");
       } else {
-        // dispatch(folder({ take_action: "create_subfolder", data }));
-
         dispatch(
           folder({
             take_action: "create_subfolder",
@@ -88,7 +88,7 @@ const Modal = ({ controller, setController }) => {
         return;
       }
 
-      apiCall("post", "info/projectCreated/", { name: folderName },"",true);
+      apiCall("post", "info/projectCreated/", { name: folderName }, "", true);
       setFolderName("");
       return;
     }

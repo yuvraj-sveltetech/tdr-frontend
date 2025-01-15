@@ -25,9 +25,9 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const isFolderExist = folders?.some(
-      (folder) => folder?.folder_name === param?.parent_folder
-    );
+    // const isFolderExist = folders?.some(
+    //   (folder) => folder?.folder_name === param?.parent_folder
+    // );
 
     // if (!isFolderExist) {
     //   navigate("/not-found");
@@ -36,7 +36,6 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
 
     !isSubfolderExist() && getData();
   }, []);
-
 
   useEffect(() => {
     if (status_code === 200) {
@@ -115,7 +114,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   };
 
   const isSubfolderChecked = (subfolder_id) => {
-    let isChecked;
+    let isChecked = false;
 
     for (let folder in folders) {
       if (folders[folder]?.folder_name === param?.parent_folder) {
@@ -284,10 +283,9 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                         >
                           <RxCross2 size={13} />
                         </div>
-
                         <input
                           type="checkbox"
-                          checked={isSubfolderChecked(folder?.id)}
+                          checked={isSubfolderChecked(folder?.id) ?? false}
                           onChange={(e) => selectAllFiles(e, folder)}
                           onClick={(e) => e.stopPropagation()}
                           className="align-self-end me-2 position-absolute end-0 cursot"
@@ -322,7 +320,11 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
       </div>
 
       {isModalOpen && (
-        <ViewFile apiURL={URL.EXPORT_CSV} locationID={locationID} setIsModalOpen={setIsModalOpen} />
+        <ViewFile
+          apiURL={URL.EXPORT_CSV}
+          locationID={locationID}
+          setIsModalOpen={setIsModalOpen}
+        />
       )}
     </>
   );

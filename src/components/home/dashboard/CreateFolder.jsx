@@ -14,7 +14,6 @@ const CreateFolder = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // folders?.created_folders?.length === 0 &&
     apiCall("get", URL.FOLDER_API, {});
   }, []);
 

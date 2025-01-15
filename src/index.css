@@ -509,3 +509,7 @@ nav ul li a {
 .css-11cfq65-MuiTablePagination-displayedRows {
   margin-top: revert !important;
 }
+
+#send_data .btn.btn-primary:disabled {
+  opacity: 0.5;
+}

@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import { AddFolder } from "./AddFolder";
 import { HiHome } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Modal from "../../utils/Modal";
+import { activeBtn } from "../../../redux/slices/BreadCrumbSlice";
 
 const Navbar = ({ toggleFileUploadModal, category }) => {
   const folders = useSelector((state) => state.folder.created_folders);
+  // const activeBtnState = useSelector(
+  //   (state) => state.folder?.show_count?.activeBtn
+  // );
   const [controller, setController] = useState(new AbortController());
 
   const navigate = useNavigate();
   const params = useParams();
+  const dispatch = useDispatch();
 
   const parentFolderName = () => {
     let name = "";
@@ -42,15 +47,31 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
     return name;
   };
 
+  const setActiveBtn = (value) => {
+    dispatch(activeBtn(value));
+  };
+
+  const btns = ["TDR - CDR"];
+
   return (
     <>
       <div className="choose">
-        <button
-          className="btn btn-light"
-          style={{ backgroundColor: "#e5e9f2", cursor: "text" }}
-        >
-          TDR - CDR
-        </button>
+        {btns?.map((btn) => (
+          <button
+            className="btn btn-light"
+            style={{
+              // backgroundColor:
+              //   activeBtnState === btn?.toLowerCase() ? "#e5e9f2" : "",
+              backgroundColor: "#e5e9f2",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              setActiveBtn(btn.toLowerCase());
+            }}
+          >
+            {btn}
+          </button>
+        ))}
       </div>
 
       <div className="container-fluid breadcrumb">
