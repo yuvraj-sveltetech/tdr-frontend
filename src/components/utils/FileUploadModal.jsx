@@ -81,6 +81,7 @@ const FileUploader = () => {
       aria-hidden="true"
       aria-labelledby="exampleModalToggleLabel2"
       tabIndex="-1"
+      data-bs-keyboard="false"
       data-bs-backdrop={loading ? "static" : true}
     >
       <div className="modal-dialog modal-dialog-centered modal-lg">

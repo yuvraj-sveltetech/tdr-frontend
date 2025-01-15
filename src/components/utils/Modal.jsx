@@ -133,6 +133,7 @@ const Modal = ({ controller, setController }) => {
       aria-hidden="true"
       aria-labelledby="exampleModalToggleLabel"
       tabIndex="-1"
+      data-bs-keyboard="false"
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">

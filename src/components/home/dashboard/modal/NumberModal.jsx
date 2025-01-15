@@ -8,6 +8,7 @@ const NumberModal = ({ data }) => {
       tabIndex="-1"
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
+      data-bs-keyboard="false"
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
