@@ -58,13 +58,14 @@ const AddFolder = ({ controller }) => {
       for (const subFolder of Object.values(folder?.subFolder || {})) {
         if (subFolder?.select_all) {
           selectedFiles = [...selectedFileIDs, subFolder?.id];
-          setSelectedFileIDs(selectedFiles);
+          // setSelectedFileIDs(selectedFiles);
+          setSelectedFileIDs((prev) => [...prev, subFolder?.id]);
         }
       }
     }
 
     if (selectedFiles.length === 0) {
-      toast.warning("Please Upload Atleast 1 File in Location Folder");
+      toast.warning("Please Upload or Select Files in Location Folder");
     }
   };
 

@@ -105,7 +105,7 @@ const ViewFile = ({
     } finally {
       setLoading(false);
       requestLock.current = false; // Release lock
-      setSelectedFileIDs && setSelectedFileIDs([]);
+      // setSelectedFileIDs && setSelectedFileIDs([]);  // commented due to ids not going in filter api
     }
   };
 
