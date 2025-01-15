@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { activeBtn } from "../../../redux/slices/BreadCrumbSlice";
 import ModalBox from "../../utils/ModalBox";
+import { OverlayTrigger } from "react-bootstrap";
+import Tooltip from "react-bootstrap/Tooltip";
 
 const Navbar = ({ toggleFileUploadModal, category }) => {
   const folders = useSelector((state) => state.folder.created_folders);
@@ -77,20 +79,38 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
       <div className="container-fluid breadcrumb">
         <div className="row ps-2 w-100">
           <div className="d-flex align-items-center justify-content-between pe-0">
-            <div className="d-flex align-items-center">
-              <HiHome
-                size={20}
-                style={{ cursor: "pointer" }}
-                onClick={() => navigate("/")}
-              />
-              <span
-                className="ms-2"
-                style={{ cursor: "pointer" }}
-                onClick={() => navigate(`/${params?.parent_folder}`)}
-              >
-                {parentFolderName()}
+            <div className="w-50 d-flex align-items-center">
+              <span>
+                <HiHome
+                  size={20}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => navigate("/")}
+                />
               </span>
-              <span className="ms-2">{subFolderName()}</span>
+
+              <OverlayTrigger
+                placement="top"
+                delay={{ show: 200, hide: 300 }}
+                overlay={<Tooltip>{parentFolderName()}</Tooltip>}
+              >
+                <span
+                  className="ms-2 mw-50 d-inline-block text-truncate"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => navigate(`/${params?.parent_folder}`)}
+                >
+                  {parentFolderName()}
+                </span>
+              </OverlayTrigger>
+
+              <OverlayTrigger
+                placement="top"
+                delay={{ show: 200, hide: 300 }}
+                overlay={<Tooltip>{subFolderName()}</Tooltip>}
+              >
+                <span className="mw-50 d-inline-block text-truncate">
+                  {subFolderName()}
+                </span>
+              </OverlayTrigger>
             </div>
             <AddFolder controller={controller} />
           </div>

@@ -6,6 +6,9 @@ import { useSelector, useDispatch } from "react-redux";
 import * as URL from "../../utils/ConstantUrl";
 import useApiHandle from "../../utils/useApiHandle";
 import { folder } from "../../../redux/slices/FolderSlice";
+import { OverlayTrigger } from "react-bootstrap";
+import Tooltip from "react-bootstrap/Tooltip";
+
 
 const CreateFolder = () => {
   const { data, apiCall, status_code } = useApiHandle();
@@ -50,7 +53,16 @@ const CreateFolder = () => {
                       <li onClick={(e) => getSubfolder(folder?.folder_name)}>
                         <MdFolder size="70" className="folderIcon" />
                       </li>
-                      <p>{folder?.folder_name}</p>
+
+                      <OverlayTrigger
+                        placement="top"
+                        delay={{ show: 200, hide: 300 }}
+                        overlay={<Tooltip> {folder?.folder_name}</Tooltip>}
+                      >
+                        <p className="w-75 d-inline-block text-truncate">
+                          {folder?.folder_name}
+                        </p>
+                      </OverlayTrigger>
                     </div>
                   </div>
                 );

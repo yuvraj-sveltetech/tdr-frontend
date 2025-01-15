@@ -149,7 +149,6 @@ const AddFolder = ({ controller }) => {
           pro_id={params?.parent_folder}
           apiURL={`api/${processType}/`}
           setIsModalOpen={setIsModalOpen}
-          setSelectedFileIDs={setSelectedFileIDs}
         />
       )}
     </>

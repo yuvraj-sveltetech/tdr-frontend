@@ -13,7 +13,6 @@ const ViewFile = ({
   pro_id = null,
   setIsModalOpen,
   apiURL,
-  setSelectedFileIDs = null,
 }) => {
   const param = useParams();
   const [rows, setRows] = useState([]);
@@ -115,8 +114,12 @@ const ViewFile = ({
     const paginationChanged =
       prevPagination.page !== paginationModel.page ||
       prevPagination.pageSize !== paginationModel.pageSize;
+
+    // const filterChanged =
+    //   JSON.stringify(prevFilter) !== JSON.stringify(memoizedFilterModel);
+
     const filterChanged =
-      JSON.stringify(prevFilter) !== JSON.stringify(memoizedFilterModel);
+      prevFilter?.items?.[0]?.value !== memoizedFilterModel?.items?.[0]?.value;
 
     if (paginationChanged || filterChanged) {
       fetchData(

@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 import { RxCross2 } from "react-icons/rx";
 import { CiViewTable } from "react-icons/ci";
 import ViewFile from "./modal/ViewFile";
+import { OverlayTrigger } from "react-bootstrap";
+import Tooltip from "react-bootstrap/Tooltip";
 
 const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   const { data, loading, apiCall, status_code } = useApiHandle();
@@ -298,9 +300,19 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                         >
                           <MdFolder size="32" className="folderIcon" />
                         </li>
-                        <p style={{ margin: "auto 0", padding: "0 0.4rem" }}>
-                          {folder?.location_name}
-                        </p>
+
+                        <OverlayTrigger
+                          placement="top"
+                          delay={{ show: 200, hide: 300 }}
+                          overlay={<Tooltip> {folder?.location_name}</Tooltip>}
+                        >
+                          <p
+                            className="d-inline-block text-truncate"
+                            style={{ margin: "auto 0", padding: "0 0.4rem" }}
+                          >
+                            {folder?.location_name}
+                          </p>
+                        </OverlayTrigger>
                       </div>
                     </div>
                   );
