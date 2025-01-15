@@ -12,7 +12,7 @@ const PrivateRoute = () => {
     return <Outlet />;
   } else {
     dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
-    // window.close();
+    window.close();
   }
   // return auth ? <Outlet /> : window.close() &&  localStorage.clear();
 };

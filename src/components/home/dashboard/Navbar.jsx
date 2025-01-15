@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { AddFolder } from "./AddFolder";
 import { HiHome } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Modal from "../../utils/Modal";
 import { activeBtn } from "../../../redux/slices/BreadCrumbSlice";
+import ModalBox from "../../utils/ModalBox";
 
 const Navbar = ({ toggleFileUploadModal, category }) => {
   const folders = useSelector((state) => state.folder.created_folders);
@@ -97,7 +97,7 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
         </div>
       </div>
 
-      <Modal controller={controller} setController={setController} />
+      <ModalBox controller={controller} setController={setController} />
     </>
   );
 };

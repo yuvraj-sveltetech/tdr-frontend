@@ -20,7 +20,7 @@ const Dashboard = () => {
     let auth = Cookies.get("ss_tkn");
     if (!auth) {
       dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
-      // window.close();
+      window.close();
     } else {
       localStorage.setItem("auth_token", auth);
     }
@@ -33,7 +33,7 @@ const Dashboard = () => {
         {showCount === 0 && <CreateFolder />}
       </div>
 
-      {/* <Modal controller={controller} setController={setController} /> */}
+      {/* <ModalBox controller={controller} setController={setController} /> */}
       {/* <FileUploadModal /> */}
     </>
   );

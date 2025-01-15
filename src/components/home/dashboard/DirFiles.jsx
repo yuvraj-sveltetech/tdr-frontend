@@ -8,8 +8,8 @@ import useApiHandle from "../../utils/useApiHandle";
 import { Navbar } from "../../utils/index";
 import { folder } from "../../../redux/slices/FolderSlice";
 import CheckBox from "./CheckBox";
-import Modal from "../../utils/Modal";
 import FileUploadModal from "../../utils/FileUploadModal";
+import ModalBox from "../../utils/ModalBox";
 
 const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   const { data, apiCall, status_code, loading } = useApiHandle();
@@ -200,7 +200,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
         </div>
       </div>
 
-      <Modal modalType={modalType} category={category} />
+      <ModalBox modalType={modalType} category={category} />
       <FileUploadModal />
     </div>
   );

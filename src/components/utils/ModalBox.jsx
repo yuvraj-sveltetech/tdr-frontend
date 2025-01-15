@@ -1,20 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { folder } from "../../redux/slices/FolderSlice";
-import * as URL from "../utils/ConstantUrl";
+import * as URL from "./ConstantUrl";
 import { useLocation, useParams } from "react-router-dom";
 import useApiHandle from "./useApiHandle";
 import { fileProcess } from "../../redux/slices/ModalSlice";
 import { toast } from "react-toastify";
+import { Modal } from "bootstrap";
 
-const Modal = ({ controller, setController }) => {
+const ModalBox = ({ controller, setController }) => {
   const modalType = useSelector((state) => state.modal?.modal_type);
   const { data, apiCall, status_code } = useApiHandle();
   const [buttonName, setButtonName] = useState("");
   const [folderName, setFolderName] = useState("");
+  const [modalInstance, setModalInstance] = useState(null);
+
   const dispatch = useDispatch();
   const params = useParams();
   const location = useLocation();
+
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const myModal = Modal.getOrCreateInstance(
+      document.getElementById("exampleModalToggle"),
+      {
+        keyboard: false,
+      }
+    );
+    setModalInstance(myModal);
+  }, []);
 
   useEffect(() => {
     if (status_code === 201) {
@@ -30,6 +45,7 @@ const Modal = ({ controller, setController }) => {
       if (location?.pathname === "/") {
         dispatch(folder({ take_action: "create_folder", data }));
         toast.success("Case Created!");
+        handleCloseModal();
       } else {
         dispatch(
           folder({
@@ -37,6 +53,7 @@ const Modal = ({ controller, setController }) => {
             data: { id: params?.parent_folder, sub_folder: data },
           })
         );
+        handleCloseModal();
       }
     }
   }, [status_code, data, location?.pathname]);
@@ -77,8 +94,24 @@ const Modal = ({ controller, setController }) => {
     setFolderName(e.target.value);
   };
 
+  const handleCloseModal = () => {
+    if (typeof modalInstance === "object") {
+      modalInstance?.hide();
+    }
+
+    const elements = document.querySelectorAll(".modal-backdrop"); // Select all elements with this class
+    elements.forEach((element) => {
+      element.remove(); // Remove each element from the DOM
+    });
+  };
+
   const clickHandler = async () => {
     if (modalType === "Create Folder") {
+      if (folderName?.length >= 50) {
+        toast.warn("Max 50 Character Allowed!");
+        return;
+      }
+
       if (params?.parent_folder?.length > 0) {
         apiCall("post", `${URL.CREATE_SUB_FOLDER}`, {
           location_name: folderName,
@@ -134,6 +167,7 @@ const Modal = ({ controller, setController }) => {
       aria-labelledby="exampleModalToggleLabel"
       tabIndex="-1"
       data-bs-keyboard="false"
+      ref={modalRef}
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
@@ -170,7 +204,7 @@ const Modal = ({ controller, setController }) => {
                   ? "btn-danger"
                   : "btn-primary"
               }`}
-              data-bs-dismiss="modal"
+              // data-bs-dismiss="modal"
               disabled={
                 modalType !== "Files is in process"
                   ? folderName
@@ -189,4 +223,4 @@ const Modal = ({ controller, setController }) => {
   );
 };
 
-export default Modal;
+export default ModalBox;
