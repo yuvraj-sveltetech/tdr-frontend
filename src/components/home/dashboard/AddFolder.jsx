@@ -6,18 +6,17 @@ import { AiOutlineFolderAdd } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { is_selected } from "../../../redux/slices/BreadCrumbSlice";
-import { fileProcess, modalType } from "../../../redux/slices/ModalSlice";
-import useApiHandle from "../../utils/useApiHandle";
-import { folder } from "../../../redux/slices/FolderSlice";
-import { downloadFile } from "../../../utils/downloadFile";
+import { modalType } from "../../../redux/slices/ModalSlice";
 import { toast } from "react-toastify";
+import ViewFile from "./modal/ViewFile";
 
 const AddFolder = ({ controller }) => {
-  const { data, loading, apiCall, status_code } = useApiHandle();
   const folders = useSelector((state) => state?.folder?.created_folders);
   const is_processed = useSelector((state) => state.modal.isFileProcessing);
   const processType = useSelector((state) => state.show_count.is_selected);
+  const [selectedFileIDs, setSelectedFileIDs] = useState([]);
   const [modalInstance, setModalInstance] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const dispatch = useDispatch();
   const params = useParams();
@@ -34,17 +33,6 @@ const AddFolder = ({ controller }) => {
   }, []);
 
   useEffect(() => {
-    dispatch(fileProcess(loading));
-
-    if (status_code === 200 && is_processed) {
-      downloadFile(data?.data);
-      dispatch(folder({ take_action: "unselect_all", data: null }));
-    } else if (status_code === 400) {
-      dispatch(folder({ take_action: "unselect_all", data: null }));
-    }
-  }, [loading, status_code, modalInstance, data]);
-
-  useEffect(() => {
     if (typeof modalInstance === "object") {
       if (is_processed) {
         modalInstance?.show();
@@ -57,36 +45,34 @@ const AddFolder = ({ controller }) => {
     }
   }, [is_processed, modalInstance, dispatch]);
 
+  useEffect(() => {
+    if (selectedFileIDs?.length > 0 && params?.parent_folder?.length > 0) {
+      setIsModalOpen(true);
+    }
+  }, [selectedFileIDs?.length, params]);
+
   const getFilesData = async () => {
-    let selectedFileIDs = [];
+    let selectedFiles = [];
 
     for (const folder of Object.values(folders)) {
       for (const subFolder of Object.values(folder?.subFolder || {})) {
         if (subFolder?.select_all) {
-          selectedFileIDs.push(subFolder.id);
+          selectedFiles = [...selectedFileIDs, subFolder?.id];
+          // setSelectedFileIDs(selectedFiles);
+          setSelectedFileIDs((prev) => [...prev, subFolder?.id]);
         }
-
-        // const checkedFileIds =
-        //   subFolder.file
-        //     ?.filter((file) => file?.isChecked)
-        //     .map((file) => file.id) || [];
-
-        // if (checkedFileIds.length > 0) {
-        //   selectedFileIDs = [...selectedFileIDs, ...checkedFileIds];
-        // }
       }
     }
 
-    if (selectedFileIDs?.length === 0) {
-      toast.warning("please select atleast 1 location");
-    }
-
-    if (selectedFileIDs?.length > 0 && params?.parent_folder?.length > 0) {
-      apiCall(
-        "get",
-        `api/${processType}/?ids=${selectedFileIDs}&pro_id=${params?.parent_folder}`,
-        {},
-        controller?.signal
+    if (selectedFiles.length === 0) {
+      toast.warning(
+        `Please Upload Files or Select ${
+          params?.parent_folder?.length > 0 && !params?.subfolder
+            ? "Location Folders"
+            : params?.subfolder?.length > 0
+            ? "All Files"
+            : ""
+        }`
       );
     }
   };
@@ -106,11 +92,6 @@ const AddFolder = ({ controller }) => {
               name="drop-down"
               onChange={(e) => isSelected(e)}
             >
-              {/* <option value="compare">Compare</option>
-          <option value="voip">V.O.I.P</option>
-          <option value="tor_vpn">Tor/VPN</option>
-          <option value="matching_numbers">Match Numbers</option> */}
-
               <option value="export-ist-numbers">
                 All International Numbers
               </option>
@@ -136,26 +117,15 @@ const AddFolder = ({ controller }) => {
               className="btn btn-primary mx-2"
               id="send_data"
               onClick={getFilesData}
-              disabled={is_processed.isDisable}
             >
-              {is_processed.loading ? (
-                <div className="d-flex align-items-center">
-                  <div
-                    className="spinner-border spinner-border-sm me-1"
-                    role="status"
-                  />
-                  Processing...
-                </div>
-              ) : (
-                <h6 className="m-0">Process</h6>
-              )}
+              <h6 className="m-0">Process</h6>
             </button>
           </>
         )}
 
         {params?.parent_folder && params?.subfolder ? (
           <a
-            className={`btn btn-primary d-flex align-items-center justify-content-between   ${
+            className={`btn btn-primary d-flex align-items-center justify-content-between ${
               params?.parent_folder && params?.subfolder ? "ms-0" : "ms-2"
             }`}
             data-bs-toggle="modal"
@@ -180,6 +150,15 @@ const AddFolder = ({ controller }) => {
           </a>
         )}
       </div>
+
+      {isModalOpen && (
+        <ViewFile
+          ids={selectedFileIDs}
+          pro_id={params?.parent_folder}
+          apiURL={`api/${processType}/`}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
     </>
   );
 };

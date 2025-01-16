@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./CreateFolder.css";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import * as URL from "../../utils/ConstantUrl";
-import { MdDeleteOutline } from "react-icons/md";
+// import { MdDeleteOutline } from "react-icons/md";
 import useApiHandle from "../../utils/useApiHandle";
 import { Navbar } from "../../utils/index";
 import { folder } from "../../../redux/slices/FolderSlice";
 import CheckBox from "./CheckBox";
-import Modal from "../../utils/Modal";
 import FileUploadModal from "../../utils/FileUploadModal";
+import ModalBox from "../../utils/ModalBox";
 
 const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   const { data, apiCall, status_code, loading } = useApiHandle();
   const folders = useSelector((state) => state.folder.created_folders);
-  const [fileIds, setFileIds] = useState([]);
 
   const dispatch = useDispatch();
   const param = useParams();
@@ -42,7 +41,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   const isFileExist = () => {
     const isExist = folders?.some(
       (fld) =>
-        fld?.id === +param?.parent_folder &&
+        fld?.folder_name === param?.parent_folder &&
         fld?.subFolder?.some(
           (subfl) => subfl?.id === +param?.subfolder && subfl?.file?.length > 0
         )
@@ -51,33 +50,54 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   };
 
   const renderFiles = () => {
-    const result = folders?.map(
-      (folder) =>
-        folder?.id === +param?.parent_folder &&
-        folder?.subFolder?.map(
-          (subFolder) =>
-            subFolder?.id === +param?.subfolder &&
-            subFolder?.file?.map((fl) => (
-              <div
-                className="col-md-3 position-relative file"
-                key={`all_files${fl.id}`}
-              >
-                <CheckBox file={fl} index={index} />
-              </div>
-            ))
+    if (loading) {
+      return (
+        <div className="d-flex justify-content-center center-div">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      );
+    }
+
+    if (!folders || folders.length === 0) {
+      return (
+        <div className="d-flex align-items-center justify-content-center">
+          <h6 style={{ color: "red" }}>No folders available.</h6>
+        </div>
+      ); // Fallback for empty folders
+    }
+
+    const filteredFolders = folders.filter(
+      (folder) => folder?.folder_name === param?.parent_folder
+    );
+
+    const result = filteredFolders.flatMap((folder) =>
+      (folder.subFolder || []) // Handle cases where subFolder might be undefined
+        .filter((subFolder) => subFolder.id === +param?.subfolder)
+        .flatMap((subFolder) =>
+          (subFolder.file || []).map((fl, index) => (
+            <div
+              className="col-md-3 position-relative file"
+              key={`all_files${fl.id}`}
+            >
+              <CheckBox file={fl} index={index} />
+            </div>
+          ))
         )
     );
 
-    const hasFiles = result.some(
-      (folder) =>
-        folder && folder.some((subFolder) => subFolder && subFolder.length > 0)
-    );
-
-    if (!hasFiles) {
-      return false;
+    if (result.length === 0) {
+      return (
+        <div className="d-flex align-items-center justify-content-center">
+          <h6 style={{ color: "red" }}>
+            Files does not exist. Please upload one.
+          </h6>
+        </div>
+      );
     }
 
-    return result;
+    return <div className="row">{result}</div>;
   };
 
   function isSelectAllChecked() {
@@ -85,7 +105,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
       for (let folder in folders) {
         if (
           folders.hasOwnProperty(folder) &&
-          folders[folder]?.id === +param?.parent_folder
+          folders[folder]?.folder_name === param?.parent_folder
         ) {
           for (let sub in folders[folder]?.subFolder) {
             if (
@@ -139,9 +159,8 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
       <div className="all_files">
         <div className="d-flex align-items-center justify-content-between">
           <h6>FILES</h6>
-
           <div className="d-flex align-items-center">
-            {fileIds?.length > 1 && (
+            {/* {fileIds?.length > 1 && (
               <MdDeleteOutline
                 data-bs-toggle="modal"
                 data-bs-target="#deleteModal"
@@ -150,7 +169,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
                 className="me-2"
                 style={{ cursor: "pointer" }}
               />
-            )}
+            )} */}
 
             <label
               htmlFor="select_All"
@@ -164,6 +183,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
             >
               Select All
             </label>
+
             <input
               type="checkbox"
               id="select_All"
@@ -176,27 +196,11 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
         </div>
 
         <div className="container" style={{ overflow: "auto", height: "60vh" }}>
-          <div className="row py-2">
-            {loading ? (
-              <div className="d-flex justify-content-center center-div">
-                <div className="spinner-border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-              </div>
-            ) : (
-              renderFiles() || (
-                <div className="d-flex align-items-center justify-content-center">
-                  <h6 style={{ color: "red" }}>
-                    Folder does not exist. Please create one.
-                  </h6>
-                </div>
-              )
-            )}
-          </div>
+          <div className="row py-2">{renderFiles()}</div>
         </div>
       </div>
 
-      <Modal modalType={modalType} category={category} />
+      <ModalBox modalType={modalType} category={category} />
       <FileUploadModal />
     </div>
   );

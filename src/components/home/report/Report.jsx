@@ -5,6 +5,8 @@ import useApiHandle from "../../utils/useApiHandle";
 import * as URL from "../../utils/ConstantUrl";
 import { switchComponent } from "../../../redux/slices/BreadCrumbSlice";
 import { BsFillFileEarmarkTextFill } from "react-icons/bs";
+import { OverlayTrigger } from "react-bootstrap";
+import Tooltip from "react-bootstrap/Tooltip";
 import { BiTime } from "react-icons/bi";
 import { FaEye } from "react-icons/fa";
 import { FcDownload } from "react-icons/fc";
@@ -76,13 +78,24 @@ const Report = () => {
                   return (
                     <div className="item me-1" key={item.id}>
                       <li className="w-75 d-flex justify-content-between">
-                        <div className="reportListName">
-                          <BsFillFileEarmarkTextFill
-                            className="file_icon mb-1 me-2"
-                            size={20}
-                          />
-                          {`${item.project_name} (${item.result_type})`}
-                        </div>
+                        <OverlayTrigger
+                          placement="top"
+                          delay={{ show: 200, hide: 300 }}
+                          overlay={
+                            <Tooltip>
+                              {item?.project_name} / {item?.location_name} (
+                              {item?.result_type})
+                            </Tooltip>
+                          }
+                        >
+                          <div className="reportListName d-inline-block text-truncate">
+                            <BsFillFileEarmarkTextFill
+                              className="file_icon mb-1 me-2"
+                              size={20}
+                            />
+                            {`${item?.project_name}/${item?.location_name} (${item?.result_type})`}
+                          </div>
+                        </OverlayTrigger>
 
                         <div className="date">
                           <span className="d-flex align-items-center">

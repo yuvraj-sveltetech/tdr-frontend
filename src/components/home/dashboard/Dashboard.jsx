@@ -33,7 +33,7 @@ const Dashboard = () => {
         {showCount === 0 && <CreateFolder />}
       </div>
 
-      {/* <Modal controller={controller} setController={setController} /> */}
+      {/* <ModalBox controller={controller} setController={setController} /> */}
       {/* <FileUploadModal /> */}
     </>
   );

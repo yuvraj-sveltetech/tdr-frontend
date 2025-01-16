@@ -15,11 +15,11 @@ const useApiHandle = () => {
   // let accessToken = Cookies.get("ss_tkn");
   let refreshToken = localStorage.getItem("refresh_token");
 
-  const apiCall = async (method, url, payload, signal,iscreate) => {
+  const apiCall = async (method, url, payload, signal, iscreate) => {
     setLoading(true);
 
     const axiosInstance = axios.create({
-      baseURL:iscreate?process.env.REACT_APP_API_KEY_CREATE_FOLDER: baseUrl,
+      baseURL: iscreate ? process.env.REACT_APP_API_KEY_CREATE_FOLDER : baseUrl,
       headers: {
         "Content-Type": "application/json",
         Authorization: accessToken,
@@ -97,7 +97,7 @@ const useApiHandle = () => {
         toast.success(res?.data?.message);
       })
       .catch((err) => {
-        toast.error(err?.response?.data?.message);
+        toast.error(err?.response?.data?.message || err?.response?.data?.Error);
         setLoading(false);
         setApiData({});
       });

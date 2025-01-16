@@ -5,6 +5,7 @@ export const breadCrumbSlice = createSlice({
   initialState: {
     show: 0,
     switch_component: "",
+    active_btn: "cdr",
     is_selected: "export-ist-numbers",
     isProccesed: { isDisable: false, loading: false },
   },
@@ -30,6 +31,13 @@ export const breadCrumbSlice = createSlice({
       };
     },
 
+    activeBtn: (state, action) => {
+      return {
+        ...state,
+        active_btn: action.payload,
+      };
+    },
+
     isProccesed: (state, action) => {
       const { isDisable, loading } = action.payload;
       return {
@@ -40,6 +48,11 @@ export const breadCrumbSlice = createSlice({
   },
 });
 
-export const { setShowCount, switchComponent, is_selected, isProccesed } =
-  breadCrumbSlice.actions;
+export const {
+  setShowCount,
+  switchComponent,
+  is_selected,
+  isProccesed,
+  activeBtn,
+} = breadCrumbSlice.actions;
 export default breadCrumbSlice.reducer;
