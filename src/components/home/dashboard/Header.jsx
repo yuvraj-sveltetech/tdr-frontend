@@ -7,15 +7,6 @@ import { Nav, NavDropdown } from "react-bootstrap";
 const Header = () => {
   const username = Cookies.get("user") || "User";
 
-  const handleLogout = () => {
-    // Remove all cookies
-    Object.keys(Cookies.get()).forEach((cookieName) => {
-      Cookies.remove(cookieName);
-    });
-
-    window.close();
-  };
-
   return (
     <>
       <div className="header">
@@ -23,18 +14,7 @@ const Header = () => {
           <div className="col-md-6"></div>
 
           <div className="col-md-6">
-            <Nav>
-              <NavDropdown
-                id="user-nav-dropdown"
-                title={username}
-                menuVariant="white"
-                className="nav-profile-dropdown"
-              >
-                <NavDropdown.Item onClick={handleLogout}>
-                  Logout
-                </NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
+            <span className="text-white me-2 fw-bold">{username}</span>
             <FaUser color="#fff" size="1.3rem" />
           </div>
         </div>
