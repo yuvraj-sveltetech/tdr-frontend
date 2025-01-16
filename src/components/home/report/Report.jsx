@@ -92,7 +92,7 @@ const Report = () => {
                               className="file_icon mb-1 me-2"
                               size={20}
                             />
-                            {`${item.project_name} (${item.result_type})`}
+                            {`${item?.project_name}/${item?.location_name} (${item?.result_type})`}
                           </div>
                         </OverlayTrigger>
 
