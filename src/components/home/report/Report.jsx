@@ -83,7 +83,7 @@ const Report = () => {
                           delay={{ show: 200, hide: 300 }}
                           overlay={
                             <Tooltip>
-                              {item?.project_name}/${item?.location_name} (
+                              {item?.project_name} / {item?.location_name} (
                               {item?.result_type})
                             </Tooltip>
                           }
