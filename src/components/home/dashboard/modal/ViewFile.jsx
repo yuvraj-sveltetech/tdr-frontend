@@ -6,6 +6,7 @@ import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { v4 as uuidv4 } from "uuid";
 import { downloadFile } from "../../../../utils/downloadFile";
+import { toast } from "react-toastify";
 
 const ViewFile = ({
   ids = null,
@@ -101,6 +102,7 @@ const ViewFile = ({
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+      toast.warn(error?.response?.data?.message);
     } finally {
       setLoading(false);
       requestLock.current = false; // Release lock
@@ -183,13 +185,16 @@ const ViewFile = ({
             </Box>
           </div>
           <div className="modal-footer">
-            <button
-              className="btn btn-success"
-              disabled={downloadURL?.length === 0}
-              onClick={downloadExcel}
-            >
-              Download Excel
-            </button>
+            {downloadURL?.length > 0 && (
+              <button
+                className="btn btn-success"
+                disabled={downloadURL?.length === 0}
+                onClick={downloadExcel}
+              >
+                Download Excel
+              </button>
+            )}
+
             <button
               type="button"
               className="btn btn-secondary"

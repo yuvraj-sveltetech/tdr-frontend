@@ -513,3 +513,13 @@ nav ul li a {
 #send_data .btn.btn-primary:disabled {
   opacity: 0.5;
 }
+
+.nav-profile-dropdown .dropdown-toggle {
+  color: white !important; /* Make the text white */
+}
+
+.nav-profile-dropdown .dropdown-toggle::after {
+  border-top-color: white !important; /* Make the arrow white */
+  border-right-color: transparent;
+  border-left-color: transparent;
+}

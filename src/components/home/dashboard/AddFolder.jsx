@@ -65,7 +65,7 @@ const AddFolder = ({ controller }) => {
     }
 
     if (selectedFiles.length === 0) {
-      toast.warning("Please Upload or Select Files in Location Folder");
+      toast.warning("Please Upload Files or Select Location Folder");
     }
   };
 
