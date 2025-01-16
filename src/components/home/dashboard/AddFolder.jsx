@@ -65,7 +65,15 @@ const AddFolder = ({ controller }) => {
     }
 
     if (selectedFiles.length === 0) {
-      toast.warning("Please Upload Files or Select Location Folder");
+      toast.warning(
+        `Please Upload Files or Select ${
+          params?.parent_folder?.length > 0 && !params?.subfolder
+            ? "Location Folders"
+            : params?.subfolder?.length > 0
+            ? "All Files"
+            : ""
+        }`
+      );
     }
   };
 
