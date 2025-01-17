@@ -9,11 +9,14 @@ import { is_selected } from "../../../redux/slices/BreadCrumbSlice";
 import { modalType } from "../../../redux/slices/ModalSlice";
 import { toast } from "react-toastify";
 import ViewFile from "./modal/ViewFile";
+import { options } from "../../utils/process-api-endpoint";
 
 const AddFolder = ({ controller }) => {
   const folders = useSelector((state) => state?.folder?.created_folders);
   const is_processed = useSelector((state) => state.modal.isFileProcessing);
   const processType = useSelector((state) => state.show_count.is_selected);
+  const selectedValue = useSelector((state) => state.show_count);
+
   const [selectedFileIDs, setSelectedFileIDs] = useState([]);
   const [modalInstance, setModalInstance] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,7 +61,6 @@ const AddFolder = ({ controller }) => {
       for (const subFolder of Object.values(folder?.subFolder || {})) {
         if (subFolder?.select_all) {
           selectedFiles = [...selectedFileIDs, subFolder?.id];
-          // setSelectedFileIDs(selectedFiles);
           setSelectedFileIDs((prev) => [...prev, subFolder?.id]);
         }
       }
@@ -90,27 +92,14 @@ const AddFolder = ({ controller }) => {
             <select
               className="form-select form-select-sm"
               name="drop-down"
+              value={is_selected?.is_selected}
               onChange={(e) => isSelected(e)}
             >
-              <option value="export-ist-numbers">
-                All International Numbers
-              </option>
-              <option value="get-other-state-numbers">
-                Other State Numbers (Currently not Available)
-              </option>
-              <option value="get-call-type-counts">Call Type Counts</option>
-              <option value="search-numbers">
-                Target Numbers Exists/Not Exists on Locations
-              </option>
-              <option value="get-call-duration-numbers">
-                Calls more than 30 Minutes
-              </option>
-              <option value="get-common-imei-numbers">
-                Common IMEI Analysis
-              </option>
-              <option value="get-common-number-on-imeis">
-                Multiple IMEI Analysis
-              </option>
+              {options?.[selectedValue?.active_btn]?.map((option) => (
+                <option value={option?.endpoint} key={option?.endpoint}>
+                  {option?.name}
+                </option>
+              ))}
             </select>
 
             <button

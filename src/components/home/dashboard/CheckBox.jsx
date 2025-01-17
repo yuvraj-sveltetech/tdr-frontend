@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { BsFillFileEarmarkTextFill } from "react-icons/bs";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { folder } from "../../../redux/slices/FolderSlice";
 import { RxCross2 } from "react-icons/rx";
@@ -9,6 +9,8 @@ import * as URL from "../../utils/ConstantUrl";
 
 const CheckBox = ({ file }) => {
   const { data, apiCall, status_code } = useApiHandle();
+  const activeBtnState = useSelector((state) => state.show_count?.active_btn);
+
   const dispatch = useDispatch();
   const params = useParams();
 
@@ -26,40 +28,45 @@ const CheckBox = ({ file }) => {
     if (data?.message === "Deleted successfully") {
       getData();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status_code, data]);
 
-  const selectedFileHandle = (e, file) => {
-    const { checked } = e.target;
-    dispatch(
-      folder({
-        take_action: "file_checkbox",
-        data: { ...file, ...params, checked },
-      })
-    );
+  // const selectedFileHandle = (e, file) => {
+  //   const { checked } = e.target;
+  //   dispatch(
+  //     folder({
+  //       take_action: "file_checkbox",
+  //       data: { ...file, ...params, checked },
+  //     })
+  //   );
 
-    if (!checked) {
-      dispatch(
-        folder({
-          take_action: "select_only_subfolder",
-          data: {
-            checked,
-            ...params,
-          },
-        })
-      );
-    }
-  };
+  //   if (!checked) {
+  //     dispatch(
+  //       folder({
+  //         take_action: "select_only_subfolder",
+  //         data: {
+  //           checked,
+  //           ...params,
+  //         },
+  //       })
+  //     );
+  //   }
+  // };
 
   const getData = async () => {
     apiCall(
       "get",
-      `${URL.ALL_FILES}?project_id=${params?.parent_folder}&location_id=${params?.subfolder}`,
+      `${URL.ALL_FILES?.[activeBtnState]}?project_id=${params?.parent_folder}&location_id=${params?.subfolder}&file_type=${activeBtnState}`,
       {}
     );
   };
 
   const deleteFile = (id) => {
-    apiCall("delete", `${URL.ALL_FILES}?file_id=${id}`, {});
+    apiCall(
+      "delete",
+      `${URL.ALL_FILES?.[activeBtnState]}?file_id=${id}&file_type=${activeBtnState}`,
+      {}
+    );
   };
 
   return (
