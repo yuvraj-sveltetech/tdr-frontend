@@ -3,12 +3,11 @@ import "./CreateFolder.css";
 import { MdFolder } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import * as URL from "../../utils/ConstantUrl";
 import useApiHandle from "../../utils/useApiHandle";
 import { folder } from "../../../redux/slices/FolderSlice";
 import { OverlayTrigger } from "react-bootstrap";
 import Tooltip from "react-bootstrap/Tooltip";
-
+import { GET_CASE_FOLDERS } from "../../utils/ConstantUrl";
 
 const CreateFolder = () => {
   const { data, apiCall, status_code } = useApiHandle();
@@ -17,7 +16,7 @@ const CreateFolder = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    apiCall("get", URL.FOLDER_API, {});
+    apiCall("get", GET_CASE_FOLDERS, {}, "", true);
   }, []);
 
   useEffect(() => {

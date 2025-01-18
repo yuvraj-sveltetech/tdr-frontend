@@ -79,7 +79,7 @@ const ModalBox = ({ controller, setController }) => {
       );
       return;
     }
-    apiCall("get", URL.FOLDER_API, {});
+    apiCall("get", URL.GET_CASE_FOLDERS, {}, "", true);
   };
 
   const getSubFolder = () => {

@@ -237,10 +237,13 @@ const FileUploader = () => {
               <button
                 id="submit"
                 className="btn btn-primary rounded-sm me-3"
-                disabled={files?.length === 0 && !loading}
+                disabled={
+                  (files?.length === 0 && !loading) ||
+                  (files?.length > 0 && loading)
+                }
                 onClick={sendFiles}
               >
-                Upload now
+                Upload
               </button>
             </footer>
           </div>

@@ -16,6 +16,7 @@ export const PROCESS_SDR_FILE = "airtel/processSdrData/";
 export const FILE_UPLOAD = "tdr/uploadTdrFile/";
 // export const FOLDER_API = "tdr/createProjectFolder/";
 export const FOLDER_API = "api/create-project/";
+export const GET_CASE_FOLDERS = "info/listProject/";
 // export const CREATE_SUB_FOLDER = "tdr/createSubFolder/";
 export const CREATE_SUB_FOLDER = "api/create-location/";
 // export const UPLOAD_FILES = "tdr/uploadTdrFile/";
