@@ -20,8 +20,8 @@ const CreateFolder = () => {
   }, []);
 
   useEffect(() => {
-    if (status_code === 200 && data?.length > 0) {
-      dispatch(folder({ take_action: "create_folder", data }));
+    if (status_code === 200 && data?.data?.length > 0) {
+      dispatch(folder({ take_action: "create_folder", data: data?.data }));
     }
   }, [status_code, data, dispatch]);
 

@@ -43,7 +43,7 @@ const ModalBox = ({ controller, setController }) => {
 
     if (status_code === 200 && data?.length > 0) {
       if (location?.pathname === "/") {
-        dispatch(folder({ take_action: "create_folder", data }));
+        dispatch(folder({ take_action: "create_folder", data: data?.data }));
         toast.success("Case Created!");
         handleCloseModal();
       } else {

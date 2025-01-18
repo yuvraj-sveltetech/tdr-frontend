@@ -24,7 +24,7 @@ export const CREATE_SUB_FOLDER = "api/create-location/";
 export const ALL_FILES = {
   cdr: "api/upload/",
   gprs: "api/upload-gprs/",
-  ipdr: "api/upload/",
+  ipdr: "api/upload-ipdr/",
 };
 export const ANALYZE_FILES = "tdr/processTdr/";
 export const EXPORT_CSV = "api/export-csv/";
