@@ -223,6 +223,25 @@ nav ul li a {
   text-align: left;
 }
 
+.create-folder h6 {
+  border: none;
+}
+
+.case-header {
+  border-top: 1px solid #e5e9f2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 2px 0;
+}
+
+.case-header input {
+  padding: 5px 10px;
+  border-radius: 7px;
+  border: 1px solid rgb(205, 205, 205);
+  outline-color: rgb(15, 23, 42);
+}
+
 .all-folders h6 {
   border: none;
 }

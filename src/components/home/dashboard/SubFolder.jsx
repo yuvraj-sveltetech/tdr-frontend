@@ -17,6 +17,8 @@ import Tooltip from "react-bootstrap/Tooltip";
 const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   const { data, loading, apiCall, status_code } = useApiHandle();
   const folders = useSelector((state) => state.folder.created_folders);
+  const activeBtnState = useSelector((state) => state.show_count?.active_btn);
+
   const [subFolder, setSubfolder] = useState([]);
   const [locationID, setLocationID] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -182,7 +184,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     toastId.current = toast.loading("Downloading File...");
     apiCall(
       "get",
-      `${URL.EXPORT_CSV}?location_id=${id}&project_id=${param?.parent_folder}&download=true`,
+      `${URL.EXPORT_CSV?.[activeBtnState]}?location_id=${id}&project_id=${param?.parent_folder}&download=true`,
       {}
     );
   };
@@ -333,7 +335,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
 
       {isModalOpen && (
         <ViewFile
-          apiURL={URL.EXPORT_CSV}
+          apiURL={URL.EXPORT_CSV?.[activeBtnState]}
           locationID={locationID}
           setIsModalOpen={setIsModalOpen}
         />

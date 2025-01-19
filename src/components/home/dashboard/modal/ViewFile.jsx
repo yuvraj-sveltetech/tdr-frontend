@@ -21,7 +21,7 @@ const ViewFile = ({
   const [loading, setLoading] = useState(false);
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
-    pageSize: 10,
+    pageSize: 100,
   });
   const [filterModel, setFilterModel] = useState({});
   const [totalRowCount, setTotalRowCount] = useState(0);
@@ -37,39 +37,26 @@ const ViewFile = ({
     [JSON.stringify(filterModel)]
   );
 
-  const fetchData = async (page = 0, pageSize = 5, filterModel = {}) => {
+  const fetchData = async (page = 0, pageSize = 100, filterModel = {}) => {
     if (requestLock.current) return; // Prevent if a request is already in progress
     requestLock.current = true; // Set lock
 
     setLoading(true);
     try {
-      let params = {
+      if (!auth) {
+        toast.error("Authorization token not found in cookies");
+        return;
+      }
+
+      const params = {
         page: page + 1,
         page_size: pageSize,
         filter: JSON.stringify(filterModel?.items || []),
-        // download: false,
+        ...(locationID && { location_id: locationID }),
+        ...(ids?.length && { ids: [...new Set(ids)].join(",") }),
+        ...(pro_id ? { pro_id } : { project_id: param?.parent_folder }),
+        ...(apiURL?.includes("voip-ipdr") && { voip: true }),
       };
-
-      // Only add these if it is not null or undefined
-      if (locationID) {
-        params.location_id = locationID;
-      }
-
-      if (ids?.length) {
-        const uniqueIds = [...new Set(ids)]; // Ensure unique IDs
-        params.ids = uniqueIds.join(",");
-      }
-
-      if (pro_id) {
-        params.pro_id = pro_id;
-      } else {
-        params.project_id = param?.parent_folder;
-      }
-
-      if (!auth) {
-        console.error("Authorization token not found in cookies");
-        return;
-      }
 
       const response = await axios.get(
         `${process.env.REACT_APP_API_KEY}${apiURL}`,
@@ -147,7 +134,6 @@ const ViewFile = ({
       className="modal fade show"
       style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}
       aria-labelledby="viewFileModalToggle"
-      aria-hidden="true"
     >
       <div className="modal-dialog modal-dialog-centered modal-xl">
         <div className="modal-content">

@@ -20,7 +20,16 @@ export const options = {
       endpoint: "get-common-number-on-imeis",
     },
   ],
-  ipdr: [],
+  ipdr: [
+    {
+      name: "Target Numbers Exists/Not Exists on Locations",
+      endpoint: "search-numbers-ipdr",
+    },
+    {
+      name: "Voice over internet protocol",
+      endpoint: "voip-ipdr",
+    },
+  ],
   gprs: [
     {
       name: "All International Numbers",

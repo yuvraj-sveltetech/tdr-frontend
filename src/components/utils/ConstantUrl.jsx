@@ -27,5 +27,10 @@ export const ALL_FILES = {
   ipdr: "api/upload-ipdr/",
 };
 export const ANALYZE_FILES = "tdr/processTdr/";
-export const EXPORT_CSV = "api/export-csv/";
+// export const EXPORT_CSV = "api/export-csv/";
+export const EXPORT_CSV = {
+  cdr: "api/export-csv/",
+  gprs: "api/export-csv-gprs/",
+  ipdr: "api/export-csv-ipdr/",
+};
 export const SEARCH_NUMBER = "api/search-a-party/";

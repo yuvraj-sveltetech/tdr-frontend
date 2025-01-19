@@ -81,7 +81,6 @@ const FileUploader = () => {
     <div
       className="modal fade"
       id="exampleModalToggle2"
-      aria-hidden="true"
       aria-labelledby="exampleModalToggleLabel2"
       tabIndex="-1"
       data-bs-keyboard="false"
