@@ -29,6 +29,14 @@ export const options = {
       name: "Voice over internet protocol",
       endpoint: "voip-ipdr",
     },
+    {
+      name: "Communication Apps",
+      endpoint: "communication-apps-ipdr",
+    },
+    {
+      name: "Non Communication Apps",
+      endpoint: "non-communication-apps-ipdr",
+    },
   ],
   gprs: [
     {
@@ -54,6 +62,48 @@ export const options = {
     {
       name: "Multiple IMEI Analysis",
       endpoint: "get-common-number-on-imeis-gprs",
+    },
+  ],
+};
+
+export const ipdrOptions = {
+  type: "non-communication-apps-ipdr",
+  options: [
+    {
+      name: "All",
+      value: "all",
+    },
+    {
+      name: "Banking App",
+      value: "banking_app_name",
+    },
+    {
+      name: "Food App",
+      value: "food_app_name",
+    },
+    {
+      name: "Transport App",
+      value: "transport_app_name",
+    },
+    {
+      name: "E-Commerce App",
+      value: "ecommerce_app_name",
+    },
+    {
+      name: "Betting App",
+      value: "betting_app_name",
+    },
+    {
+      name: "Streaming App",
+      value: "streaming_app_name",
+    },
+    {
+      name: "Payment Gateway",
+      value: "payment_gateway_name",
+    },
+    {
+      name: "Crypto Currency",
+      value: "crypto_currency_name",
     },
   ],
 };

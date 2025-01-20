@@ -94,7 +94,7 @@ const useApiHandle = () => {
           status_code: res?.status,
         });
         setLoading(false);
-        toast.success(res?.data?.message);
+        toast.success(res?.data?.message || res?.data?.Message);
       })
       .catch((err) => {
         toast.error(err?.response?.data?.message || err?.response?.data?.Error);

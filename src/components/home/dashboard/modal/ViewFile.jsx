@@ -7,6 +7,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { v4 as uuidv4 } from "uuid";
 import { downloadFile } from "../../../../utils/downloadFile";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const ViewFile = ({
   ids = null,
@@ -15,6 +16,10 @@ const ViewFile = ({
   setIsModalOpen,
   apiURL,
 }) => {
+  const isSubIpdrOption = useSelector(
+    (state) => state.show_count?.is_sub_ipdr_option
+  );
+
   const param = useParams();
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
@@ -56,6 +61,14 @@ const ViewFile = ({
         ...(ids?.length && { ids: [...new Set(ids)].join(",") }),
         ...(pro_id ? { pro_id } : { project_id: param?.parent_folder }),
         ...(apiURL?.includes("voip-ipdr") && { voip: true }),
+        ...(apiURL?.includes("communication-apps-ipdr") && {
+          app_type: "communication",
+        }),
+        ...(apiURL?.includes("non-communication-apps-ipdr") &&
+          isSubIpdrOption && {
+            app_category: isSubIpdrOption,
+            app_type: "non-communication",
+          }),
       };
 
       const response = await axios.get(

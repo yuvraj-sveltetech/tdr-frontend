@@ -63,7 +63,10 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
             onClick={() => {
               setActiveBtn(btn.toLowerCase());
               dispatch(
-                is_selected(options?.[btn?.toLowerCase()]?.[0]?.endpoint)
+                is_selected({
+                  value: options?.[btn?.toLowerCase()]?.[0]?.endpoint,
+                  is_sub_category_option: false,
+                })
               );
               dispatch(folder({ take_action: "unselect_all", data: null }));
             }}
@@ -76,12 +79,14 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
       <div className="container-fluid breadcrumb">
         <div className="row ps-2 w-100">
           <div className="d-flex align-items-center justify-content-between pe-0">
-            <div className="w-50 d-flex align-items-center">
-              <HiHome
-                size={20}
-                className="home-icon"
-                onClick={() => navigate("/")}
-              />
+            <div className="w-25 d-flex align-items-center">
+              <span>
+                <HiHome
+                  size={20}
+                  className="home-icon"
+                  onClick={() => navigate("/")}
+                />
+              </span>
 
               <OverlayTrigger
                 placement="top"

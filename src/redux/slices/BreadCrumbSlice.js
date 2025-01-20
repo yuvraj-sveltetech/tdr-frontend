@@ -7,6 +7,7 @@ export const breadCrumbSlice = createSlice({
     switch_component: "",
     active_btn: "cdr",
     is_selected: "export-ist-numbers",
+    is_sub_ipdr_option: "all",
     isProccesed: { isDisable: false, loading: false },
   },
   reducers: {
@@ -25,9 +26,14 @@ export const breadCrumbSlice = createSlice({
     },
 
     is_selected: (state, action) => {
+      const { value, is_sub_category_option } = action.payload;
+
       return {
         ...state,
-        is_selected: action.payload,
+        is_selected: is_sub_category_option ? state?.is_selected : value,
+        is_sub_ipdr_option: is_sub_category_option
+          ? value
+          : state?.is_sub_ipdr_option,
       };
     },
 

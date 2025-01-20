@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import { RxCross2 } from "react-icons/rx";
 import { CiViewTable } from "react-icons/ci";
 import ViewFile from "./modal/ViewFile";
-import { OverlayTrigger } from "react-bootstrap";
+import { OverlayTrigger, Popover } from "react-bootstrap";
 import Tooltip from "react-bootstrap/Tooltip";
 
 const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
@@ -22,6 +22,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   const [subFolder, setSubfolder] = useState([]);
   const [locationID, setLocationID] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // New state for search input
   const toastId = useRef(null);
 
   const dispatch = useDispatch();
@@ -29,15 +30,6 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // const isFolderExist = folders?.some(
-    //   (folder) => folder?.folder_name === param?.parent_folder
-    // );
-
-    // if (!isFolderExist) {
-    //   navigate("/not-found");
-    //   return;
-    // }
-
     !isSubfolderExist() && getData();
   }, []);
 
@@ -200,6 +192,42 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     setIsModalOpen(true);
   };
 
+  const displayFileRecords = ({ file_count, record_count }) => {
+    const dataKeys = Object.keys(file_count);
+    const displayData = dataKeys.map((key) => ({
+      name: key,
+      files: file_count[key],
+      records: record_count[key],
+    }));
+
+    return (
+      <>
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">Files</th>
+              <th scope="col">Records</th>
+            </tr>
+          </thead>
+          <tbody>
+            {displayData.map((item, index) => (
+              <tr key={index}>
+                <td>{item.name}</td>
+                <td>{item.files}</td>
+                <td>{item.records}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    );
+  };
+
+  const filteredSubFolders = subFolder?.subFolder?.filter((folder) =>
+    folder?.location_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
       <div className="main">
@@ -213,29 +241,42 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
             style={{ overflow: "auto", height: "60vh" }}
           >
             <hr style={{ padding: "0", margin: "0", color: "#B6B6B6" }} />
-            <div className="d-flex align-items-center justify-content-between">
+            <div className="d-flex align-items-center justify-content-between mb-2">
               <h6>LOCATIONS</h6>
-              <div className="d-flex align-items-center">
-                <label
-                  htmlFor="select_All"
-                  style={{
-                    fontSize: "13px",
-                    marginRight: "3px",
-                    marginBottom: "1px",
-                    cursor: "pointer",
-                    userSelect: "none",
-                  }}
-                >
-                  Select All
-                </label>
+
+              <div className="location-header d-flex align-items-center justify-content-between">
                 <input
-                  type="checkbox"
-                  id="select_All"
-                  checked={isSelectAllChecked()}
-                  onChange={(e) => {
-                    changeAllSubfolders(e);
-                  }}
+                  type="text"
+                  placeholder="Search folders..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  disabled={subFolder?.subFolder?.length === 0 || !subFolder}
                 />
+
+                <span className="line"></span>
+
+                <div className="d-flex align-items-center">
+                  <label
+                    htmlFor="select_All"
+                    style={{
+                      fontSize: "13px",
+                      marginRight: "3px",
+                      marginBottom: "1px",
+                      cursor: "pointer",
+                      userSelect: "none",
+                    }}
+                  >
+                    Select All
+                  </label>
+                  <input
+                    type="checkbox"
+                    id="select_All"
+                    checked={isSelectAllChecked()}
+                    onChange={(e) => {
+                      changeAllSubfolders(e);
+                    }}
+                  />
+                </div>
               </div>
             </div>
 
@@ -247,75 +288,92 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                   <span className="visually-hidden">Loading...</span>
                 </div>
               </div>
-            ) : subFolder?.subFolder?.length > 0 ? (
+            ) : filteredSubFolders?.length > 0 ? (
               <div className="row list-unstyled">
-                {subFolder?.subFolder?.map((folder) => {
+                {filteredSubFolders?.map((folder) => {
                   return (
                     <div
                       className="col-md-3 mb-3"
                       key={`SubFolder${folder?.id}`}
                     >
-                      <div
-                        className="position-relative file folder d-flex justify-content-start align-items-center subfolder-box position-relative"
-                        onClick={(e) =>
-                          navigate(`/${subFolder?.folder_name}/${folder?.id}`)
+                      <OverlayTrigger
+                        placement="bottom"
+                        delay={{ show: 200, hide: 300 }}
+                        overlay={
+                          <Popover id={`popover-positioned`}>
+                            <Popover.Body style={{ padding: "2px 10px" }}>
+                              {displayFileRecords({
+                                file_count: folder?.file_count,
+                                record_count: folder?.record_count,
+                              })}
+                            </Popover.Body>
+                          </Popover>
                         }
                       >
-                        <span
-                          className="align-self-end me-2 position-absolute cursot"
-                          style={{ bottom: "5px", right: "20px" }}
-                          onClick={(e) => handleClick(e, folder?.id)}
-                        >
-                          <CiViewTable />
-                        </span>
-
-                        <span
-                          className="align-self-end me-2 position-absolute cursot"
-                          style={{ bottom: "5px", right: "-5px" }}
-                        >
-                          <MdOutlineFileDownload
-                            size={20}
-                            color="gray"
-                            onClick={(e) => exportCSV(e, folder?.id)}
-                          />
-                        </span>
-
                         <div
-                          className="dot"
-                          style={{ left: "-9px", top: "-7px" }}
-                          onClick={(e) => deleteFile(e, folder.id)}
-                        >
-                          <RxCross2 size={13} />
-                        </div>
-                        <input
-                          type="checkbox"
-                          checked={isSubfolderChecked(folder?.id) ?? false}
-                          onChange={(e) => selectAllFiles(e, folder)}
-                          onClick={(e) => e.stopPropagation()}
-                          className="align-self-end me-2 position-absolute end-0 cursot"
-                          style={{ top: "8px", cursor: "pointer" }}
-                        />
-                        <li
+                          className="position-relative file folder d-flex justify-content-start align-items-center subfolder-box position-relative"
                           onClick={(e) =>
                             navigate(`/${subFolder?.folder_name}/${folder?.id}`)
                           }
                         >
-                          <MdFolder size="32" className="folderIcon" />
-                        </li>
-
-                        <OverlayTrigger
-                          placement="top"
-                          delay={{ show: 200, hide: 300 }}
-                          overlay={<Tooltip> {folder?.location_name}</Tooltip>}
-                        >
-                          <p
-                            className="d-inline-block text-truncate"
-                            style={{ margin: "auto 0", padding: "0 0.4rem" }}
+                          <span
+                            className="align-self-end me-2 position-absolute cursot"
+                            style={{ bottom: "5px", right: "20px" }}
+                            onClick={(e) => handleClick(e, folder?.id)}
                           >
-                            {folder?.location_name}
-                          </p>
-                        </OverlayTrigger>
-                      </div>
+                            <CiViewTable />
+                          </span>
+
+                          <span
+                            className="align-self-end me-2 position-absolute cursot"
+                            style={{ bottom: "5px", right: "-5px" }}
+                          >
+                            <MdOutlineFileDownload
+                              size={20}
+                              color="gray"
+                              onClick={(e) => exportCSV(e, folder?.id)}
+                            />
+                          </span>
+
+                          <div
+                            className="dot"
+                            style={{ left: "-9px", top: "-7px" }}
+                            onClick={(e) => deleteFile(e, folder.id)}
+                          >
+                            <RxCross2 size={13} />
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={isSubfolderChecked(folder?.id) ?? false}
+                            onChange={(e) => selectAllFiles(e, folder)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="align-self-end me-2 position-absolute end-0 cursot"
+                            style={{ top: "8px", cursor: "pointer" }}
+                          />
+                          <li
+                            onClick={(e) =>
+                              navigate(
+                                `/${subFolder?.folder_name}/${folder?.id}`
+                              )
+                            }
+                          >
+                            <MdFolder size="32" className="folderIcon" />
+                          </li>
+
+                          <OverlayTrigger
+                            placement="top"
+                            delay={{ show: 200, hide: 300 }}
+                            overlay={<Tooltip>{folder?.location_name}</Tooltip>}
+                          >
+                            <p
+                              className="d-inline-block text-truncate"
+                              style={{ margin: "auto 0", padding: "0 0.4rem" }}
+                            >
+                              {folder?.location_name}
+                            </p>
+                          </OverlayTrigger>
+                        </div>
+                      </OverlayTrigger>
                     </div>
                   );
                 })}

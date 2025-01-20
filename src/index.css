@@ -235,11 +235,16 @@ nav ul li a {
   margin: 2px 0;
 }
 
-.case-header input {
+.case-header input,
+.location-header input {
   padding: 5px 10px;
   border-radius: 7px;
   border: 1px solid rgb(205, 205, 205);
   outline-color: rgb(15, 23, 42);
+}
+
+.location-header {
+  border: none;
 }
 
 .all-folders h6 {
@@ -551,4 +556,10 @@ nav ul li a {
 .inactive-btn {
   background-color: #e5e9f2 !important;
   color: #000 !important;
+}
+
+.line {
+  border: 0.7px solid #ded7d7;
+  height: 2rem;
+  margin: 0 5px;
 }

@@ -9,12 +9,12 @@ import { is_selected } from "../../../redux/slices/BreadCrumbSlice";
 import { modalType } from "../../../redux/slices/ModalSlice";
 import { toast } from "react-toastify";
 import ViewFile from "./modal/ViewFile";
-import { options } from "../../utils/process-api-endpoint";
+import { ipdrOptions, options } from "../../utils/process-api-endpoint";
 
 const AddFolder = ({ controller }) => {
-  const folders = useSelector((state) => state?.folder?.created_folders);
+  const folders = useSelector((state) => state.folder.created_folders);
   const is_processed = useSelector((state) => state.modal.isFileProcessing);
-  const processType = useSelector((state) => state.show_count.is_selected);
+  const processType = useSelector((state) => state.show_count);
   const selectedValue = useSelector((state) => state.show_count);
 
   const [selectedFileIDs, setSelectedFileIDs] = useState([]);
@@ -26,74 +26,94 @@ const AddFolder = ({ controller }) => {
   const location = useLocation();
 
   useEffect(() => {
-    let myModal = Modal.getOrCreateInstance(
+    const myModal = Modal.getOrCreateInstance(
       document.getElementById("exampleModalToggle"),
-      {
-        keyboard: false,
-      }
+      { keyboard: false }
     );
     setModalInstance(myModal);
   }, []);
 
   useEffect(() => {
-    if (typeof modalInstance === "object") {
+    if (modalInstance) {
       if (is_processed) {
-        modalInstance?.show();
+        modalInstance.show();
         modalInstance._config.backdrop = "static";
         dispatch(modalType("Files is in process"));
       } else {
-        modalInstance?.hide();
+        modalInstance.hide();
         dispatch(modalType(""));
       }
     }
   }, [is_processed, modalInstance, dispatch]);
 
   useEffect(() => {
-    if (selectedFileIDs?.length > 0 && params?.parent_folder?.length > 0) {
+    if (selectedFileIDs.length > 0 && params?.parent_folder?.length > 0) {
       setIsModalOpen(true);
     }
-  }, [selectedFileIDs?.length, params]);
+  }, [selectedFileIDs, params?.parent_folder]);
 
   const getFilesData = async () => {
-    let selectedFiles = [];
-
-    for (const folder of Object.values(folders)) {
-      for (const subFolder of Object.values(folder?.subFolder || {})) {
-        if (subFolder?.select_all) {
-          selectedFiles = [...selectedFileIDs, subFolder?.id];
-          setSelectedFileIDs((prev) => [...prev, subFolder?.id]);
-        }
-      }
-    }
-
-    if (selectedFiles.length === 0) {
-      toast.warning(
-        `Please Upload Files or Select ${
-          params?.parent_folder?.length > 0 && !params?.subfolder
-            ? "Location Folders"
-            : params?.subfolder?.length > 0
-            ? "All Files"
-            : ""
-        }`
+    try {
+      const selectedFiles = folders.flatMap((folder) =>
+        folder?.subFolder
+          ?.filter((subFolder) => subFolder.select_all)
+          .map((subFolder) => subFolder.id)
       );
+
+      setSelectedFileIDs(selectedFiles);
+
+      if (selectedFiles.length === 0) {
+        const warningMessage =
+          params?.parent_folder?.length > 0
+            ? !params?.subfolder
+              ? "Location Folders"
+              : "All Files"
+            : "";
+        toast.warning(`Please Upload Files or Select ${warningMessage}`);
+      }
+    } catch (error) {
+      toast.error("An error occurred while fetching files.");
+      console.error(error);
     }
   };
 
-  const isSelected = (e) => {
-    const { value } = e.target;
-    dispatch(is_selected(value));
+  const isSelected = (e, isSubOption) =>
+    dispatch(
+      is_selected({
+        value: e.target.value,
+        is_sub_category_option: isSubOption,
+      })
+    );
+
+  const renderIpdrSubOptions = () => {
+    if (ipdrOptions.type !== processType?.is_selected) return null;
+
+    return (
+      <select
+        className="form-select form-select-sm ms-2"
+        name="drop-down-sub-option"
+        value={processType.is_sub_ipdr_option || ""}
+        onChange={(e) => isSelected(e, true)}
+      >
+        {ipdrOptions?.options?.map((option) => (
+          <option value={option?.value} key={option?.value}>
+            {option?.name}
+          </option>
+        ))}
+      </select>
+    );
   };
 
   return (
     <>
-      <div className="folder navbar-right">
+      <div className="folder navbar-right" style={{ flexBasis: "70%" }}>
         {params?.parent_folder?.length > 0 && (
           <>
             <select
               className="form-select form-select-sm"
-              name="drop-down"
-              value={is_selected?.is_selected}
-              onChange={(e) => isSelected(e)}
+              name="drop-down-main"
+              value={processType?.is_selected}
+              onChange={(e) => isSelected(e, false)}
             >
               {options?.[selectedValue?.active_btn]?.map((option) => (
                 <option value={option?.endpoint} key={option?.endpoint}>
@@ -101,6 +121,8 @@ const AddFolder = ({ controller }) => {
                 </option>
               ))}
             </select>
+
+            {renderIpdrSubOptions()}
 
             <button
               className="btn btn-primary mx-2"
@@ -114,9 +136,7 @@ const AddFolder = ({ controller }) => {
 
         {params?.parent_folder && params?.subfolder ? (
           <a
-            className={`btn btn-primary d-flex align-items-center justify-content-between ${
-              params?.parent_folder && params?.subfolder ? "ms-0" : "ms-2"
-            }`}
+            className="btn btn-primary d-flex align-items-center justify-content-between"
             data-bs-toggle="modal"
             href="#exampleModalToggle2"
             role="button"
@@ -144,7 +164,7 @@ const AddFolder = ({ controller }) => {
         <ViewFile
           ids={selectedFileIDs}
           pro_id={params?.parent_folder}
-          apiURL={`api/${processType}/`}
+          apiURL={`api/${processType?.is_selected}/`}
           setIsModalOpen={setIsModalOpen}
         />
       )}
