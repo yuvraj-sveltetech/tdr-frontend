@@ -34,7 +34,7 @@ export const options = {
       endpoint: "communication-apps-ipdr",
     },
     {
-      name: "Non Communication Apps",
+      name: "All Apps",
       endpoint: "non-communication-apps-ipdr",
     },
   ],

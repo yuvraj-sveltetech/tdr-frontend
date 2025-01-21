@@ -54,11 +54,13 @@ const AddFolder = ({ controller }) => {
 
   const getFilesData = async () => {
     try {
-      const selectedFiles = folders.flatMap((folder) =>
-        folder?.subFolder
-          ?.filter((subFolder) => subFolder.select_all)
-          .map((subFolder) => subFolder.id)
-      );
+      const selectedFiles = (folders || [])
+        .flatMap((folder) =>
+          folder?.subFolder
+            ?.filter((subFolder) => subFolder?.select_all)
+            .map((subFolder) => subFolder.id)
+        )
+        .filter(Boolean); // Remove undefined, null, or falsy values
 
       setSelectedFileIDs(selectedFiles);
 

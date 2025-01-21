@@ -237,7 +237,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
         />
         <div className="sub_folder d-flex flex-column align-items-start">
           <div
-            className="all-folders container"
+            className="all-folders container-fluid"
             style={{ overflow: "auto", height: "60vh" }}
           >
             <hr style={{ padding: "0", margin: "0", color: "#B6B6B6" }} />

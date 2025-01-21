@@ -203,7 +203,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
           </div>
         </div>
 
-        <div className="container" style={{ overflow: "auto", height: "60vh" }}>
+        <div className="container-fluid" style={{ overflow: "auto", height: "60vh" }}>
           <div className="row py-2">{renderFiles()}</div>
         </div>
       </div>
