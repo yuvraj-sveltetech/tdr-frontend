@@ -4,11 +4,13 @@ import fileImg from "../../assets/images/file.png";
 import * as API_URL from "../utils/ConstantUrl";
 import useApiHandle from "../utils/useApiHandle";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { folder } from "../../redux/slices/FolderSlice";
 
 const FileUploader = () => {
   const { data, loading, apiCall, status_code } = useApiHandle();
+  const activeBtnState = useSelector((state) => state.show_count?.active_btn);
+
   const [files, setFiles] = useState([]);
   const param = useParams();
   const dispatch = useDispatch();
@@ -35,7 +37,7 @@ const FileUploader = () => {
   const getAllFiles = () => {
     apiCall(
       "get",
-      `${API_URL.ALL_FILES}?project_id=${param?.parent_folder}&location_id=${param?.subfolder}`,
+      `${API_URL.ALL_FILES?.[activeBtnState]}?project_id=${param?.parent_folder}&location_id=${param?.subfolder}&file_type=${activeBtnState}`,
       {}
     );
   };
@@ -70,15 +72,15 @@ const FileUploader = () => {
 
     formData.append("project_id", param?.parent_folder);
     formData.append("location_id", param?.subfolder);
+    formData.append("file_type", activeBtnState);
 
-    apiCall("post", `${API_URL.ALL_FILES}`, formData);
+    apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
   };
 
   return (
     <div
       className="modal fade"
       id="exampleModalToggle2"
-      aria-hidden="true"
       aria-labelledby="exampleModalToggleLabel2"
       tabIndex="-1"
       data-bs-keyboard="false"
@@ -234,10 +236,13 @@ const FileUploader = () => {
               <button
                 id="submit"
                 className="btn btn-primary rounded-sm me-3"
-                disabled={files?.length === 0 && !loading}
+                disabled={
+                  (files?.length === 0 && !loading) ||
+                  (files?.length > 0 && loading)
+                }
                 onClick={sendFiles}
               >
-                Upload now
+                Upload
               </button>
             </footer>
           </div>

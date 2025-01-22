@@ -30,7 +30,6 @@ const CreateUserModal = () => {
       data-bs-keyboard="false"
       tabIndex="-1"
       aria-labelledby="staticBackdropLabel"
-      aria-hidden="true"
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
@@ -90,7 +89,6 @@ const CreateUserModal = () => {
                     <span
                       className="spinner-border spinner-border-sm me-2"
                       role="status"
-                      aria-hidden="true"
                     />
 
                     <span className="sr-only">Loading...</span>

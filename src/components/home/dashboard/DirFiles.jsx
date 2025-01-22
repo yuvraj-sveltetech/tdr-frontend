@@ -14,18 +14,19 @@ import ModalBox from "../../utils/ModalBox";
 const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
   const { data, apiCall, status_code, loading } = useApiHandle();
   const folders = useSelector((state) => state.folder.created_folders);
+  const activeBtnState = useSelector((state) => state.show_count?.active_btn);
 
   const dispatch = useDispatch();
   const param = useParams();
 
   useEffect(() => {
-    !isFileExist() &&
-      apiCall(
-        "get",
-        `${URL.ALL_FILES}?project_id=${param?.parent_folder}&location_id=${param?.subfolder}`,
-        {}
-      );
-  }, []);
+    // !isFileExist() &&
+    apiCall(
+      "get",
+      `${URL.ALL_FILES?.[activeBtnState]}?project_id=${param?.parent_folder}&location_id=${param?.subfolder}&file_type=${activeBtnState}`,
+      {}
+    );
+  }, [activeBtnState]);
 
   useEffect(() => {
     if (status_code === 200 && data?.length > 0) {
@@ -35,19 +36,26 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
           data: { api_data: data, params: param },
         })
       );
+    } else {
+      dispatch(
+        folder({
+          take_action: "add_files",
+          data: { api_data: [], params: param },
+        })
+      );
     }
   }, [status_code, data, dispatch, param]);
 
-  const isFileExist = () => {
-    const isExist = folders?.some(
-      (fld) =>
-        fld?.folder_name === param?.parent_folder &&
-        fld?.subFolder?.some(
-          (subfl) => subfl?.id === +param?.subfolder && subfl?.file?.length > 0
-        )
-    );
-    return isExist;
-  };
+  // const isFileExist = () => {
+  //   const isExist = folders?.some(
+  //     (fld) =>
+  //       fld?.folder_name === param?.parent_folder &&
+  //       fld?.subFolder?.some(
+  //         (subfl) => subfl?.id === +param?.subfolder && subfl?.file?.length > 0
+  //       )
+  //   );
+  //   return isExist;
+  // };
 
   const renderFiles = () => {
     if (loading) {
@@ -195,7 +203,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
           </div>
         </div>
 
-        <div className="container" style={{ overflow: "auto", height: "60vh" }}>
+        <div className="container-fluid" style={{ overflow: "auto", height: "60vh" }}>
           <div className="row py-2">{renderFiles()}</div>
         </div>
       </div>

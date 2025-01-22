@@ -41,10 +41,9 @@ const ModalBox = ({ controller, setController }) => {
       return;
     }
 
-    if (status_code === 200 && data?.length > 0) {
+    if (status_code === 200 && (data?.length > 0 || data?.data?.length > 0)) {
       if (location?.pathname === "/") {
-        dispatch(folder({ take_action: "create_folder", data }));
-        toast.success("Case Created!");
+        dispatch(folder({ take_action: "create_folder", data: data?.data }));
         handleCloseModal();
       } else {
         dispatch(
@@ -79,7 +78,7 @@ const ModalBox = ({ controller, setController }) => {
       );
       return;
     }
-    apiCall("get", URL.FOLDER_API, {});
+    apiCall("get", URL.GET_CASE_FOLDERS, {}, "", true);
   };
 
   const getSubFolder = () => {
@@ -140,6 +139,12 @@ const ModalBox = ({ controller, setController }) => {
         <input
           type="text"
           className="w-100"
+          style={{
+            padding: "5px 10px",
+            borderRadius: "7px",
+            border: "1px solid #cdcdcd",
+            outlineColor: "#0f172a",
+          }}
           placeholder="Enter Folder Name"
           value={folderName}
           onChange={(e) => handleChange(e)}
@@ -163,7 +168,6 @@ const ModalBox = ({ controller, setController }) => {
     <div
       className="modal"
       id="exampleModalToggle"
-      aria-hidden="true"
       aria-labelledby="exampleModalToggleLabel"
       tabIndex="-1"
       data-bs-keyboard="false"

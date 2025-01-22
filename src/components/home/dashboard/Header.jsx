@@ -2,7 +2,6 @@ import React from "react";
 import { FaUser } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { CreateUserModal } from "../../utils/index";
-import { Nav, NavDropdown } from "react-bootstrap";
 
 const Header = () => {
   const username = Cookies.get("user") || "User";

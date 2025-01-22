@@ -7,6 +7,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { v4 as uuidv4 } from "uuid";
 import { downloadFile } from "../../../../utils/downloadFile";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const ViewFile = ({
   ids = null,
@@ -15,13 +16,15 @@ const ViewFile = ({
   setIsModalOpen,
   apiURL,
 }) => {
+  const selectedValue = useSelector((state) => state.show_count);
+
   const param = useParams();
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(false);
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
-    pageSize: 10,
+    pageSize: 100,
   });
   const [filterModel, setFilterModel] = useState({});
   const [totalRowCount, setTotalRowCount] = useState(0);
@@ -37,39 +40,40 @@ const ViewFile = ({
     [JSON.stringify(filterModel)]
   );
 
-  const fetchData = async (page = 0, pageSize = 5, filterModel = {}) => {
+  const fetchData = async (page = 0, pageSize = 100, filterModel = {}) => {
     if (requestLock.current) return; // Prevent if a request is already in progress
     requestLock.current = true; // Set lock
 
     setLoading(true);
     try {
-      let params = {
+      if (!auth) {
+        toast.error("Authorization token not found in cookies");
+        return;
+      }
+
+      const params = {
         page: page + 1,
         page_size: pageSize,
         filter: JSON.stringify(filterModel?.items || []),
-        // download: false,
+        ...(locationID && { location_id: locationID }),
+        ...(ids?.length && { ids: [...new Set(ids)].join(",") }),
+        ...(pro_id ? { pro_id } : { project_id: param?.parent_folder }),
+        ...(apiURL?.includes("voip-ipdr") && {
+          voip: true,
+          app_name: selectedValue?.ipdr_communication_apps?.selected || "",
+        }),
+
+        ...(apiURL?.split("/")?.[1] === "communication-apps-ipdr" && {
+          app_type: "communication",
+          app_name: selectedValue?.ipdr_communication_apps?.selected || "",
+        }),
+
+        ...(apiURL?.split("/")?.[1] === "non-communication-apps-ipdr" &&
+          selectedValue?.is_sub_ipdr_option && {
+            app_category: selectedValue?.is_sub_ipdr_option,
+            app_type: "non-communication",
+          }),
       };
-
-      // Only add these if it is not null or undefined
-      if (locationID) {
-        params.location_id = locationID;
-      }
-
-      if (ids?.length) {
-        const uniqueIds = [...new Set(ids)]; // Ensure unique IDs
-        params.ids = uniqueIds.join(",");
-      }
-
-      if (pro_id) {
-        params.pro_id = pro_id;
-      } else {
-        params.project_id = param?.parent_folder;
-      }
-
-      if (!auth) {
-        console.error("Authorization token not found in cookies");
-        return;
-      }
 
       const response = await axios.get(
         `${process.env.REACT_APP_API_KEY}${apiURL}`,
@@ -147,7 +151,6 @@ const ViewFile = ({
       className="modal fade show"
       style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}
       aria-labelledby="viewFileModalToggle"
-      aria-hidden="true"
     >
       <div className="modal-dialog modal-dialog-centered modal-xl">
         <div className="modal-content">

@@ -1,14 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./CreateFolder.css";
 import { MdFolder } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import * as URL from "../../utils/ConstantUrl";
 import useApiHandle from "../../utils/useApiHandle";
 import { folder } from "../../../redux/slices/FolderSlice";
 import { OverlayTrigger } from "react-bootstrap";
 import Tooltip from "react-bootstrap/Tooltip";
-
+import { GET_CASE_FOLDERS } from "../../utils/ConstantUrl";
 
 const CreateFolder = () => {
   const { data, apiCall, status_code } = useApiHandle();
@@ -16,15 +15,27 @@ const CreateFolder = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredFolders, setFilteredFolders] = useState([]);
+
   useEffect(() => {
-    apiCall("get", URL.FOLDER_API, {});
+    apiCall("get", GET_CASE_FOLDERS, {}, "", true);
   }, []);
 
   useEffect(() => {
-    if (status_code === 200 && data?.length > 0) {
-      dispatch(folder({ take_action: "create_folder", data }));
+    if (status_code === 200 && data?.data?.length > 0) {
+      dispatch(folder({ take_action: "create_folder", data: data?.data }));
     }
   }, [status_code, data, dispatch]);
+
+  useEffect(() => {
+    if (folders?.created_folders) {
+      const filtered = folders?.created_folders?.filter((folder) =>
+        folder?.folder_name?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+      );
+      setFilteredFolders(filtered);
+    }
+  }, [searchTerm, folders]);
 
   const getSubfolder = async (id) => {
     navigate(`/${id}`);
@@ -33,8 +44,18 @@ const CreateFolder = () => {
   return (
     <div className="create-folder">
       <div className="container-fluid">
-        <h6>CASES</h6>
-        {folders?.created_folders?.length === 0 ? (
+        <div className="case-header">
+          <h6>CASES</h6>
+          <input
+            type="text"
+            placeholder="Search folders..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            disabled={folders?.created_folders?.length === 0}
+          />
+        </div>
+
+        {filteredFolders?.length === 0 ? (
           <div className="center-div">
             <h6 style={{ color: "red" }}>
               Folder does not exist. Please create one
@@ -43,30 +64,28 @@ const CreateFolder = () => {
         ) : (
           <div className="parent_folder">
             <div className="row list-unstyled">
-              {folders?.created_folders?.map((folder) => {
-                return (
-                  <div className="col-md-3" key={`CreatedFolder${folder?.id}`}>
-                    <div
-                      className="folder rr d-flex flex-column justify-content-center my-2"
-                      onClick={(e) => getSubfolder(folder?.folder_name)}
-                    >
-                      <li onClick={(e) => getSubfolder(folder?.folder_name)}>
-                        <MdFolder size="70" className="folderIcon" />
-                      </li>
+              {filteredFolders?.map((folder) => (
+                <div className="col-md-3" key={`CreatedFolder${folder?.id}`}>
+                  <div
+                    className="folder rr d-flex flex-column justify-content-center my-2"
+                    onClick={(e) => getSubfolder(folder?.folder_name)}
+                  >
+                    <li onClick={(e) => getSubfolder(folder?.folder_name)}>
+                      <MdFolder size="70" className="folderIcon" />
+                    </li>
 
-                      <OverlayTrigger
-                        placement="top"
-                        delay={{ show: 200, hide: 300 }}
-                        overlay={<Tooltip> {folder?.folder_name}</Tooltip>}
-                      >
-                        <p className="w-75 d-inline-block text-truncate">
-                          {folder?.folder_name}
-                        </p>
-                      </OverlayTrigger>
-                    </div>
+                    <OverlayTrigger
+                      placement="top"
+                      delay={{ show: 200, hide: 300 }}
+                      overlay={<Tooltip> {folder?.folder_name}</Tooltip>}
+                    >
+                      <p className="w-75 d-inline-block text-truncate">
+                        {folder?.folder_name}
+                      </p>
+                    </OverlayTrigger>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           </div>
         )}

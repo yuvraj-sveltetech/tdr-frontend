@@ -186,7 +186,6 @@ const SdrHeaders = ({
               animation="border"
               size="sm"
               role="status"
-              aria-hidden="true"
               className="mr-2"
             />
             <span className="visually-hidden">Loading...</span>

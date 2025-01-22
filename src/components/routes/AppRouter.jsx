@@ -1,6 +1,5 @@
 import React from "react";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import {
   Route,
   Routes,
@@ -24,12 +23,10 @@ import Search from "../home/search/Search";
 const AppRouter = () => {
   return (
     <Router basename="/">
-      <ToastContainer />
       <Layout>
         <Routes>
           {/* <Route path="/" index element={<Login />} /> */}
           <Route path="/" element={<Dashboard />} />
-
           <Route element={<PrivateRoute />}>
             {/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
             {/* <Route path="/dashboard" element={<Dashboard />} /> */}

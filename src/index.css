@@ -223,6 +223,30 @@ nav ul li a {
   text-align: left;
 }
 
+.create-folder h6 {
+  border: none;
+}
+
+.case-header {
+  border-top: 1px solid #e5e9f2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 2px 0;
+}
+
+.case-header input,
+.location-header input {
+  padding: 5px 10px;
+  border-radius: 7px;
+  border: 1px solid rgb(205, 205, 205);
+  outline-color: rgb(15, 23, 42);
+}
+
+.location-header {
+  border: none;
+}
+
 .all-folders h6 {
   border: none;
 }
@@ -522,4 +546,20 @@ nav ul li a {
   border-top-color: white !important; /* Make the arrow white */
   border-right-color: transparent;
   border-left-color: transparent;
+}
+
+.active-btn {
+  background-color: #0f172a !important;
+  color: #fff !important;
+}
+
+.inactive-btn {
+  background-color: #e5e9f2 !important;
+  color: #000 !important;
+}
+
+.line {
+  border: 0.7px solid #ded7d7;
+  height: 2rem;
+  margin: 0 5px;
 }

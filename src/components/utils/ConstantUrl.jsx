@@ -16,10 +16,22 @@ export const PROCESS_SDR_FILE = "airtel/processSdrData/";
 export const FILE_UPLOAD = "tdr/uploadTdrFile/";
 // export const FOLDER_API = "tdr/createProjectFolder/";
 export const FOLDER_API = "api/create-project/";
+export const GET_CASE_FOLDERS = "info/listProject/";
 // export const CREATE_SUB_FOLDER = "tdr/createSubFolder/";
 export const CREATE_SUB_FOLDER = "api/create-location/";
 // export const UPLOAD_FILES = "tdr/uploadTdrFile/";
-export const ALL_FILES = "api/upload/";
+// export const ALL_FILES = "api/upload/";
+export const ALL_FILES = {
+  cdr: "api/upload/",
+  gprs: "api/upload-gprs/",
+  ipdr: "api/upload-ipdr/",
+};
 export const ANALYZE_FILES = "tdr/processTdr/";
-export const EXPORT_CSV = "api/export-csv/";
+// export const EXPORT_CSV = "api/export-csv/";
+export const EXPORT_CSV = {
+  cdr: "api/export-csv/",
+  gprs: "api/export-csv-gprs/",
+  ipdr: "api/export-csv-ipdr/",
+};
+export const IPDR_COMMUNICATION_LIST = "api/comm-apps-list/";
 export const SEARCH_NUMBER = "api/search-a-party/";
