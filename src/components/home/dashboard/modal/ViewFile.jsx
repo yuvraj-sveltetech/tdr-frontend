@@ -58,7 +58,10 @@ const ViewFile = ({
         ...(locationID && { location_id: locationID }),
         ...(ids?.length && { ids: [...new Set(ids)].join(",") }),
         ...(pro_id ? { pro_id } : { project_id: param?.parent_folder }),
-        ...(apiURL?.includes("voip-ipdr") && { voip: true }),
+        ...(apiURL?.includes("voip-ipdr") && {
+          voip: true,
+          app_name: selectedValue?.ipdr_communication_apps?.selected || "",
+        }),
 
         ...(apiURL?.split("/")?.[1] === "communication-apps-ipdr" && {
           app_type: "communication",
