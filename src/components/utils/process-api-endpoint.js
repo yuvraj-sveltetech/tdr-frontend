@@ -26,7 +26,7 @@ export const options = {
       endpoint: "search-numbers-ipdr",
     },
     {
-      name: "Voice over internet protocol",
+      name: "VOIP",
       endpoint: "voip-ipdr",
     },
     {
