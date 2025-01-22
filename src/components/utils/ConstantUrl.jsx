@@ -33,4 +33,5 @@ export const EXPORT_CSV = {
   gprs: "api/export-csv-gprs/",
   ipdr: "api/export-csv-ipdr/",
 };
+export const IPDR_COMMUNICATION_LIST = "api/comm-apps-list/";
 export const SEARCH_NUMBER = "api/search-a-party/";

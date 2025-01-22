@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { AddFolder } from "./AddFolder";
 import { HiHome } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,6 +19,10 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
   const navigate = useNavigate();
   const params = useParams();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setActiveBtn(activeBtnState);
+  }, []);
 
   // Get parent folder name
   const parentFolderName = useMemo(() => {
@@ -49,6 +53,19 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
     <Tooltip>{text || "No information available"}</Tooltip>
   );
 
+  const handleBtn = (btn) => {
+    const activeButton = btn.toLowerCase();
+    localStorage.setItem("active_btn", activeButton);
+    setActiveBtn(activeButton);
+    dispatch(
+      is_selected({
+        value: options?.[activeButton]?.[0]?.endpoint,
+        is_sub_category_option: false,
+      })
+    );
+    dispatch(folder({ take_action: "unselect_all", data: null }));
+  };
+
   return (
     <>
       <div className="choose">
@@ -60,16 +77,7 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
                 ? "active-btn"
                 : "inactive-btn"
             }`}
-            onClick={() => {
-              setActiveBtn(btn.toLowerCase());
-              dispatch(
-                is_selected({
-                  value: options?.[btn?.toLowerCase()]?.[0]?.endpoint,
-                  is_sub_category_option: false,
-                })
-              );
-              dispatch(folder({ take_action: "unselect_all", data: null }));
-            }}
+            onClick={() => handleBtn(btn)}
           >
             {btn}
           </button>

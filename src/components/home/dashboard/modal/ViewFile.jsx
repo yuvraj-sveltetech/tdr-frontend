@@ -16,9 +16,7 @@ const ViewFile = ({
   setIsModalOpen,
   apiURL,
 }) => {
-  const isSubIpdrOption = useSelector(
-    (state) => state.show_count?.is_sub_ipdr_option
-  );
+  const selectedValue = useSelector((state) => state.show_count);
 
   const param = useParams();
   const [rows, setRows] = useState([]);
@@ -61,12 +59,15 @@ const ViewFile = ({
         ...(ids?.length && { ids: [...new Set(ids)].join(",") }),
         ...(pro_id ? { pro_id } : { project_id: param?.parent_folder }),
         ...(apiURL?.includes("voip-ipdr") && { voip: true }),
+
         ...(apiURL?.includes("communication-apps-ipdr") && {
           app_type: "communication",
+          app_name: selectedValue?.ipdr_communication_apps?.selected || "",
         }),
+
         ...(apiURL?.includes("non-communication-apps-ipdr") &&
-          isSubIpdrOption && {
-            app_category: isSubIpdrOption,
+          selectedValue?.is_sub_ipdr_option && {
+            app_category: selectedValue?.is_sub_ipdr_option,
             app_type: "non-communication",
           }),
       };

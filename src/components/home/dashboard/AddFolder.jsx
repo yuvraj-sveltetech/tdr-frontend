@@ -5,17 +5,23 @@ import { useLocation } from "react-router-dom";
 import { AiOutlineFolderAdd } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { is_selected } from "../../../redux/slices/BreadCrumbSlice";
+import {
+  is_selected,
+  setIpdrCommunicationList,
+  setSelectedIpdrCommunication,
+} from "../../../redux/slices/BreadCrumbSlice";
 import { modalType } from "../../../redux/slices/ModalSlice";
 import { toast } from "react-toastify";
 import ViewFile from "./modal/ViewFile";
 import { ipdrOptions, options } from "../../utils/process-api-endpoint";
+import useApiHandle from "../../utils/useApiHandle";
+import { IPDR_COMMUNICATION_LIST } from "../../utils/ConstantUrl";
 
 const AddFolder = ({ controller }) => {
+  const { data, apiCall, status_code } = useApiHandle();
   const folders = useSelector((state) => state.folder.created_folders);
   const is_processed = useSelector((state) => state.modal.isFileProcessing);
   const processType = useSelector((state) => state.show_count);
-  const selectedValue = useSelector((state) => state.show_count);
 
   const [selectedFileIDs, setSelectedFileIDs] = useState([]);
   const [modalInstance, setModalInstance] = useState(null);
@@ -24,6 +30,13 @@ const AddFolder = ({ controller }) => {
   const dispatch = useDispatch();
   const params = useParams();
   const location = useLocation();
+
+  useEffect(() => {
+    if (status_code === 200) {
+      console.log(data, "dat6");
+      dispatch(setIpdrCommunicationList(data?.app_name || []));
+    }
+  }, [status_code]);
 
   useEffect(() => {
     const myModal = Modal.getOrCreateInstance(
@@ -51,6 +64,12 @@ const AddFolder = ({ controller }) => {
       setIsModalOpen(true);
     }
   }, [selectedFileIDs, params?.parent_folder]);
+
+  useEffect(() => {
+    if (processType?.is_selected === "communication-apps-ipdr") {
+      apiCall("get", `${IPDR_COMMUNICATION_LIST}`, {});
+    }
+  }, [processType?.is_selected]);
 
   const getFilesData = async () => {
     try {
@@ -87,7 +106,7 @@ const AddFolder = ({ controller }) => {
       })
     );
 
-  const renderIpdrSubOptions = () => {
+  const renderIPDRNonCommunicationApps = () => {
     if (ipdrOptions.type !== processType?.is_selected) return null;
 
     return (
@@ -106,6 +125,33 @@ const AddFolder = ({ controller }) => {
     );
   };
 
+  const renderIPDRCommunicationApps = () => {
+    if ("communication-apps-ipdr" !== processType?.is_selected) return null;
+
+    return (
+      <select
+        className="form-select form-select-sm ms-2"
+        name="drop-down-sub-option"
+        value={processType?.ipdr_communication_apps?.selected || ""}
+        onChange={(e) => {
+          dispatch(setSelectedIpdrCommunication(e.target.value));
+        }}
+      >
+        <option disabled selected>
+          Select App
+        </option>
+
+        <option value="">All</option>
+
+        {processType?.ipdr_communication_apps?.list?.map((option) => (
+          <option value={option} key={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
   return (
     <>
       <div className="folder navbar-right" style={{ flexBasis: "70%" }}>
@@ -117,14 +163,15 @@ const AddFolder = ({ controller }) => {
               value={processType?.is_selected}
               onChange={(e) => isSelected(e, false)}
             >
-              {options?.[selectedValue?.active_btn]?.map((option) => (
+              {options?.[processType?.active_btn]?.map((option) => (
                 <option value={option?.endpoint} key={option?.endpoint}>
                   {option?.name}
                 </option>
               ))}
             </select>
 
-            {renderIpdrSubOptions()}
+            {renderIPDRNonCommunicationApps()}
+            {renderIPDRCommunicationApps()}
 
             <button
               className="btn btn-primary mx-2"
