@@ -60,12 +60,12 @@ const ViewFile = ({
         ...(pro_id ? { pro_id } : { project_id: param?.parent_folder }),
         ...(apiURL?.includes("voip-ipdr") && { voip: true }),
 
-        ...(apiURL?.includes("communication-apps-ipdr") && {
+        ...(apiURL?.split("/")?.[1] === "communication-apps-ipdr" && {
           app_type: "communication",
           app_name: selectedValue?.ipdr_communication_apps?.selected || "",
         }),
 
-        ...(apiURL?.includes("non-communication-apps-ipdr") &&
+        ...(apiURL?.split("/")?.[1] === "non-communication-apps-ipdr" &&
           selectedValue?.is_sub_ipdr_option && {
             app_category: selectedValue?.is_sub_ipdr_option,
             app_type: "non-communication",

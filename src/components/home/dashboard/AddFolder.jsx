@@ -31,6 +31,10 @@ const AddFolder = ({ controller }) => {
   const params = useParams();
   const location = useLocation();
 
+  const locationFolderIDs = (folders || [])
+    .flatMap((folder) => folder?.subFolder?.map((subFolder) => subFolder.id))
+    .filter(Boolean);
+
   useEffect(() => {
     if (status_code === 200) {
       console.log(data, "dat6");
@@ -66,8 +70,12 @@ const AddFolder = ({ controller }) => {
   }, [selectedFileIDs, params?.parent_folder]);
 
   useEffect(() => {
-    if (processType?.is_selected === "communication-apps-ipdr") {
-      apiCall("get", `${IPDR_COMMUNICATION_LIST}`, {});
+    if (
+      (processType?.is_selected === "communication-apps-ipdr" ||
+        processType?.is_selected === "voip-ipdr") &&
+      locationFolderIDs?.length > 0
+    ) {
+      apiCall("get", `${IPDR_COMMUNICATION_LIST}?ids=${locationFolderIDs}`, {});
     }
   }, [processType?.is_selected]);
 
@@ -77,7 +85,7 @@ const AddFolder = ({ controller }) => {
         .flatMap((folder) =>
           folder?.subFolder
             ?.filter((subFolder) => subFolder?.select_all)
-            .map((subFolder) => subFolder.id)
+            ?.map((subFolder) => subFolder.id)
         )
         .filter(Boolean); // Remove undefined, null, or falsy values
 
@@ -126,7 +134,13 @@ const AddFolder = ({ controller }) => {
   };
 
   const renderIPDRCommunicationApps = () => {
-    if ("communication-apps-ipdr" !== processType?.is_selected) return null;
+    if (
+      !["communication-apps-ipdr", "voip-ipdr"].includes(
+        processType?.is_selected
+      )
+    ) {
+      return null;
+    }
 
     return (
       <select
@@ -140,8 +154,6 @@ const AddFolder = ({ controller }) => {
         <option disabled selected>
           Select App
         </option>
-
-        <option value="">All</option>
 
         {processType?.ipdr_communication_apps?.list?.map((option) => (
           <option value={option} key={option}>
@@ -171,7 +183,10 @@ const AddFolder = ({ controller }) => {
             </select>
 
             {renderIPDRNonCommunicationApps()}
-            {renderIPDRCommunicationApps()}
+
+            {processType?.ipdr_communication_apps?.list?.length > 0
+              ? renderIPDRCommunicationApps()
+              : null}
 
             <button
               className="btn btn-primary mx-2"
