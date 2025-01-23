@@ -19,6 +19,10 @@ export const options = {
       name: "Multiple IMEI Analysis",
       endpoint: "get-common-number-on-imeis",
     },
+    {
+      name: "Conference Call",
+      endpoint: "conference-call",
+    },
   ],
   ipdr: [
     {
