@@ -30,7 +30,8 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    !isSubfolderExist() && getData();
+    // !isSubfolderExist() && getData();
+    getData();
   }, []);
 
   useEffect(() => {
@@ -101,13 +102,13 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     }
   };
 
-  const isSubfolderExist = () => {
-    const isExist = folders?.some(
-      (fld) =>
-        fld?.folder_name === param?.parent_folder && fld?.subFolder?.length > 0
-    );
-    return isExist;
-  };
+  // const isSubfolderExist = () => {
+  //   const isExist = folders?.some(
+  //     (fld) =>
+  //       fld?.folder_name === param?.parent_folder && fld?.subFolder?.length > 0
+  //   );
+  //   return isExist;
+  // };
 
   const isSubfolderChecked = (subfolder_id) => {
     let isChecked = false;

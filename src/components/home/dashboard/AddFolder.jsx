@@ -37,8 +37,8 @@ const AddFolder = ({ controller }) => {
 
   useEffect(() => {
     if (status_code === 200) {
-      console.log(data, "dat6");
       dispatch(setIpdrCommunicationList(data?.app_name || []));
+      dispatch(setSelectedIpdrCommunication(data?.app_name?.[0] || ""));
     }
   }, [status_code]);
 

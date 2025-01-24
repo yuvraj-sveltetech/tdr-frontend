@@ -41,6 +41,10 @@ export const options = {
       name: "All Apps",
       endpoint: "non-communication-apps-ipdr",
     },
+    {
+      name: "TOR/VPN",
+      endpoint: "get-tor-vpn",
+    },
   ],
   gprs: [
     {
