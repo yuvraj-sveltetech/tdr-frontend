@@ -69,7 +69,7 @@ const AddFolder = ({ controller }) => {
         dispatch(modalType(""));
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [is_processed, modalInstance]);
 
   useEffect(() => {
@@ -83,12 +83,15 @@ const AddFolder = ({ controller }) => {
       processType?.is_selected === "communication-apps-ipdr" ||
       processType?.is_selected === "voip-ipdr"
     ) {
-      apiCall(
-        "get",
-        `${IPDR_COMMUNICATION_LIST}?ids=${getLocationFolderIDs()}`,
-        {}
-      );
+      let url = `${IPDR_COMMUNICATION_LIST}?ids=${getLocationFolderIDs()}`;
+
+      if (processType?.is_selected === "voip-ipdr") {
+        url += "&voip=true";
+      }
+
+      apiCall("get", url, {});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [processType?.is_selected]);
 
   const getFilesData = async () => {
@@ -172,6 +175,7 @@ const AddFolder = ({ controller }) => {
             {option}
           </option>
         ))}
+        <option value="">Unknown Apps</option>
       </select>
     );
   };
