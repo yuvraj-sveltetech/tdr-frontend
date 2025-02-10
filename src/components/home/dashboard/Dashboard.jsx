@@ -10,9 +10,9 @@ const Dashboard = () => {
   const dispatch = useDispatch();
 
   const toggleFileUploadModal = () => setShow(!show);
-  const auth = Cookies.get("ss_tkn");
 
-  useEffect(() => {
+  const checkAuth = () => {
+    const auth = Cookies.get("ss_tkn");
     if (auth) {
       localStorage.setItem("auth_token", auth);
     } else {
@@ -20,8 +20,24 @@ const Dashboard = () => {
       localStorage.clear();
       window.location.href = process.env.REACT_APP_REDIRECT_URL;
     }
+  };
+
+  useEffect(() => {
+    checkAuth(); // Initial check on mount
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        checkAuth(); // Re-check auth when the tab becomes active
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth]);
+  }, []);
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
