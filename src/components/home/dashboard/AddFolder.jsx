@@ -31,9 +31,17 @@ const AddFolder = ({ controller }) => {
   const params = useParams();
   const location = useLocation();
 
-  const locationFolderIDs = (folders || [])
-    .flatMap((folder) => folder?.subFolder?.map((subFolder) => subFolder.id))
-    .filter(Boolean);
+  const getLocationFolderIDs = () => {
+    if (params?.subfolder) {
+      return [params?.subfolder];
+    } else {
+      return (folders || [])
+        .flatMap((folder) =>
+          folder?.subFolder?.map((subFolder) => subFolder.id)
+        )
+        .filter(Boolean);
+    }
+  };
 
   useEffect(() => {
     if (status_code === 200) {
@@ -61,7 +69,8 @@ const AddFolder = ({ controller }) => {
         dispatch(modalType(""));
       }
     }
-  }, [is_processed, modalInstance, dispatch]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [is_processed, modalInstance]);
 
   useEffect(() => {
     if (selectedFileIDs.length > 0 && params?.parent_folder?.length > 0) {
@@ -71,11 +80,14 @@ const AddFolder = ({ controller }) => {
 
   useEffect(() => {
     if (
-      (processType?.is_selected === "communication-apps-ipdr" ||
-        processType?.is_selected === "voip-ipdr") &&
-      locationFolderIDs?.length > 0
+      processType?.is_selected === "communication-apps-ipdr" ||
+      processType?.is_selected === "voip-ipdr"
     ) {
-      apiCall("get", `${IPDR_COMMUNICATION_LIST}?ids=${locationFolderIDs}`, {});
+      apiCall(
+        "get",
+        `${IPDR_COMMUNICATION_LIST}?ids=${getLocationFolderIDs()}`,
+        {}
+      );
     }
   }, [processType?.is_selected]);
 

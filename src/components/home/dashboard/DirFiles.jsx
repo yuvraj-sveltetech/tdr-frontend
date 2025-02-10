@@ -26,6 +26,7 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
       `${URL.ALL_FILES?.[activeBtnState]}?project_id=${param?.parent_folder}&location_id=${param?.subfolder}&file_type=${activeBtnState}`,
       {}
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeBtnState]);
 
   useEffect(() => {
@@ -203,7 +204,10 @@ const DirFiles = ({ index, toggleFileUploadModal, category, modalType }) => {
           </div>
         </div>
 
-        <div className="container-fluid" style={{ overflow: "auto", height: "60vh" }}>
+        <div
+          className="container-fluid"
+          style={{ overflow: "auto", height: "60vh" }}
+        >
           <div className="row py-2">{renderFiles()}</div>
         </div>
       </div>

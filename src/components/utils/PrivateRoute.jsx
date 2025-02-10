@@ -1,20 +1,23 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import { folder } from "../../redux/slices/FolderSlice";
+import React, { useEffect } from "react";
+import { Outlet, Navigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
-// import Cookies from "js-cookie";
+import { folder } from "../../redux/slices/FolderSlice";
 
 const PrivateRoute = () => {
-  let auth = localStorage.getItem("auth_token");
+  const auth = Cookies.get("ss_tkn");
   const dispatch = useDispatch();
-  // return auth ? <Outlet /> : <Navigate to="/" />;
-  if (auth) {
-    return <Outlet />;
-  } else {
-    dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
-    window.close();
-  }
-  // return auth ? <Outlet /> : window.close() &&  localStorage.clear();
+
+  useEffect(() => {
+    if (!auth) {
+      dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
+      localStorage.clear();
+      window.location.href = process.env.REACT_APP_REDIRECT_URL;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth]);
+
+  return auth ? <Outlet /> : <Navigate to="/" replace />;
 };
 
 export default PrivateRoute;
