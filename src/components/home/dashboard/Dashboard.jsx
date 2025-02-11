@@ -1,4 +1,4 @@
-import React, { useState, Suspense, useEffect } from "react";
+import React, { useState, Suspense, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navbar, CreateFolder } from "../../utils/index";
 import { useNavigate } from "react-router-dom";
@@ -14,32 +14,40 @@ const Dashboard = () => {
 
   const toggleFileUploadModal = () => setShow(!show);
 
-  const checkAuth = () => {
-    const auth = Cookies.get("ss_tkn");
+  // Store the previous cookie value without triggering re-renders
+  const previousCookieRef = useRef(Cookies.get("ss_tkn") || "");
 
-    if (!auth) {
-      dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
-      localStorage.clear();
-      navigate(process.env.REACT_APP_REDIRECT_URL || "/", { replace: true });
-    }
-  };
-
-
-  
   useEffect(() => {
-    checkAuth(); // Initial check when component mounts
+    const checkAuth = () => {
+      const currentCookie = Cookies.get("ss_tkn") || "";
 
-    const handleStorageChange = (event) => {
-      if (event.key === "user") {
-        window.location.reload(); // Reload page if localStorage user changes
-        // navigate("/");
+      if (!currentCookie) {
+        console.log("User logged out! Redirecting...");
+
+        // Clear Redux state and localStorage
+        dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
+        localStorage.clear();
+
+        // Redirect user
+        navigate(process.env.REACT_APP_REDIRECT_URL || "/", { replace: true });
       }
+
+      // Update previous cookie value
+      previousCookieRef.current = currentCookie;
     };
 
-    window.addEventListener("storage", handleStorageChange);
+    const handleTabFocus = () => {
+      console.log("Tab is focused. Checking authentication...");
+      checkAuth();
+    };
+
+    // Listen for tab visibility change and focus
+    document.addEventListener("visibilitychange", handleTabFocus);
+    window.addEventListener("focus", handleTabFocus);
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
+      document.removeEventListener("visibilitychange", handleTabFocus);
+      window.removeEventListener("focus", handleTabFocus);
     };
   }, [dispatch, navigate]);
 

@@ -26,7 +26,7 @@ const persistConfig = {
   key: "root",
   storage,
   blacklist: [
-    "folder",
+    // "folder",
     "modal",
     "headers",
     "show_count",
