@@ -27,10 +27,13 @@ const Dashboard = () => {
           console.log("Cookie removed! Clearing data and redirecting...");
           dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
           localStorage.clear();
-          navigate(process.env.REACT_APP_REDIRECT_URL || "/", { replace: true });
+          navigate(process.env.REACT_APP_REDIRECT_URL || "/", {
+            replace: true,
+          });
         } else {
           // If cookie value changed, reload the page
           console.log("Cookie changed! Reloading page...");
+          dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
           window.location.reload();
         }
       }

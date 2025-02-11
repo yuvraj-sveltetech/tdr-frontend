@@ -7,7 +7,7 @@ import { folder } from "../../redux/slices/FolderSlice";
 const PrivateRoute = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   // Store the previous cookie value without triggering re-renders
   const previousCookieRef = useRef(Cookies.get("ss_tkn") || "");
 
@@ -21,10 +21,13 @@ const PrivateRoute = () => {
           console.log("Cookie removed! Clearing data and redirecting...");
           dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
           localStorage.clear();
-          navigate(process.env.REACT_APP_REDIRECT_URL || "/", { replace: true });
+          navigate(process.env.REACT_APP_REDIRECT_URL || "/", {
+            replace: true,
+          });
         } else {
           // If cookie value changed, reload the page
           console.log("Cookie changed! Reloading page...");
+          dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
           window.location.reload();
         }
       }
