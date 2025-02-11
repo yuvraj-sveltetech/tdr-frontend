@@ -21,15 +21,18 @@ const Dashboard = () => {
     const checkAuth = () => {
       const currentCookie = Cookies.get("ss_tkn") || "";
 
-      if (!currentCookie) {
-        console.log("User logged out! Redirecting...");
-
-        // Clear Redux state and localStorage
-        dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
-        localStorage.clear();
-
-        // Redirect user
-        navigate(process.env.REACT_APP_REDIRECT_URL || "/", { replace: true });
+      if (currentCookie !== previousCookieRef.current) {
+        if (!currentCookie) {
+          // If cookie is removed, clear data and redirect
+          console.log("Cookie removed! Clearing data and redirecting...");
+          dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
+          localStorage.clear();
+          navigate(process.env.REACT_APP_REDIRECT_URL || "/", { replace: true });
+        } else {
+          // If cookie value changed, reload the page
+          console.log("Cookie changed! Reloading page...");
+          window.location.reload();
+        }
       }
 
       // Update previous cookie value
@@ -42,7 +45,12 @@ const Dashboard = () => {
     };
 
     // Listen for tab visibility change and focus
-    document.addEventListener("visibilitychange", handleTabFocus);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        handleTabFocus();
+      }
+    });
+
     window.addEventListener("focus", handleTabFocus);
 
     return () => {
