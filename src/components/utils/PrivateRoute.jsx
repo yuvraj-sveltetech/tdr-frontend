@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { Outlet, Navigate, useNavigate } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { folder } from "../../redux/slices/FolderSlice";
 
 const PrivateRoute = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   // Store the previous cookie value without triggering re-renders
   const previousCookieRef = useRef(Cookies.get("ss_tkn") || "");
