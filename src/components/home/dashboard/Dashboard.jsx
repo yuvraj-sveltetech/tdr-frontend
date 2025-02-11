@@ -1,5 +1,6 @@
 import React, { useState, Suspense, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Navbar, CreateFolder } from "../../utils/index";
 import { folder } from "../../../redux/slices/FolderSlice";
 import Cookies from "js-cookie";
@@ -9,6 +10,7 @@ const Dashboard = () => {
   const [show, setShow] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const toggleFileUploadModal = () => setShow(!show);
 
@@ -28,7 +30,7 @@ const Dashboard = () => {
         } else {
           // If cookie value changed, reload the page
           dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
-          window.location.reload();
+          window.location.href = "/";
         }
       }
 
