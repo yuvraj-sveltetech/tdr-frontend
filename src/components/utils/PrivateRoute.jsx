@@ -22,15 +22,25 @@ const PrivateRoute = () => {
     checkAuth(); // Initial check when component mounts
 
     const handleStorageChange = (event) => {
-      if (event.key === "auth_token") {
+      if (event.key === "user") {
         checkAuth(); // Re-check cookies when localStorage updates
       }
     };
 
+    const handleCookieChange = () => {
+      window.location.reload(); // Reload page if cookies change
+    };
+
     window.addEventListener("storage", handleStorageChange);
+    const cookieInterval = setInterval(() => {
+      if (!Cookies.get("ss_tkn")) {
+        handleCookieChange();
+      }
+    }, 1000);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
+      clearInterval(cookieInterval);
     };
   }, [dispatch, navigate]);
 
