@@ -1,12 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const getInitialSelected = () => {
+  const activeBtn = localStorage.getItem("active_btn");
+  if (activeBtn === "cdr") return "export-ist-numbers";
+  if (activeBtn === "ipdr") return "search-numbers-ipdr";
+  return "export-ist-numbers-gprs";
+};
+
 export const breadCrumbSlice = createSlice({
   name: "BreadCrumb",
   initialState: {
     show: 0,
     switch_component: "",
     active_btn: localStorage.getItem("active_btn") || "cdr",
-    is_selected: "export-ist-numbers",
+    is_selected: getInitialSelected(),
     is_sub_ipdr_option: "all",
     ipdr_communication_apps: {
       selected: "",
