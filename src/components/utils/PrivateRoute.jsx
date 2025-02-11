@@ -12,7 +12,7 @@ const PrivateRoute = () => {
     if (!auth) {
       dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
       localStorage.clear();
-      // window.location.href = process.env.REACT_APP_REDIRECT_URL;
+      window.location.href = process.env.REACT_APP_REDIRECT_URL;
     }
   };
 
