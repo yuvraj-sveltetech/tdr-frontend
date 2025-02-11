@@ -23,24 +23,14 @@ const PrivateRoute = () => {
 
     const handleStorageChange = (event) => {
       if (event.key === "user") {
-        checkAuth(); // Re-check cookies when localStorage updates
+        window.location.reload(); // Reload page if localStorage user changes
       }
-    };
-
-    const handleCookieChange = () => {
-      window.location.reload(); // Reload page if cookies change
     };
 
     window.addEventListener("storage", handleStorageChange);
-    const cookieInterval = setInterval(() => {
-      if (!Cookies.get("ss_tkn")) {
-        handleCookieChange();
-      }
-    }, 1000);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
-      clearInterval(cookieInterval);
     };
   }, [dispatch, navigate]);
 
