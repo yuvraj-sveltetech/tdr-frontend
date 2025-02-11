@@ -29,7 +29,8 @@ const Dashboard = () => {
 
     const handleStorageChange = (event) => {
       if (event.key === "user") {
-        window.location.reload(); // Reload page if localStorage user changes
+        // window.location.reload(); // Reload page if localStorage user changes
+        navigate("/");
       }
     };
 
