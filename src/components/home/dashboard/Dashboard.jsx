@@ -33,7 +33,7 @@ const Dashboard = () => {
         } else {
           // If cookie value changed, reload the page
           console.log("Cookie changed! Reloading page...");
-          dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
+          // dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
           window.location.reload();
         }
       }
