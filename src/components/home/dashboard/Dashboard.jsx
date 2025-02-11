@@ -1,16 +1,16 @@
 import React, { useState, Suspense, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navbar, CreateFolder } from "../../utils/index";
-import { useNavigate } from "react-router-dom";
-import { folder } from "../../../redux/slices/FolderSlice";
-import Cookies from "js-cookie";
+// import { useNavigate } from "react-router-dom";
+// import { folder } from "../../../redux/slices/FolderSlice";
+// import Cookies from "js-cookie";
 
 const Dashboard = () => {
   const showCount = useSelector((state) => state.show_count.show);
   const [show, setShow] = useState(false);
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  // const navigate = useNavigate();
 
   const toggleFileUploadModal = () => setShow(!show);
 
