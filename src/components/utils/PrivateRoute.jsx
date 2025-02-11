@@ -22,7 +22,7 @@ const PrivateRoute = () => {
     checkAuth(); // Initial check when component mounts
 
     const handleStorageChange = (event) => {
-      if (event.key === "auth_change") {
+      if (event.key === "auth_token") {
         checkAuth(); // Re-check cookies when localStorage updates
       }
     };

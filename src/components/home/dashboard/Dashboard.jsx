@@ -9,18 +9,17 @@ const Dashboard = () => {
 
   const toggleFileUploadModal = () => setShow(!show);
 
-  // Simulate login with a new auth token
-  const handleLogin = () => {
-    Cookies.set("ss_tkn", "new-auth-token"); // Update auth token in cookies
-    localStorage.setItem("auth_change", Date.now()); // Notify all tabs
-  };
+  // // Simulate login with a new auth token
+  // const handleLogin = () => {
+  //   Cookies.set("ss_tkn", "new-auth-token"); // Update auth token in cookies
+  //   localStorage.setItem("auth_change", Date.now()); // Notify all tabs
+  // };
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="main">
         <Navbar toggleFileUploadModal={toggleFileUploadModal} />
         {showCount === 0 && <CreateFolder />}
-        <button onClick={handleLogin}>Simulate Login</button>
       </div>
     </Suspense>
   );
