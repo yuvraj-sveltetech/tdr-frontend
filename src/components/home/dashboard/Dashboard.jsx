@@ -15,6 +15,7 @@ const Dashboard = () => {
     const auth = Cookies.get("ss_tkn");
     if (auth) {
       localStorage.setItem("auth_token", auth);
+      window.location.reload();
     } else {
       dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
       localStorage.clear();
