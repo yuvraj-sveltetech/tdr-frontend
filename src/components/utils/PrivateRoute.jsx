@@ -23,8 +23,8 @@ const PrivateRoute = () => {
 
     const handleStorageChange = (event) => {
       if (event.key === "user") {
-        // window.location.reload(); // Reload page if localStorage user changes
-        navigate("/");
+        window.location.reload(); // Reload page if localStorage user changes
+        // navigate("/");
       }
     };
 

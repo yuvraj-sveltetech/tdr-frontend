@@ -24,13 +24,15 @@ const Dashboard = () => {
     }
   };
 
+
+  
   useEffect(() => {
     checkAuth(); // Initial check when component mounts
 
     const handleStorageChange = (event) => {
       if (event.key === "user") {
-        // window.location.reload(); // Reload page if localStorage user changes
-        navigate("/");
+        window.location.reload(); // Reload page if localStorage user changes
+        // navigate("/");
       }
     };
 
