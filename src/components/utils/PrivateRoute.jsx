@@ -1,39 +1,38 @@
 import React, { useEffect } from "react";
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet, Navigate, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { folder } from "../../redux/slices/FolderSlice";
 
 const PrivateRoute = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const checkAuth = () => {
     const auth = Cookies.get("ss_tkn");
+
     if (!auth) {
       dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
       localStorage.clear();
-      window.location.href = process.env.REACT_APP_REDIRECT_URL;
-    } else {
-      window.location.reload();
+      navigate(process.env.REACT_APP_REDIRECT_URL || "/", { replace: true });
     }
   };
 
   useEffect(() => {
     checkAuth(); // Initial check when component mounts
 
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        checkAuth(); // Re-check auth when the tab becomes active
+    const handleStorageChange = (event) => {
+      if (event.key === "auth_change") {
+        checkAuth(); // Re-check cookies when localStorage updates
       }
     };
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("storage", handleStorageChange);
 
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch, navigate]);
 
   return Cookies.get("ss_tkn") ? <Outlet /> : <Navigate to="/" replace />;
 };
