@@ -45,6 +45,10 @@ export const options = {
       name: "TOR/VPN",
       endpoint: "get-tor-vpn",
     },
+    {
+      name: "Interconnectivity",
+      endpoint: "get-interconnectivity",
+    },
   ],
   gprs: [
     {
