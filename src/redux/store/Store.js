@@ -25,7 +25,14 @@ import modalSlice from "../slices/ModalSlice";
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ["modal", "headers", "show_count", "selected_files", "sdr"],
+  blacklist: [
+    // "folder",
+    "modal",
+    "headers",
+    "show_count",
+    "selected_files",
+    "sdr",
+  ],
 };
 
 const rootReducer = combineReducers({
