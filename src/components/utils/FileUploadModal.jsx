@@ -12,6 +12,8 @@ const FileUploader = () => {
   const activeBtnState = useSelector((state) => state.show_count?.active_btn);
 
   const [files, setFiles] = useState([]);
+  const [erroredFiles, setErroredFiles] = useState([]);
+
   const param = useParams();
   const dispatch = useDispatch();
 
@@ -30,6 +32,7 @@ const FileUploader = () => {
     if (status_code === 201) {
       setFiles([]);
       getAllFiles();
+      setErroredFiles(data?.invalid_files || []);
       return;
     }
   }, [status_code, data]);
@@ -43,6 +46,7 @@ const FileUploader = () => {
   };
 
   const handleFileSelect = useCallback((event) => {
+    setErroredFiles([]);
     const newFiles = event.target.files;
     setFiles((prev) => [...prev, ...newFiles]);
   }, []);
@@ -76,6 +80,8 @@ const FileUploader = () => {
 
     apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
   };
+
+  console.log(erroredFiles, "erroredFiles");
 
   return (
     <div
@@ -160,7 +166,7 @@ const FileUploader = () => {
                 <div className="pt-3">
                   <div
                     className="w-full d-flex flex-wrap gap-3 list-none"
-                    style={{ height: "35vh", overflowY: "scroll" }}
+                    style={{ height: "25vh", overflowY: "scroll" }}
                   >
                     {files?.length > 0 ? (
                       files?.map((file, i) => (
@@ -227,6 +233,19 @@ const FileUploader = () => {
                     )}
                   </div>
                 </div>
+
+                {erroredFiles?.length > 0 && (
+                  <div
+                    className="mt-4"
+                    style={{ height: "5rem", overflow: "auto" }}
+                  >
+                    {erroredFiles?.map((file) => (
+                      <div className="alert alert-danger m-0 mt-1" role="alert">
+                        Error in <strong>{file?.file_name}</strong>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
