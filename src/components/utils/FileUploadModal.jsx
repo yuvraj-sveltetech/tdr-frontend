@@ -1,11 +1,14 @@
 import { MdOutlineDelete } from "react-icons/md";
 import React, { useState, useCallback, useEffect } from "react";
 import fileImg from "../../assets/images/file.png";
+import Cookies from "js-cookie";
 import * as API_URL from "../utils/ConstantUrl";
 import useApiHandle from "../utils/useApiHandle";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { folder } from "../../redux/slices/FolderSlice";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const FileUploader = () => {
   const { data, loading, apiCall, status_code } = useApiHandle();
@@ -13,7 +16,10 @@ const FileUploader = () => {
 
   const [files, setFiles] = useState([]);
   const [erroredFiles, setErroredFiles] = useState([]);
+  const [ipdrMultiFileLoader, setIpdrMultiFileLoader] = useState(false);
+  const [uploadedFileCount, setUploadedFileCount] = useState(0);
 
+  const auth = Cookies.get("ss_tkn");
   const param = useParams();
   const dispatch = useDispatch();
 
@@ -30,12 +36,30 @@ const FileUploader = () => {
     }
 
     if (status_code === 201) {
-      setFiles([]);
-      getAllFiles();
+      if (activeBtnState !== "ipdr") {
+        setFiles([]);
+        getAllFiles();
+      }
       setErroredFiles(data?.invalid_files || []);
       return;
     }
   }, [status_code, data]);
+
+useEffect(() => {
+  if (files?.length > 0 && files.length === uploadedFileCount) {
+    setIpdrMultiFileLoader(false);
+
+    // Avoid unnecessary state updates
+    if (uploadedFileCount !== 0) {
+      setUploadedFileCount(0);
+    }
+    if (files.length > 0) {
+      setFiles([]);
+    }
+
+    getAllFiles(); // Ensure this does not modify uploadedFileCount
+  }
+}, [uploadedFileCount, files]); 
 
   const getAllFiles = () => {
     apiCall(
@@ -67,21 +91,55 @@ const FileUploader = () => {
     return `${size} ${units[index]}`;
   }
 
-  const sendFiles = () => {
-    const formData = new FormData();
+  const ipdrApiCall = async (fileFormData) => {
+    setIpdrMultiFileLoader(true);
 
-    files?.forEach((file) => {
-      formData.append("file", file);
-    });
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_KEY}${API_URL.ALL_FILES?.[activeBtnState]}`,
+        fileFormData,
+        {
+          headers: {
+            Authorization: `Bearer ${auth}`,
+            "Content-Type": "multipart/form-data", // Ensure content type is set for file upload
+          },
+        }
+      );
 
-    formData.append("project_id", param?.parent_folder);
-    formData.append("location_id", param?.subfolder);
-    formData.append("file_type", activeBtnState);
-
-    apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
+      toast.success(response?.data?.Message);
+    } catch (error) {
+      console.error("Error fetching files:", error);
+      return null;
+    } finally {
+      setUploadedFileCount((prevCount) => prevCount + 1);
+    }
   };
 
-  console.log(erroredFiles, "erroredFiles");
+  const sendFiles = () => {
+    if (activeBtnState === "ipdr") {
+      files.forEach((file, index) => {
+        const fileFormData = new FormData();
+        fileFormData.append("file", file);
+        fileFormData.append("project_id", param?.parent_folder);
+        fileFormData.append("location_id", param?.subfolder);
+        fileFormData.append("file_type", activeBtnState);
+
+        ipdrApiCall(fileFormData);
+      });
+    } else {
+      // If not "ipdr", send files as a batch request
+      const formData = new FormData();
+      files?.forEach((file) => {
+        formData.append("file", file);
+      });
+
+      formData.append("project_id", param?.parent_folder);
+      formData.append("location_id", param?.subfolder);
+      formData.append("file_type", activeBtnState);
+
+      apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
+    }
+  };
 
   return (
     <div
@@ -90,7 +148,7 @@ const FileUploader = () => {
       aria-labelledby="exampleModalToggleLabel2"
       tabIndex="-1"
       data-bs-keyboard="false"
-      data-bs-backdrop={loading ? "static" : true}
+      data-bs-backdrop="static"
     >
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
@@ -103,12 +161,16 @@ const FileUploader = () => {
               className="btn-close"
               data-bs-dismiss={loading ? "" : "modal"}
               aria-label="Close"
+              disabled={loading || ipdrMultiFileLoader}
+              onClick={() => {
+                setErroredFiles([]);
+                setFiles([]);
+              }}
             ></button>
           </div>
           <div className="modal-body">
-            {loading && (
+            {(loading || ipdrMultiFileLoader) && (
               <div
-                className=""
                 style={{
                   position: "absolute",
                   width: "96%",
@@ -257,7 +319,8 @@ const FileUploader = () => {
                 className="btn btn-primary rounded-sm me-3"
                 disabled={
                   (files?.length === 0 && !loading) ||
-                  (files?.length > 0 && loading)
+                  (files?.length > 0 && loading) ||
+                  (files?.length > 0 && ipdrMultiFileLoader)
                 }
                 onClick={sendFiles}
               >
