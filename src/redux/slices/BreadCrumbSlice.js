@@ -1,10 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const getStoredActiveBtn = () => {
+  const value = localStorage.getItem("active_btn");
+  return value && value.trim() ? value : "cdr";
+};
+
 const getInitialSelected = () => {
-  const activeBtn = localStorage.getItem("active_btn");
+  const activeBtn = getStoredActiveBtn();
   if (activeBtn === "cdr") return "export-ist-numbers";
   if (activeBtn === "ipdr") return "search-numbers-ipdr";
-  return "export-ist-numbers-gprs";
+  if (activeBtn === "gprs") return "export-ist-numbers-gprs";
 };
 
 export const breadCrumbSlice = createSlice({
@@ -12,7 +17,7 @@ export const breadCrumbSlice = createSlice({
   initialState: {
     show: 0,
     switch_component: "",
-    active_btn: localStorage.getItem("active_btn") || "cdr",
+    active_btn: getStoredActiveBtn(),
     is_selected: getInitialSelected(),
     is_sub_ipdr_option: "all",
     ipdr_communication_apps: {
@@ -67,10 +72,9 @@ export const breadCrumbSlice = createSlice({
     },
 
     activeBtn: (state, action) => {
-      return {
-        ...state,
-        active_btn: action.payload,
-      };
+      const newValue = action.payload?.trim() || "cdr";
+      state.active_btn = newValue;
+      localStorage.setItem("active_btn", newValue);
     },
 
     isProccesed: (state, action) => {
