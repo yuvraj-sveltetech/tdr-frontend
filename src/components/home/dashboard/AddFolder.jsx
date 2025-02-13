@@ -94,6 +94,7 @@ const AddFolder = ({ controller }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [processType?.is_selected]);
 
+
   const getFilesData = async () => {
     try {
       const selectedFiles = (folders || [])
@@ -175,7 +176,10 @@ const AddFolder = ({ controller }) => {
             {option}
           </option>
         ))}
-        <option value="">Unknown Apps</option>
+
+        {processType?.is_selected === "voip-ipdr" && (
+          <option value="">Unknown Apps</option>
+        )}
       </select>
     );
   };
