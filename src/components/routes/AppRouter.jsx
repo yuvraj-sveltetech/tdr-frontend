@@ -19,8 +19,11 @@ import {
 import PrivateRoute from "../utils/PrivateRoute";
 import Layout from "../home/layout/Layout";
 import Search from "../home/search/Search";
+import { useAuthToken } from "../auth/Authenticate";
 
 const AppRouter = () => {
+  useAuthToken();
+
   return (
     <Router basename="/">
       <Layout>
