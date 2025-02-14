@@ -34,21 +34,23 @@ const AddFolder = ({ controller }) => {
   const getLocationFolderIDs = () => {
     if (params?.subfolder) {
       return [params?.subfolder];
-    } else {
-      return (folders || [])
-        .flatMap((folder) =>
-          folder?.subFolder?.map((subFolder) => subFolder.id)
-        )
-        .filter(Boolean);
     }
-  };
 
-  useEffect(() => {
-    if (status_code === 200) {
-      dispatch(setIpdrCommunicationList(data?.app_name || []));
-      dispatch(setSelectedIpdrCommunication(data?.app_name?.[0] || ""));
+    if (!folders || folders.length === 0) {
+      return [];
     }
-  }, [status_code]);
+
+    const selectedIDs = folders
+      .flatMap(
+        (folder) =>
+          folder?.subFolder
+            ?.filter((subFolder) => subFolder.select_all) // Only include selected subFolders
+            .map((subFolder) => subFolder.id) // Extract IDs
+      )
+      .filter(Boolean);
+
+    return selectedIDs;
+  };
 
   useEffect(() => {
     const myModal = Modal.getOrCreateInstance(
@@ -79,20 +81,37 @@ const AddFolder = ({ controller }) => {
   }, [selectedFileIDs, params?.parent_folder]);
 
   useEffect(() => {
+    const locationFolderIDs = getLocationFolderIDs();
+
     if (
       processType?.is_selected === "communication-apps-ipdr" ||
       processType?.is_selected === "voip-ipdr"
     ) {
-      let url = `${IPDR_COMMUNICATION_LIST}?ids=${getLocationFolderIDs()}`;
+      if (locationFolderIDs.length > 0) {
+        let url = `${IPDR_COMMUNICATION_LIST}?ids=${locationFolderIDs.join(
+          ","
+        )}`;
 
-      if (processType?.is_selected === "voip-ipdr") {
-        url += "&voip=true";
+        if (processType?.is_selected === "voip-ipdr") {
+          url += "&voip=true";
+        }
+
+        apiCall("get", url, {});
+      } else {
+        // If no valid IDs, reset the Redux state
+        dispatch(setIpdrCommunicationList([]));
+        dispatch(setSelectedIpdrCommunication(""));
       }
-
-      apiCall("get", url, {});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [processType?.is_selected]);
+  }, [processType?.is_selected, folders]);
+
+  useEffect(() => {
+    if (status_code === 200) {
+      dispatch(setIpdrCommunicationList(data?.app_name || []));
+      dispatch(setSelectedIpdrCommunication(data?.app_name?.[0] || ""));
+    }
+  }, [status_code, data]);
 
   const getFilesData = async () => {
     try {
@@ -175,7 +194,10 @@ const AddFolder = ({ controller }) => {
             {option}
           </option>
         ))}
-        <option value="">Unknown Apps</option>
+
+        {processType?.is_selected === "voip-ipdr" && (
+          <option value="">Unknown Apps</option>
+        )}
       </select>
     );
   };

@@ -55,7 +55,6 @@ const Navbar = ({ toggleFileUploadModal, category }) => {
 
   const handleBtn = (btn) => {
     const activeButton = btn.toLowerCase();
-    localStorage.setItem("active_btn", activeButton);
     setActiveBtn(activeButton);
     dispatch(
       is_selected({

@@ -531,7 +531,7 @@ nav ul li a {
 /* MUI component CSS */
 .css-1hr2sou-MuiTablePagination-root .MuiTablePagination-selectLabel,
 .css-11cfq65-MuiTablePagination-displayedRows {
-  margin-top: revert !important;
+  margin: 0 !important;
 }
 
 #send_data .btn.btn-primary:disabled {
