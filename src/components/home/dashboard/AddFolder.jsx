@@ -109,7 +109,7 @@ const AddFolder = ({ controller }) => {
   useEffect(() => {
     if (status_code === 200) {
       dispatch(setIpdrCommunicationList(data?.app_name || []));
-      dispatch(setSelectedIpdrCommunication(data?.app_name?.[0] || ""));
+      dispatch(setSelectedIpdrCommunication("all"));
     }
   }, [status_code, data]);
 
@@ -188,6 +188,14 @@ const AddFolder = ({ controller }) => {
         <option disabled selected>
           Select App
         </option>
+
+        {["communication-apps-ipdr", "voip-ipdr"].includes(
+          processType?.is_selected
+        ) && (
+          <option value="all" selected>
+            All Apps
+          </option>
+        )}
 
         {processType?.ipdr_communication_apps?.list?.map((option) => (
           <option value={option} key={option}>

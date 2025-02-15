@@ -16,6 +16,7 @@ const FileUploader = () => {
 
   const [files, setFiles] = useState([]);
   const [erroredFiles, setErroredFiles] = useState([]);
+  const [emptyFiles, setEmptyFiles] = useState(null);
 
   // const [ipdrMultiFileLoader, setIpdrMultiFileLoader] = useState(false);
   // const [uploadedFileCount, setUploadedFileCount] = useState(0);
@@ -45,6 +46,7 @@ const FileUploader = () => {
       setFiles([]);
       getAllFiles();
       setErroredFiles(data?.invalid_files || []);
+      setEmptyFiles(data?.empty_files?.empty_file_count);
       return;
     }
   }, [status_code, data]);
@@ -184,6 +186,7 @@ const FileUploader = () => {
     apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
   };
 
+
   return (
     <div
       className="modal fade"
@@ -209,6 +212,7 @@ const FileUploader = () => {
               onClick={() => {
                 setErroredFiles([]);
                 setFiles([]);
+                setEmptyFiles(null);
               }}
             ></button>
           </div>
@@ -358,10 +362,13 @@ const FileUploader = () => {
           </div>
 
           <div className="modal-footer">
-            <footer className="d-flex justify-content-end">
+            <footer className="w-100 d-flex align-items-center justify-content-between">
+              {typeof emptyFiles === "number" && (
+                <span>Empty Files: {emptyFiles}</span>
+              )}
               <button
                 id="submit"
-                className="btn btn-primary rounded-sm me-3"
+                className="btn btn-primary rounded-sm ms-auto me-3"
                 disabled={
                   (files?.length === 0 && !loading) ||
                   (files?.length > 0 && loading)
