@@ -127,7 +127,11 @@ const ViewFile = ({
     const filterChanged =
       prevFilter?.items?.[0]?.value !== memoizedFilterModel?.items?.[0]?.value;
 
-    if (paginationChanged || filterChanged) {
+    const operatorChanged =
+      prevFilter?.items?.[0]?.operator !==
+      memoizedFilterModel?.items?.[0]?.operator;
+
+    if (paginationChanged || filterChanged || operatorChanged) {
       fetchData(
         paginationModel.page,
         paginationModel.pageSize,
