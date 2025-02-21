@@ -115,14 +115,7 @@ const AddFolder = ({ controller }) => {
 
   const getFilesData = async () => {
     try {
-      const selectedFiles = (folders || [])
-        .flatMap((folder) =>
-          folder?.subFolder
-            ?.filter((subFolder) => subFolder?.select_all)
-            ?.map((subFolder) => subFolder.id)
-        )
-        .filter(Boolean); // Remove undefined, null, or falsy values
-
+      const selectedFiles = getLocationFolderIDs();
       setSelectedFileIDs(selectedFiles);
 
       if (selectedFiles.length === 0) {
@@ -132,6 +125,7 @@ const AddFolder = ({ controller }) => {
               ? "Location Folders"
               : "All Files"
             : "";
+
         toast.warning(`Please Upload Files or Select ${warningMessage}`);
       }
     } catch (error) {
