@@ -1,14 +1,14 @@
 import { MdOutlineDelete } from "react-icons/md";
 import React, { useState, useCallback, useEffect } from "react";
 import fileImg from "../../assets/images/file.png";
-// import Cookies from "js-cookie";
-// import axios from "axios";
-// import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 import * as API_URL from "../utils/ConstantUrl";
 import useApiHandle from "../utils/useApiHandle";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { folder } from "../../redux/slices/FolderSlice";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const FileUploader = () => {
   const { data, loading, apiCall, status_code } = useApiHandle();
@@ -17,10 +17,11 @@ const FileUploader = () => {
   const [files, setFiles] = useState([]);
   const [erroredFiles, setErroredFiles] = useState([]);
   const [emptyFiles, setEmptyFiles] = useState(null);
+  const [remainingFileCount, setRemainingFileCount] = useState(null);
 
-  // const [ipdrMultiFileLoader, setIpdrMultiFileLoader] = useState(false);
-  // const [uploadedFileCount, setUploadedFileCount] = useState(0);
-  // const auth = Cookies.get("ss_tkn");
+  const [ipdrMultiFileLoader, setIpdrMultiFileLoader] = useState(false);
+  const [uploadedFileCount, setUploadedFileCount] = useState(0);
+  const auth = Cookies.get("ss_tkn");
 
   const param = useParams();
   const dispatch = useDispatch();
@@ -38,34 +39,42 @@ const FileUploader = () => {
     }
 
     if (status_code === 201) {
-      // if (activeBtnState !== "ipdr") {
-      //   setFiles([]);
-      //   getAllFiles();
-      // }
+      if (activeBtnState !== "ipdr") {
+        setFiles([]);
+        getAllFiles();
+      }
 
-      setFiles([]);
-      getAllFiles();
-      setErroredFiles(data?.invalid_files || []);
-      setEmptyFiles(data?.empty_files?.empty_file_count);
+      // setFiles([]);
+      // getAllFiles();
+      // setErroredFiles(data?.invalid_files || []);
+      setEmptyFiles(data?.empty_files?.empty_file_count || null);
       return;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status_code, data]);
 
-  // useEffect(() => {
-  //   if (files?.length > 0 && files.length === uploadedFileCount) {
-  //     setIpdrMultiFileLoader(false);
+  useEffect(() => {
+    if (files?.length > 0 && files.length === uploadedFileCount) {
+      setIpdrMultiFileLoader(false);
 
-  //     // Avoid unnecessary state updates
-  //     if (uploadedFileCount !== 0) {
-  //       setUploadedFileCount(0);
-  //     }
-  //     if (files.length > 0) {
-  //       setFiles([]);
-  //     }
+      // Avoid unnecessary state updates
+      if (uploadedFileCount !== 0) {
+        setUploadedFileCount(0);
+      }
+      if (files.length > 0) {
+        setFiles([]);
+      }
 
-  //     getAllFiles(); // Ensure this does not modify uploadedFileCount
-  //   }
-  // }, [uploadedFileCount, files]);
+      getAllFiles(); // Ensure this does not modify uploadedFileCount
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uploadedFileCount, files]);
+
+  useEffect(() => {
+    if (remainingFileCount === 0) {
+      setRemainingFileCount(null); // Reset to null once all uploads are done
+    }
+  }, [remainingFileCount]);
 
   const getAllFiles = () => {
     apiCall(
@@ -79,11 +88,13 @@ const FileUploader = () => {
     setErroredFiles([]);
     const newFiles = event.target.files;
     setFiles((prev) => [...prev, ...newFiles]);
+    setRemainingFileCount(newFiles?.length);
   }, []);
 
   const handleDelete = (fileName) => {
     const filteredFiles = files?.filter((file) => file?.name !== fileName);
     setFiles([...filteredFiles]);
+    setRemainingFileCount((prev) => (prev !== null ? prev - 1 : null));
   };
 
   function formatFileSize(bytes) {
@@ -97,31 +108,32 @@ const FileUploader = () => {
     return `${size} ${units[index]}`;
   }
 
-  // const ipdrApiCall = async (fileFormData) => {
-  //   setIpdrMultiFileLoader(true);
+  const ipdrApiCall = async (fileFormData, fileName) => {
+    setIpdrMultiFileLoader(true);
 
-  //   try {
-  //     const response = await axios.post(
-  //       `${process.env.REACT_APP_API_KEY}${API_URL.ALL_FILES?.[activeBtnState]}`,
-  //       fileFormData,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${auth}`,
-  //           "Content-Type": "multipart/form-data", // Ensure content type is set for file upload
-  //         },
-  //       }
-  //     );
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_KEY}${API_URL.ALL_FILES?.[activeBtnState]}`,
+        fileFormData,
+        {
+          headers: {
+            Authorization: `Bearer ${auth}`,
+            "Content-Type": "multipart/form-data", // Ensure content type is set for file upload
+          },
+        }
+      );
 
-  //     toast.success(response?.data?.Message);
-  //   } catch (error) {
-  //     console.error("Error fetching files:", error);
-  //     return null;
-  //   } finally {
-  //     setUploadedFileCount((prevCount) => prevCount + 1);
-  //   }
-  // };
+      toast.success(response?.data?.Message);
+    } catch (error) {
+      console.error("Error fetching files:", fileFormData);
+      setErroredFiles((prev) => [...prev, fileName]);
+      return null;
+    } finally {
+      setUploadedFileCount((prevCount) => prevCount + 1);
+    }
+  };
 
-  //  {API CALL IN ONE GOO.....}}}}}}}}}}
+  //  {API CALL IN ONE GOO..... BULK UPOLOAD}}}}}}}}}}
   // const sendFiles = () => {
   //   if (activeBtnState === "ipdr") {
   //     files.forEach((file, index) => {
@@ -149,43 +161,45 @@ const FileUploader = () => {
   // };
 
   const sendFiles = async () => {
-    // if (activeBtnState === "ipdr") {
-    //   for (const file of files) {
-    //     const fileFormData = new FormData();
-    //     fileFormData.append("file", file);
-    //     fileFormData.append("project_id", param?.parent_folder);
-    //     fileFormData.append("location_id", param?.subfolder);
-    //     fileFormData.append("file_type", activeBtnState);
+    if (activeBtnState === "ipdr") {
+      for (const file of files) {
+        const fileFormData = new FormData();
+        fileFormData.append("file", file);
+        fileFormData.append("project_id", param?.parent_folder);
+        fileFormData.append("location_id", param?.subfolder);
+        fileFormData.append("file_type", activeBtnState);
 
-    //     await ipdrApiCall(fileFormData); // Wait for one request to finish before sending the next
-    //   }
-    // } else {
-    //   // If not "ipdr", send files as a batch request
-    //   const formData = new FormData();
-    //   files?.forEach((file) => {
-    //     formData.append("file", file);
-    //   });
+        await ipdrApiCall(fileFormData, file?.name); // Wait for one request to finish before sending the next
+        setRemainingFileCount((prev) => prev - 1);
+      }
+    } else {
+      // If not "ipdr", send files as a batch request
+      const formData = new FormData();
+      files?.forEach((file) => {
+        formData.append("file", file);
+      });
 
-    //   formData.append("project_id", param?.parent_folder);
-    //   formData.append("location_id", param?.subfolder);
-    //   formData.append("file_type", activeBtnState);
+      formData.append("project_id", param?.parent_folder);
+      formData.append("location_id", param?.subfolder);
+      formData.append("file_type", activeBtnState);
 
-    //   apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
-    // }
+      apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
+    }
 
     // If not "ipdr", send files as a batch request
-    const formData = new FormData();
-    files?.forEach((file) => {
-      formData.append("file", file);
-    });
+    // const formData = new FormData();
+    // files?.forEach((file) => {
+    //   formData.append("file", file);
+    // });
 
-    formData.append("project_id", param?.parent_folder);
-    formData.append("location_id", param?.subfolder);
-    formData.append("file_type", activeBtnState);
+    // formData.append("project_id", param?.parent_folder);
+    // formData.append("location_id", param?.subfolder);
+    // formData.append("file_type", activeBtnState);
 
-    apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
+    // apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
   };
 
+  console.log(uploadedFileCount, "uploadedFileCount", remainingFileCount);
 
   return (
     <div
@@ -207,8 +221,8 @@ const FileUploader = () => {
               className="btn-close"
               data-bs-dismiss={loading ? "" : "modal"}
               aria-label="Close"
-              disabled={loading}
-              // disabled={loading || ipdrMultiFileLoader}
+              // disabled={loading}
+              disabled={loading || ipdrMultiFileLoader}
               onClick={() => {
                 setErroredFiles([]);
                 setFiles([]);
@@ -217,13 +231,13 @@ const FileUploader = () => {
             ></button>
           </div>
           <div className="modal-body">
-            {/* {(loading || ipdrMultiFileLoader) && ( */}
-            {loading && (
+            {(loading || ipdrMultiFileLoader) && (
+              /* {loading && ( */
               <div
                 style={{
                   position: "absolute",
                   width: "96%",
-                  height: "97%",
+                  height: "68%",
                   backgroundColor: "#5e555570",
                   display: "flex",
                   alignItems: "center",
@@ -240,7 +254,7 @@ const FileUploader = () => {
             <label
               className="d-flex align-items-center justify-content-center"
               style={{
-                height: "23vh",
+                height: "15vh",
                 border: "1px solid",
                 borderStyle: "dashed",
                 cursor: "pointer",
@@ -270,7 +284,7 @@ const FileUploader = () => {
             </label>
 
             <div>
-              <div className="py-3">
+              <div className="pt-3">
                 <span style={{ fontSize: "1rem", paddingBottom: "5rem" }}>
                   To Upload : <span className="fw-bold">{files?.length}</span>
                 </span>
@@ -345,6 +359,14 @@ const FileUploader = () => {
                   </div>
                 </div>
 
+                {/* 
+                <div
+                  className="bg-black w-full mt-3 text-light px-3 py-2"
+                  style={{ height: "8rem" }}
+                >
+                  <span>File Upload</span>
+                </div> */}
+
                 {erroredFiles?.length > 0 && (
                   <div
                     className="mt-4"
@@ -352,7 +374,7 @@ const FileUploader = () => {
                   >
                     {erroredFiles?.map((file) => (
                       <div className="alert alert-danger m-0 mt-1" role="alert">
-                        Error in <strong>{file?.file_name}</strong>
+                        Error in <strong>{file}</strong>
                       </div>
                     ))}
                   </div>
@@ -366,14 +388,18 @@ const FileUploader = () => {
               {typeof emptyFiles === "number" && (
                 <span>Empty Files: {emptyFiles}</span>
               )}
+
+              {remainingFileCount && ipdrMultiFileLoader && (
+                <span>Remaining Files: {remainingFileCount}</span>
+              )}
+
               <button
                 id="submit"
                 className="btn btn-primary rounded-sm ms-auto me-3"
                 disabled={
                   (files?.length === 0 && !loading) ||
-                  (files?.length > 0 && loading)
-                  //  ||
-                  // (files?.length > 0 && ipdrMultiFileLoader)
+                  (files?.length > 0 && loading) ||
+                  (files?.length > 0 && ipdrMultiFileLoader)
                 }
                 onClick={sendFiles}
               >
