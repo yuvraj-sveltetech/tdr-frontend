@@ -1,7 +1,8 @@
+import {BASE_URL} from "./config"
 export const downloadFile = async (download_link) => {
   try {
     // Construct the download URL
-    const url = process.env.REACT_APP_API_KEY + download_link;
+    const url = BASE_URL + download_link;
 
     // Validate the file's availability (optional)
     const response = await fetch(url, { method: "HEAD" });

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { folder } from "../../redux/slices/FolderSlice";
 import { toast } from "react-toastify";
 import axios from "axios";
+import {BASE_URL} from "../../utils/config"
 
 const FileUploader = () => {
   const { data, loading, apiCall, status_code } = useApiHandle();
@@ -113,7 +114,7 @@ const FileUploader = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_KEY}${API_URL.ALL_FILES?.[activeBtnState]}`,
+        `${BASE_URL}${API_URL.ALL_FILES?.[activeBtnState]}`,
         fileFormData,
         {
           headers: {

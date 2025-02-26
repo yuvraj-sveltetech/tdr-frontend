@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navbar, CreateFolder } from "../../utils/index";
 import { folder } from "../../../redux/slices/FolderSlice";
 import Cookies from "js-cookie";
+import {URL} from "../../../utils/config"
 
 const Dashboard = () => {
   const showCount = useSelector((state) => state.show_count.show);
@@ -24,7 +25,7 @@ const Dashboard = () => {
           // If cookie is removed, clear data and redirect
           dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
           localStorage.clear();
-          window.location.href = process.env.REACT_APP_REDIRECT_URL;
+          window.location.href = URL;
         } else {
           // If cookie value changed, reload the page
           dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));

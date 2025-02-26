@@ -26,7 +26,7 @@ export const useAuthToken = () => {
         window.close();
         if (!window.closed) {
           window.close();
-          // window.location.replace(`${process.env.REACT_APP_REDIRECT_URL}:5001/`);
+
         }
       }
     };
