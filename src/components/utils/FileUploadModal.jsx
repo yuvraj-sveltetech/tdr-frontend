@@ -73,6 +73,7 @@ const FileUploader = () => {
   useEffect(() => {
     if (remainingFileCount === 0) {
       setRemainingFileCount(null); // Reset to null once all uploads are done
+      toast.success("All Files are Uploaded");
     }
   }, [remainingFileCount]);
 
@@ -112,7 +113,7 @@ const FileUploader = () => {
     setIpdrMultiFileLoader(true);
 
     try {
-      const response = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_API_KEY}${API_URL.ALL_FILES?.[activeBtnState]}`,
         fileFormData,
         {
@@ -123,7 +124,7 @@ const FileUploader = () => {
         }
       );
 
-      toast.success(response?.data?.Message);
+      // toast.success(response?.data?.Message);
     } catch (error) {
       console.error("Error fetching files:", fileFormData);
       setErroredFiles((prev) => [...prev, fileName]);
@@ -237,7 +238,7 @@ const FileUploader = () => {
                 style={{
                   position: "absolute",
                   width: "96%",
-                  height: "68%",
+                  height: "93%",
                   backgroundColor: "#5e555570",
                   display: "flex",
                   alignItems: "center",
