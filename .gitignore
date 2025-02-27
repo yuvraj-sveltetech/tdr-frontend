@@ -1,23 +1,44 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-/node_modules
-/.pnp
+# Frontend (React / Next.js)
+node_modules/
+.pnp/
 .pnp.js
+/build/   
+/coverage/
 
-# testing
-/coverage
+# Backend (Node.js - Inside "backend/" folder)
+backend/node_modules/
+backend/logs/
+backend/temp/
+backend/uploads/
+backend/*.zip  # Ignore bulk upload ZIPs
+backend/.env
+backend/.env.local
+backend/.env.production
+backend/.env.development
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+backend/pm2.log
+backend/pm2.pid
 
-# production
-/build
-
-# misc
-.DS_Store
+# Environment Variables (Frontend & Backend)
+.env
 .env.local
+.env.development
+.env.test
+.env.production
 .env.development.local
 .env.test.local
 .env.production.local
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Logs & Debugging Files
+*.log
+debug.log
+error.log
+out.log
+
+# System & Editor-Specific Files
+.DS_Store
+.vscode/
