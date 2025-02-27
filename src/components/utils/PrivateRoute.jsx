@@ -3,6 +3,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { folder } from "../../redux/slices/FolderSlice";
+import {URL} from "../../utils/config";
 
 const PrivateRoute = () => {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const PrivateRoute = () => {
           // If cookie is removed, clear data and redirect
           dispatch(folder({ take_action: "CLEAR_FOLDER", data: [] }));
           localStorage.clear();
-          window.location.href = process.env.REACT_APP_REDIRECT_URL;
+          window.location.href = URL;
         } else {
           // If cookie value changed, reload the page
           window.location.href = "/";

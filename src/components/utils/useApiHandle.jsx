@@ -4,11 +4,11 @@ import { toast } from "react-toastify";
 import * as URL from "../utils/ConstantUrl";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-
+import {BASE_URL,CREATE_FOLDER_URL} from "../../utils/config"
 const useApiHandle = () => {
   const [apiData, setApiData] = useState({ data: {}, status_code: 0 });
   const [loading, setLoading] = useState(false);
-  const baseUrl = process.env.REACT_APP_API_KEY;
+  
   const navigate = useNavigate();
 
   // let accessToken = localStorage.getItem("auth_token");
@@ -19,7 +19,7 @@ const useApiHandle = () => {
     setLoading(true);
 
     const axiosInstance = axios.create({
-      baseURL: iscreate ? process.env.REACT_APP_API_KEY_CREATE_FOLDER : baseUrl,
+      baseURL: iscreate ? CREATE_FOLDER_URL : BASE_URL,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
@@ -51,7 +51,7 @@ const useApiHandle = () => {
     // Function to refresh the access token using the refresh token
     async function refreshAccessToken() {
       try {
-        const response = await axios.post(baseUrl + URL.REFRESH, {
+        const response = await axios.post(BASE_URL + URL.REFRESH, {
           refresh_token: refreshToken,
         });
         accessToken = response.data.access_token;
