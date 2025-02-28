@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { folder } from "../../redux/slices/FolderSlice";
 import { toast } from "react-toastify";
 import axios from "axios";
+import {BASE_URL} from "../../utils/config"
 
 const FileUploader = () => {
   const { data, loading, apiCall, status_code } = useApiHandle();
@@ -73,6 +74,7 @@ const FileUploader = () => {
   useEffect(() => {
     if (remainingFileCount === 0) {
       setRemainingFileCount(null); // Reset to null once all uploads are done
+      toast.success("All Files are Uploaded");
     }
   }, [remainingFileCount]);
 
@@ -112,8 +114,8 @@ const FileUploader = () => {
     setIpdrMultiFileLoader(true);
 
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_KEY}${API_URL.ALL_FILES?.[activeBtnState]}`,
+       await axios.post(
+        `${BASE_URL}${API_URL.ALL_FILES?.[activeBtnState]}`,
         fileFormData,
         {
           headers: {
@@ -122,8 +124,7 @@ const FileUploader = () => {
           },
         }
       );
-
-      toast.success(response?.data?.Message);
+      // toast.success(response?.data?.Message);
     } catch (error) {
       console.error("Error fetching files:", fileFormData);
       setErroredFiles((prev) => [...prev, fileName]);
@@ -263,7 +264,7 @@ const FileUploader = () => {
                 style={{
                   position: "absolute",
                   width: "96%",
-                  height: "68%",
+                  height: "93%",
                   backgroundColor: "#5e555570",
                   display: "flex",
                   alignItems: "center",

@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { downloadFile } from "../../../../utils/downloadFile";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import {BASE_URL} from "../../../../utils/config";
 
 const ViewFile = ({
   ids = null,
@@ -76,7 +77,7 @@ const ViewFile = ({
       };
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_KEY}${apiURL}`,
+        `${BASE_URL}${apiURL}`,
         {
           headers: { Authorization: `Bearer ${auth}` },
           params,
