@@ -201,29 +201,29 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
   //     records: record_count[key],
   //   }));
 
-    return (
-      <>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">Type</th>
-              <th scope="col">Files</th>
-              <th scope="col">Records</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayData.map((item, index) => (
-              <tr key={index}>
-                <td>{item.name}</td>
-                <td>{item.files}</td>
-                <td>{item.records}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </>
-    );
-  };
+  //   return (
+  //     <>
+  //       <table className="table table-striped">
+  //         <thead>
+  //           <tr>
+  //             <th scope="col">Type</th>
+  //             <th scope="col">Files</th>
+  //             <th scope="col">Records</th>
+  //           </tr>
+  //         </thead>
+  //         <tbody>
+  //           {displayData.map((item, index) => (
+  //             <tr key={index}>
+  //               <td>{item.name}</td>
+  //               <td>{item.files}</td>
+  //               <td>{item.records}</td>
+  //             </tr>
+  //           ))}
+  //         </tbody>
+  //       </table>
+  //     </>
+  //   );
+  // };
 
   const filteredSubFolders = subFolder?.subFolder?.filter((folder) =>
     folder?.location_name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -372,6 +372,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                           </p>
                         </OverlayTrigger>
                       </div>
+
                       {/* </OverlayTrigger> */}
                     </div>
                   );
