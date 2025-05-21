@@ -193,13 +193,13 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
     setIsModalOpen(true);
   };
 
-  const displayFileRecords = ({ file_count, record_count }) => {
-    const dataKeys = Object.keys(file_count);
-    const displayData = dataKeys.map((key) => ({
-      name: key,
-      files: file_count[key],
-      records: record_count[key],
-    }));
+  // const displayFileRecords = ({ file_count, record_count }) => {
+  //   const dataKeys = Object.keys(file_count);
+  //   const displayData = dataKeys.map((key) => ({
+  //     name: key,
+  //     files: file_count[key],
+  //     records: record_count[key],
+  //   }));
 
     return (
       <>
@@ -297,7 +297,7 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                       className="col-md-3 mb-3"
                       key={`SubFolder${folder?.id}`}
                     >
-                      <OverlayTrigger
+                      {/* <OverlayTrigger
                         placement="bottom"
                         delay={{ show: 200, hide: 300 }}
                         overlay={
@@ -310,71 +310,69 @@ const SubFolder = ({ toggleFileUploadModal, category, modalType }) => {
                             </Popover.Body>
                           </Popover>
                         }
+                      > */}
+                      <div
+                        className="position-relative file folder d-flex justify-content-start align-items-center subfolder-box position-relative"
+                        onClick={(e) =>
+                          navigate(`/${subFolder?.folder_name}/${folder?.id}`)
+                        }
                       >
+                        <span
+                          className="align-self-end me-2 position-absolute cursot"
+                          style={{ bottom: "5px", right: "20px" }}
+                          onClick={(e) => handleClick(e, folder?.id)}
+                        >
+                          <CiViewTable />
+                        </span>
+
+                        <span
+                          className="align-self-end me-2 position-absolute cursot"
+                          style={{ bottom: "5px", right: "-5px" }}
+                        >
+                          <MdOutlineFileDownload
+                            size={20}
+                            color="gray"
+                            onClick={(e) => exportCSV(e, folder?.id)}
+                          />
+                        </span>
+
                         <div
-                          className="position-relative file folder d-flex justify-content-start align-items-center subfolder-box position-relative"
+                          className="dot"
+                          style={{ left: "-9px", top: "-7px" }}
+                          onClick={(e) => deleteFile(e, folder.id)}
+                        >
+                          <RxCross2 size={13} />
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={isSubfolderChecked(folder?.id) ?? false}
+                          onChange={(e) => selectAllFiles(e, folder)}
+                          onClick={(e) => e.stopPropagation()}
+                          className="align-self-end me-2 position-absolute end-0 cursot"
+                          style={{ top: "8px", cursor: "pointer" }}
+                        />
+                        <li
                           onClick={(e) =>
                             navigate(`/${subFolder?.folder_name}/${folder?.id}`)
                           }
                         >
-                          <span
-                            className="align-self-end me-2 position-absolute cursot"
-                            style={{ bottom: "5px", right: "20px" }}
-                            onClick={(e) => handleClick(e, folder?.id)}
-                          >
-                            <CiViewTable />
-                          </span>
+                          <MdFolder size="32" className="folderIcon" />
+                        </li>
 
-                          <span
-                            className="align-self-end me-2 position-absolute cursot"
-                            style={{ bottom: "5px", right: "-5px" }}
+                        <OverlayTrigger
+                          placement="top"
+                          delay={{ show: 200, hide: 300 }}
+                          overlay={<Tooltip>{folder?.location_name}</Tooltip>}
+                        >
+                          <p
+                            className="d-inline-block text-truncate"
+                            style={{ margin: "auto 0", padding: "0 0.4rem" }}
                           >
-                            <MdOutlineFileDownload
-                              size={20}
-                              color="gray"
-                              onClick={(e) => exportCSV(e, folder?.id)}
-                            />
-                          </span>
-
-                          <div
-                            className="dot"
-                            style={{ left: "-9px", top: "-7px" }}
-                            onClick={(e) => deleteFile(e, folder.id)}
-                          >
-                            <RxCross2 size={13} />
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={isSubfolderChecked(folder?.id) ?? false}
-                            onChange={(e) => selectAllFiles(e, folder)}
-                            onClick={(e) => e.stopPropagation()}
-                            className="align-self-end me-2 position-absolute end-0 cursot"
-                            style={{ top: "8px", cursor: "pointer" }}
-                          />
-                          <li
-                            onClick={(e) =>
-                              navigate(
-                                `/${subFolder?.folder_name}/${folder?.id}`
-                              )
-                            }
-                          >
-                            <MdFolder size="32" className="folderIcon" />
-                          </li>
-
-                          <OverlayTrigger
-                            placement="top"
-                            delay={{ show: 200, hide: 300 }}
-                            overlay={<Tooltip>{folder?.location_name}</Tooltip>}
-                          >
-                            <p
-                              className="d-inline-block text-truncate"
-                              style={{ margin: "auto 0", padding: "0 0.4rem" }}
-                            >
-                              {folder?.location_name}
-                            </p>
-                          </OverlayTrigger>
-                        </div>
-                      </OverlayTrigger>
+                            {folder?.location_name}
+                          </p>
+                        </OverlayTrigger>
+                      </div>
+                      {/* </OverlayTrigger> */}
                     </div>
                   );
                 })}
