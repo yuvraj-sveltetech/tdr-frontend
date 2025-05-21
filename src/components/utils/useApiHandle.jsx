@@ -4,11 +4,11 @@ import { toast } from "react-toastify";
 import * as URL from "../utils/ConstantUrl";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import {BASE_URL,CREATE_FOLDER_URL} from "../../utils/config"
+import { BASE_URL, CREATE_FOLDER_URL } from "../../utils/config";
 const useApiHandle = () => {
   const [apiData, setApiData] = useState({ data: {}, status_code: 0 });
   const [loading, setLoading] = useState(false);
-  
+
   const navigate = useNavigate();
 
   // let accessToken = localStorage.getItem("auth_token");
@@ -73,14 +73,19 @@ const useApiHandle = () => {
       async function (error) {
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
-        const originalRequest = error.config;
+        // const originalRequest = error.config;
 
-        if (error.response.status === 403 && !originalRequest._retry) {
-          originalRequest._retry = true;
-          return refreshAccessToken().then(() => {
-            originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-            return axios(originalRequest);
-          });
+        // if (error.response.status === 403 && !originalRequest._retry) {
+        //   originalRequest._retry = true;
+        //   return refreshAccessToken().then(() => {
+        //     originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        //     return axios(originalRequest);
+        //   });
+        // }
+
+        if (error.response?.status === 403) {
+          window.location.href = process.env.REACT_APP_REDIRECT_ON_403; //  Redirect to this IP
+          return Promise.reject(error); // Stop further processing
         }
 
         return Promise.reject(error);
