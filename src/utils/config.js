@@ -1,4 +1,4 @@
-const LOCAL_IP = "10.10.99.113";
+const LOCAL_IP = "10.1.100.213";
 
 const getRedirectUrl = () => {
   if (typeof window !== "undefined") {
@@ -14,7 +14,6 @@ const getRedirectUrl = () => {
 export const URL = getRedirectUrl();
 
 export const getBaseUrl = () => {
-
   if (typeof window !== "undefined") {
     const isLocalNetwork = window.location.hostname === LOCAL_IP;
     return isLocalNetwork
@@ -26,7 +25,6 @@ export const getBaseUrl = () => {
 
 export const BASE_URL = getBaseUrl();
 
-
 export const getCreateFolder = () => {
   if (typeof window !== "undefined") {
     const isLocalNetwork = window.location.hostname === LOCAL_IP;
@@ -34,7 +32,6 @@ export const getCreateFolder = () => {
       ? process.env.REACT_APP_API_KEY_CREATE_FOLDER
       : process.env.REACT_APP_VPN_API_KEY_CREATE_FOLDER;
   }
-
 
   return process.env.REACT_APP_API_KEY_CREATE_FOLDER;
 };

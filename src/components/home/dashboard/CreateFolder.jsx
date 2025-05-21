@@ -24,7 +24,9 @@ const CreateFolder = () => {
 
   useEffect(() => {
     if (status_code === 200) {
-      dispatch(folder({ take_action: "create_folder", data: data }));
+      dispatch(
+        folder({ take_action: "create_folder", data: data?.data ?? [] })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status_code, data]);
