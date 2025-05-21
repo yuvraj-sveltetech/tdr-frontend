@@ -15,7 +15,7 @@ const useApiHandle = () => {
   let accessToken = Cookies.get("ss_tkn");
   let refreshToken = localStorage.getItem("refresh_token");
 
-  const apiCall = async (method, url, payload, signal, iscreate) => {
+  const apiCall = async (method, url, payload, signal, iscreate = false) => {
     setLoading(true);
 
     const axiosInstance = axios.create({
