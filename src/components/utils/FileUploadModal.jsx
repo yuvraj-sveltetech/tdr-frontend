@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { folder } from "../../redux/slices/FolderSlice";
 import { toast } from "react-toastify";
 import axios from "axios";
-import {BASE_URL} from "../../utils/config"
+import { BASE_URL } from "../../utils/config";
 
 const FileUploader = () => {
   const { data, loading, apiCall, status_code } = useApiHandle();
@@ -114,7 +114,7 @@ const FileUploader = () => {
     setIpdrMultiFileLoader(true);
 
     try {
-       await axios.post(
+      await axios.post(
         `${BASE_URL}${API_URL.ALL_FILES?.[activeBtnState]}`,
         fileFormData,
         {
@@ -161,44 +161,83 @@ const FileUploader = () => {
   //   }
   // };
 
+  // const sendFiles = async () => {
+  //   if (activeBtnState === "ipdr") {
+  //     // for (const file of files) {
+  //     //   const fileFormData = new FormData();
+  //     //   fileFormData.append("file", file);
+  //     //   fileFormData.append("project_id", param?.parent_folder);
+  //     //   fileFormData.append("location_id", param?.subfolder);
+  //     //   fileFormData.append("file_type", activeBtnState);
+
+  //     //   await ipdrApiCall(fileFormData, file?.name); // Wait for one request to finish before sending the next
+  //     //   setRemainingFileCount((prev) => prev - 1);
+  //     // }
+
+  //     // ----------------------------------------------------
+
+  //     const formData = new FormData();
+  //     files?.forEach((file) => {
+  //       formData.append("file", file);
+  //     });
+
+  //     formData.append("project_id", param?.parent_folder);
+  //     formData.append("location_id", param?.subfolder);
+  //     formData.append("file_type", activeBtnState);
+
+  //     const response = await axios.get(
+  //       // `${process.env.REACT_APP_API_KEY}${apiURL}`,
+  //       "http://localhost:5000/upload",
+  //       formData,
+  //       {
+  //         headers: { Authorization: `Bearer ${auth}` },
+  //       }
+  //     );
+
+  //     console.log(response, "IPDR Upload");
+
+  //     // apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
+
+  //     // ----------------------------------------------------
+  //   } else {
+  //     // If not "ipdr", send files as a batch request
+  //     const formData = new FormData();
+  //     files?.forEach((file) => {
+  //       formData.append("file", file);
+  //     });
+
+  //     formData.append("project_id", param?.parent_folder);
+  //     formData.append("location_id", param?.subfolder);
+  //     formData.append("file_type", activeBtnState);
+
+  //     apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
+  //   }
+
+  //   // If not "ipdr", send files as a batch request
+  //   // const formData = new FormData();
+  //   // files?.forEach((file) => {
+  //   //   formData.append("file", file);
+  //   // });
+
+  //   // formData.append("project_id", param?.parent_folder);
+  //   // formData.append("location_id", param?.subfolder);
+  //   // formData.append("file_type", activeBtnState);
+
+  //   // apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
+  // };
+
   const sendFiles = async () => {
     if (activeBtnState === "ipdr") {
-      // for (const file of files) {
-      //   const fileFormData = new FormData();
-      //   fileFormData.append("file", file);
-      //   fileFormData.append("project_id", param?.parent_folder);
-      //   fileFormData.append("location_id", param?.subfolder);
-      //   fileFormData.append("file_type", activeBtnState);
+      for (const file of files) {
+        const fileFormData = new FormData();
+        fileFormData.append("file", file);
+        fileFormData.append("project_id", param?.parent_folder);
+        fileFormData.append("location_id", param?.subfolder);
+        fileFormData.append("file_type", activeBtnState);
 
-      //   await ipdrApiCall(fileFormData, file?.name); // Wait for one request to finish before sending the next
-      //   setRemainingFileCount((prev) => prev - 1);
-      // }
-
-      // ----------------------------------------------------
-
-      const formData = new FormData();
-      files?.forEach((file) => {
-        formData.append("file", file);
-      });
-
-      formData.append("project_id", param?.parent_folder);
-      formData.append("location_id", param?.subfolder);
-      formData.append("file_type", activeBtnState);
-
-      const response = await axios.get(
-        // `${process.env.REACT_APP_API_KEY}${apiURL}`,
-        "http://localhost:5000/upload",
-        formData,
-        {
-          headers: { Authorization: `Bearer ${auth}` },
-        }
-      );
-
-      console.log(response, "IPDR Upload");
-
-      // apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
-
-      // ----------------------------------------------------
+        await ipdrApiCall(fileFormData, file?.name); // Wait for one request to finish before sending the next
+        setRemainingFileCount((prev) => prev - 1);
+      }
     } else {
       // If not "ipdr", send files as a batch request
       const formData = new FormData();
@@ -226,7 +265,7 @@ const FileUploader = () => {
     // apiCall("post", `${API_URL.ALL_FILES?.[activeBtnState]}`, formData);
   };
 
-  console.log(uploadedFileCount, "uploadedFileCount", remainingFileCount);
+  // console.log(uploadedFileCount, "uploadedFileCount", remainingFileCount);
 
   return (
     <div
