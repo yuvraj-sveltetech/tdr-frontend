@@ -49,19 +49,19 @@ const useApiHandle = () => {
     );
 
     // Function to refresh the access token using the refresh token
-    async function refreshAccessToken() {
-      try {
-        const response = await axios.post(BASE_URL + URL.REFRESH, {
-          refresh_token: refreshToken,
-        });
-        accessToken = response.data.access_token;
-        localStorage.setItem("auth_token", response.data.access_token);
-      } catch (err) {
-        localStorage.clear();
-        navigate("/");
-        throw err;
-      }
-    }
+    // async function refreshAccessToken() {
+    //   try {
+    //     const response = await axios.post(BASE_URL + URL.REFRESH, {
+    //       refresh_token: refreshToken,
+    //     });
+    //     accessToken = response.data.access_token;
+    //     localStorage.setItem("auth_token", response.data.access_token);
+    //   } catch (err) {
+    //     localStorage.clear();
+    //     navigate("/");
+    //     throw err;
+    //   }
+    // }
 
     // Add a response interceptor
     axiosInstance.interceptors.response.use(
