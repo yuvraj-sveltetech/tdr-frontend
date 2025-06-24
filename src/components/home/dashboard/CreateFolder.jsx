@@ -12,7 +12,6 @@ import { useInView } from "react-intersection-observer";
 
 const CreateFolder = () => {
   const { data, apiCall, status_code, loading } = useApiHandle();
-  const folders = useSelector((state) => state.folder);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
