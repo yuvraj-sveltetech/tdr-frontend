@@ -17,25 +17,46 @@ const CreateFolder = () => {
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
   const [filteredFolders, setFilteredFolders] = useState([]);
   const [pageNo, setPageNo] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const { ref, inView } = useInView();
 
   useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
+
+  useEffect(() => {
     // Reset on search term change
     setFilteredFolders([]);
     setPageNo(1);
     setHasMore(true);
-  }, [searchTerm]);
+  }, [debouncedSearchTerm]);
 
   useEffect(() => {
     if (pageNo === 1) {
       setFilteredFolders([]); // Reset for new search or initial load
     }
-    apiCall("get", `${GET_CASE_FOLDERS}?page_no=${pageNo}`, {}, "", true);
+    apiCall(
+      "get",
+      `${GET_CASE_FOLDERS}?page_no=${pageNo}${
+        debouncedSearchTerm
+          ? `&folder_name=${encodeURIComponent(debouncedSearchTerm)}`
+          : ""
+      }`,
+      {},
+      "",
+      true
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNo]);
+  }, [pageNo, debouncedSearchTerm]);
 
   useEffect(() => {
     if (status_code === 200 && data?.data) {
@@ -71,7 +92,6 @@ const CreateFolder = () => {
             placeholder="Search folders..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            disabled={folders?.created_folders?.length === 0}
           />
         </div>
 
