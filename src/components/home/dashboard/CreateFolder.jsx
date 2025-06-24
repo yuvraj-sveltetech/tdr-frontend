@@ -8,35 +8,54 @@ import { folder } from "../../../redux/slices/FolderSlice";
 import { OverlayTrigger } from "react-bootstrap";
 import Tooltip from "react-bootstrap/Tooltip";
 import { GET_CASE_FOLDERS } from "../../utils/ConstantUrl";
+import { useInView } from "react-intersection-observer";
 
 const CreateFolder = () => {
-  const { data, apiCall, status_code } = useApiHandle();
+  const { data, apiCall, status_code, loading } = useApiHandle();
   const folders = useSelector((state) => state.folder);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredFolders, setFilteredFolders] = useState([]);
+  const [pageNo, setPageNo] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const { ref, inView } = useInView();
 
   useEffect(() => {
-    apiCall("get", GET_CASE_FOLDERS, {}, "", true);
-  }, []);
+    // Reset on search term change
+    setFilteredFolders([]);
+    setPageNo(1);
+    setHasMore(true);
+  }, [searchTerm]);
 
   useEffect(() => {
-    if (status_code === 200) {
+    if (pageNo === 1) {
+      setFilteredFolders([]); // Reset for new search or initial load
+    }
+    apiCall("get", `${GET_CASE_FOLDERS}?page_no=${pageNo}`, {}, "", true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageNo]);
+
+  useEffect(() => {
+    if (status_code === 200 && data?.data) {
+      if (pageNo === 1) {
+        setFilteredFolders(data.data);
+      } else {
+        setFilteredFolders((prev) => [...prev, ...data.data]);
+      }
+      setHasMore(data.data.length > 0);
       dispatch(folder({ take_action: "create_folder", data: data?.data }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status_code, data]);
 
   useEffect(() => {
-    if (folders?.created_folders) {
-      const filtered = folders?.created_folders?.filter((folder) =>
-        folder?.folder_name?.toLowerCase()?.includes(searchTerm?.toLowerCase())
-      );
-      setFilteredFolders(filtered);
+    if (inView && hasMore && filteredFolders.length > 0) {
+      setPageNo((prev) => prev + 1);
     }
-  }, [searchTerm, folders]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);
 
   const getSubfolder = async (id) => {
     navigate(`/${id}`);
@@ -56,7 +75,15 @@ const CreateFolder = () => {
           />
         </div>
 
-        {filteredFolders?.length === 0 ? (
+        {loading && filteredFolders.length === 0 ? (
+          <div className="center-div">
+            <span
+              className="spinner-border spinner-border-sm"
+              role="status"
+            ></span>
+            <span className="ps-1">loading...</span>
+          </div>
+        ) : filteredFolders?.length === 0 ? (
           <div className="center-div">
             <h6 style={{ color: "red" }}>
               Folder does not exist. Please create one
@@ -65,29 +92,45 @@ const CreateFolder = () => {
         ) : (
           <div className="parent_folder">
             <div className="row list-unstyled">
-              {filteredFolders?.map((folder) => (
-                <div className="col-md-3" key={`CreatedFolder${folder?.id}`}>
+              {filteredFolders?.map((folder, idx) => {
+                const isLast = idx === filteredFolders.length - 1;
+                return (
                   <div
-                    className="folder rr d-flex flex-column justify-content-center my-2"
-                    onClick={(e) => getSubfolder(folder?.folder_name)}
+                    className="col-md-3"
+                    key={`CreatedFolder${folder?.id}`}
+                    ref={isLast ? ref : null}
                   >
-                    <li onClick={(e) => getSubfolder(folder?.folder_name)}>
-                      <MdFolder size="70" className="folderIcon" />
-                    </li>
-
-                    <OverlayTrigger
-                      placement="top"
-                      delay={{ show: 200, hide: 300 }}
-                      overlay={<Tooltip> {folder?.folder_name}</Tooltip>}
+                    <div
+                      className="folder rr d-flex flex-column justify-content-center my-2"
+                      onClick={(e) => getSubfolder(folder?.folder_name)}
                     >
-                      <p className="w-75 d-inline-block text-truncate">
-                        {folder?.folder_name}
-                      </p>
-                    </OverlayTrigger>
+                      <li onClick={(e) => getSubfolder(folder?.folder_name)}>
+                        <MdFolder size="70" className="folderIcon" />
+                      </li>
+
+                      <OverlayTrigger
+                        placement="top"
+                        delay={{ show: 200, hide: 300 }}
+                        overlay={<Tooltip> {folder?.folder_name}</Tooltip>}
+                      >
+                        <p className="w-75 d-inline-block text-truncate">
+                          {folder?.folder_name}
+                        </p>
+                      </OverlayTrigger>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
+            {hasMore && (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                ></span>
+                <span className="ps-1">loading...</span>
+              </>
+            )}
           </div>
         )}
       </div>
