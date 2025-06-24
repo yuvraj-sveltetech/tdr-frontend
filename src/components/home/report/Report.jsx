@@ -13,28 +13,45 @@ import { FcDownload } from "react-icons/fc";
 import { CiCalendarDate } from "react-icons/ci";
 import notFound from "../../../assets/images/data-not-found.png";
 import { downloadFile } from "../../../utils/downloadFile";
+import { useInView } from "react-intersection-observer";
 
 const Report = () => {
-  const { data, loading, apiCall } = useApiHandle();
+  const { data, loading, apiCall, status_code } = useApiHandle();
   const [reportData, setReportData] = useState([]);
   const toComp = useSelector((state) => state.show_count.switch_component);
   const download_link = useRef(null);
   const dispatch = useDispatch();
   const report_id = useRef(null);
   const created_file_name = useRef(null);
+  const [pageNo, setPageNo] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const { ref, inView } = useInView();
 
   useEffect(() => {
-    if (data?.length > 0) {
-      setReportData([...data]);
+    if (status_code === 200 && data?.results) {
+      if (pageNo === 1) {
+        setReportData(data.results);
+      } else {
+        setReportData((prev) => [...prev, ...data.results]);
+      }
+      setHasMore(data.results.length > 0);
     }
-  }, [data]);
+  }, [data, status_code]);
 
   useEffect(() => {
     getGeneratedReport();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageNo]);
+
+  useEffect(() => {
+    if (inView && hasMore && reportData.length > 0) {
+      setPageNo((prev) => prev + 1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);
 
   const getGeneratedReport = () => {
-    apiCall("get", URL.GET_EXCEL_DATA, "");
+    apiCall("get", `${URL.GET_EXCEL_DATA}?page_no=${pageNo}`, "");
   };
 
   const switchTo = (item, component) => {
@@ -57,7 +74,7 @@ const Report = () => {
           <div className="report">
             <h6 className="mb-3">Report List</h6>
             <hr />
-            {loading ? (
+            {loading && reportData.length === 0 ? (
               <div className="data-not-found">
                 <div className="d-flex justify-content-center">
                   <div className="spinner-border" role="status" />
@@ -74,9 +91,14 @@ const Report = () => {
                     : { overflow: "hidden" }
                 }
               >
-                {reportData?.map((item) => {
+                {reportData?.map((item, idx) => {
+                  const isLast = idx === reportData.length - 1;
                   return (
-                    <div className="item me-1" key={item.id}>
+                    <div
+                      className="item me-1"
+                      key={item.id}
+                      ref={isLast ? ref : null}
+                    >
                       <li className="w-75 d-flex justify-content-between">
                         <OverlayTrigger
                           placement="top"
@@ -135,6 +157,11 @@ const Report = () => {
                     </div>
                   );
                 })}
+                {hasMore && (
+                  <div className="d-flex justify-content-center">
+                    <div className="spinner-border" role="status" />
+                  </div>
+                )}
               </ul>
             ) : (
               <div className="data-not-found">
