@@ -21,9 +21,14 @@ export const folderSlice = createSlice({
 
       switch (take_action) {
         case "create_folder":
+          // Add only folders whose id is not already present in created_folders
+          const existingIds = new Set(
+            prevState.created_folders.map((f) => f.id)
+          );
+          const newFolders = data.filter((f) => !existingIds.has(f.id));
           return {
             ...state,
-            created_folders: [...data],
+            created_folders: [...prevState.created_folders, ...newFolders],
           };
 
         case "create_subfolder":

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./CreateFolder.css";
 import { MdFolder } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import useApiHandle from "../../utils/useApiHandle";
 import { folder } from "../../../redux/slices/FolderSlice";
 import { OverlayTrigger } from "react-bootstrap";
@@ -65,7 +65,10 @@ const CreateFolder = () => {
         setFilteredFolders((prev) => [...prev, ...data.data]);
       }
       setHasMore(data.data.length > 0);
-      dispatch(folder({ take_action: "create_folder", data: data?.data }));
+
+      if (data.data.length > 0) {
+        dispatch(folder({ take_action: "create_folder", data: data?.data }));
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status_code, data]);
